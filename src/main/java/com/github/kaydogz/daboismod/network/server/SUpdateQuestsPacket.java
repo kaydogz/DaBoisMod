@@ -1,13 +1,7 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
-import com.github.kaydogz.daboismod.client.gui.QuestScreen;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import com.github.kaydogz.daboismod.quest.Quest;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
@@ -21,8 +15,8 @@ import java.util.function.Supplier;
 
 public class SUpdateQuestsPacket {
 	
-	private final ArrayList<Quest> quests;
-	private final int playerId;
+	public final ArrayList<Quest> quests;
+	public final int playerId;
 
 	public SUpdateQuestsPacket(ArrayList<Quest> quests, int playerId) {
 		this.quests = quests;
@@ -59,17 +53,7 @@ public class SUpdateQuestsPacket {
 		
 		public static void handle(final SUpdateQuestsPacket msg, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					Minecraft minecraft = Minecraft.getInstance();
-					Entity entity = minecraft.world.getEntityByID(msg.playerId);
-					if (entity instanceof AbstractClientPlayerEntity) {
-						DaBoisMod.get(PlayerCapability.getCapabilityOf(entity)).setQuests(msg.quests);
-						if (entity instanceof ClientPlayerEntity && minecraft.currentScreen instanceof QuestScreen) {
-							QuestScreen screen = (QuestScreen) minecraft.currentScreen;
-							screen.updateQuests();
-						}
-					}
-				});
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateQuests(msg, ctx));
 			});
 			ctx.get().setPacketHandled(true);
 		}

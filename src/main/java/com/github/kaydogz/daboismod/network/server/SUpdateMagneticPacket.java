@@ -1,11 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
-import com.github.kaydogz.daboismod.client.audio.MagnetismTickableSound;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.entity.Entity;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -15,8 +10,8 @@ import java.util.function.Supplier;
 
 public class SUpdateMagneticPacket {
 
-    private final boolean magnetic;
-    private final int playerId;
+    public final boolean magnetic;
+    public final int playerId;
 
     public SUpdateMagneticPacket(boolean magnetic, int playerId) {
         this.magnetic = magnetic;
@@ -36,14 +31,7 @@ public class SUpdateMagneticPacket {
 
         public static void handle(final SUpdateMagneticPacket msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                    Minecraft minecraft = Minecraft.getInstance();
-                    Entity entity = minecraft.world.getEntityByID(msg.playerId);
-                    if (entity instanceof AbstractClientPlayerEntity) {
-                        DaBoisMod.get(PlayerCapability.getCapabilityOf(entity)).setMagnetic(msg.magnetic);
-                        minecraft.getSoundHandler().playOnNextTick(new MagnetismTickableSound((AbstractClientPlayerEntity) entity));
-                    }
-                });
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateMagnetic(msg, ctx));
             });
             ctx.get().setPacketHandled(true);
         }

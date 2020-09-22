@@ -1,9 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.provider.LivingCapability;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -13,8 +10,8 @@ import java.util.function.Supplier;
 
 public class SUpdateFallingFromSkyPacket {
 
-	private final boolean fallingFromSky;
-	private final int entityId;
+	public final boolean fallingFromSky;
+	public final int entityId;
 
 	public SUpdateFallingFromSkyPacket(boolean fallingFromSky, int entityId) {
 		this.fallingFromSky = fallingFromSky;
@@ -34,10 +31,7 @@ public class SUpdateFallingFromSkyPacket {
 		
 		public static void handle(final SUpdateFallingFromSkyPacket msg, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					Entity entity = Minecraft.getInstance().world.getEntityByID(msg.entityId);
-					if (entity != null) DaBoisMod.get(LivingCapability.getCapabilityOf(entity)).setFallingFromSky(msg.fallingFromSky);
-				});
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateFallingFromSky(msg, ctx));
 			});
 			ctx.get().setPacketHandled(true);
 		}

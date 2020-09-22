@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import net.minecraft.client.Minecraft;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class SDisplayItemActivationPacket {
 
-	private final ItemStack stack;
+	public final ItemStack stack;
 
 	public SDisplayItemActivationPacket(ItemStack stack) {
 		this.stack = stack;
@@ -29,7 +29,7 @@ public class SDisplayItemActivationPacket {
 		
 		public static void handle(final SDisplayItemActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().gameRenderer.displayItemActivation(msg.stack));
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleDisplayItemActivation(msg, ctx));
 			});
 			ctx.get().setPacketHandled(true);
 		}
