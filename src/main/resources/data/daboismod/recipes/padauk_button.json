@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "daboismod:padauk_planks"
+    }
+  ],
+  "result": {
+    "item": "daboismod:padauk_button"
+  }
+}

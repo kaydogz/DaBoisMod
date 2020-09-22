@@ -1,0 +1,31 @@
+modLoader="javafml" #mandatory
+loaderVersion="[31,)" #mandatory
+
+[[mods]] #mandatory
+modId="daboismod" #mandatory
+version="0.4.6" #mandatory
+
+displayName="Da Bois Mod" #mandatory
+displayURL="" #optional
+
+credits="Thanks to all of Da Bois for the inspiration and fun times!" #optional
+authors="Kaydogz" #optional
+description='''
+A mod made by one of Da Bois, for Da Bois. It incorporates as many inside jokes as possible into Minecraft to make a funny, joyful, and awesome experience.
+
+Praise Jacob.
+'''
+
+[[dependencies.daboismod]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[31,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+# Here's another dependency
+[[dependencies.daboismod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="NONE"
+    side="BOTH"

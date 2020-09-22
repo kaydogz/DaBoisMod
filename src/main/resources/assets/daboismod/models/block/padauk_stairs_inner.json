@@ -1,0 +1,8 @@
+{
+    "parent": "block/inner_stairs",
+    "textures": {
+        "bottom": "daboismod:block/padauk_planks",
+        "top": "daboismod:block/padauk_planks",
+        "side": "daboismod:block/padauk_planks"
+    }
+}

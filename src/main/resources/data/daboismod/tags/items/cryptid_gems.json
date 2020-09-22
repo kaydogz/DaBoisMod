@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#daboismod:gems/topaz",
+    "#daboismod:gems/amethyst",
+    "#daboismod:gems/amber",
+    "#daboismod:gems/ruby"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_stairs",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "daboismod:padauk_planks"
+    }
+  },
+  "result": {
+    "item": "daboismod:padauk_stairs",
+    "count": 4
+  }
+}

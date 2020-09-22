@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "daboismod:block/padauk_log_top",
+        "side": "daboismod:block/padauk_log"
+    }
+}

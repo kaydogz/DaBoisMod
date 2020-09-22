@@ -1,0 +1,6 @@
+{
+    "parent": "block/pressure_plate_up",
+    "textures": {
+        "texture": "daboismod:block/padauk_planks"
+    }
+}

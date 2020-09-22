@@ -1,0 +1,111 @@
+{
+	"entity.sasquatch.ambient": {
+		"sounds": [
+			{
+				"name": "daboismod:entity/sasquatch/growl1",
+				"volume": 0.7
+			},
+			{
+				"name": "daboismod:entity/sasquatch/growl2",
+				"volume": 0.7
+			}
+		]
+	},
+	"entity.sasquatch.death": {
+		"sounds": [
+			{
+				"name": "daboismod:entity/sasquatch/hurt1",
+				"pitch": 0.75
+			},
+			{
+				"name": "daboismod:entity/sasquatch/hurt2",
+				"pitch": 0.75
+			}
+		]
+	},
+	"entity.sasquatch.hurt": {
+		"sounds": [
+			{
+				"name": "daboismod:entity/sasquatch/hurt1",
+				"volume": 0.5
+			},
+			{
+				"name": "daboismod:entity/sasquatch/hurt2",
+				"volume": 0.5
+			}
+		]
+	},
+	"entity.sasquatch.transition": {
+		"sounds": [
+			{ 
+				"name": "daboismod:entity/sasquatch/transition",
+				"volume": 0.9
+			}
+		]
+	},
+	"entity.sasquatch.smash": {
+		"sounds": [
+			{ 
+				"name": "daboismod:entity/sasquatch/smash",
+				"volume": 1.5
+			}
+		]
+	},
+	"music_disc.mr_blue_sky": {
+		"sounds": [
+			{
+				"name": "daboismod:records/mr_blue_sky",
+				"stream": true,
+				"volume": 0.15,
+				"attenuation_distance": 64
+			}
+		]
+	},
+	"music_disc.sphere": {
+    	"sounds": [
+      		{
+        		"name": "daboismod:records/sphere",
+        		"stream": true,
+        		"volume": 0.15,
+				"attenuation_distance": 64
+      		}
+    	]
+  	},
+	"music_disc.carnivores": {
+		"sounds": [
+			{
+				"name": "daboismod:records/carnivores",
+				"stream": true,
+				"volume": 0.15,
+				"attenuation_distance": 64
+			}
+		]
+	},
+	"music_disc.megalovania": {
+		"sounds": [
+			{
+				"name": "daboismod:records/megalovania",
+				"stream": true,
+				"volume": 0.2,
+				"attenuation_distance": 64
+			}
+		]
+	},
+	"player.magnetic_hum": {
+		"sounds": [
+			{
+				"name": "daboismod:player/magnetic_hum",
+				"volume": 1.5
+			}
+		]
+	},
+	"master.heavenly_choir": {
+		"sounds": [
+			{
+				"name": "daboismod:master/heavenly_choir",
+				"volume": 1.5,
+				"stream": true
+			}
+		]
+	}
+}

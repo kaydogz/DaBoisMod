@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:smelting",
+	"ingredient": { "item": "daboismod:ancient_ore" },
+	"result": "daboismod:ancient_ingot",
+	"experience": 2.3,
+	"cookingtime": 200
+}

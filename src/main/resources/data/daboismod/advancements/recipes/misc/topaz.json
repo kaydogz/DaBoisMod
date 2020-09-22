@@ -1,0 +1,32 @@
+{
+	  "parent": "minecraft:recipes/root",
+	  "rewards": {
+	    "recipes": [
+	      "daboismod:topaz"
+	    ]
+	  },
+	  "criteria": {
+	    "has_topaz_block": {
+	      "trigger": "minecraft:inventory_changed",
+	      "conditions": {
+	        "items": [
+	          {
+	            "item": "daboismod:topaz_block"
+	          }
+	        ]
+	      }
+	    },
+	    "has_the_recipe": {
+	      "trigger": "minecraft:recipe_unlocked",
+	      "conditions": {
+	        "recipe": "daboismod:topaz"
+	      }
+	    }
+	  },
+	  "requirements": [
+	    [
+	      "has_topaz_block",
+	      "has_the_recipe"
+	    ]
+	  ]
+}

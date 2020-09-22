@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"B"
+	],
+	
+	"key": {
+		"B": { "item": "daboismod:amethyst_block" }
+	},
+	
+	"result": { 
+		"item": "daboismod:amethyst",
+		"count": 9
+	}
+}

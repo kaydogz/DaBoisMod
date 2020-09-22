@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "axis=y": { "model": "daboismod:block/padauk_wood" },
+        "axis=z": { "model": "daboismod:block/padauk_wood", "x": 90 },
+        "axis=x": { "model": "daboismod:block/padauk_wood", "x": 90, "y": 90 }
+    }
+}

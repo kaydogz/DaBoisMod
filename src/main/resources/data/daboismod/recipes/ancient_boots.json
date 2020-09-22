@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"I I",
+		"I I"
+	],
+	
+	"key": {
+		"I": { "item": "daboismod:ancient_ingot" }
+	},
+	
+	"result": { 
+		"item": "daboismod:ancient_boots",
+		"count": 1
+	}
+}

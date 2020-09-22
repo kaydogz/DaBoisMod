@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_slab",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "daboismod:padauk_planks"
+    }
+  },
+  "result": {
+    "item": "daboismod:padauk_slab",
+    "count": 6
+  }
+}

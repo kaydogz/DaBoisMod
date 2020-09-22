@@ -1,0 +1,7 @@
+{
+  "parent": "block/door_top",
+  "textures": {
+    "bottom": "daboismod:block/padauk_door_bottom",
+    "top": "daboismod:block/padauk_door_top"
+  }
+}

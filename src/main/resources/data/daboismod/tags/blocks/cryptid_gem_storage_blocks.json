@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#daboismod:storage_blocks/topaz",
+    "#daboismod:storage_blocks/amethyst",
+    "#daboismod:storage_blocks/amber",
+    "#daboismod:storage_blocks/ruby"
+  ]
+}

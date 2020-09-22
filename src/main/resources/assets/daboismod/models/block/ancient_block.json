@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "daboismod:block/ancient_block"
+    }
+}

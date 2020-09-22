@@ -1,0 +1,9 @@
+{
+	"ambient.cave": {
+		"replace": false,
+		"sounds": [
+			"daboismod:ambient/cave/laugh",
+			"daboismod:ambient/cave/my_wife"
+		]
+	}
+}

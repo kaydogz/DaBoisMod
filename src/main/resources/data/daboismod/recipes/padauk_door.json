@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_door",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "daboismod:padauk_planks"
+    }
+  },
+  "result": {
+    "item": "daboismod:padauk_door",
+    "count": 3
+  }
+}

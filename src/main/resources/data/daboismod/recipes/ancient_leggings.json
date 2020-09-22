@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"III",
+		"I I",
+		"I I"
+	],
+	
+	"key": {
+		"I": { "item": "daboismod:ancient_ingot" }
+	},
+	
+	"result": { 
+		"item": "daboismod:ancient_leggings",
+		"count": 1
+	}
+}

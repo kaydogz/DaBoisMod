@@ -1,0 +1,32 @@
+{
+	  "parent": "minecraft:recipes/root",
+	  "rewards": {
+	    "recipes": [
+	      "daboismod:ancient_ingot_from_blasting"
+	    ]
+	  },
+	  "criteria": {
+	    "has_ancient_ore": {
+	      "trigger": "minecraft:inventory_changed",
+	      "conditions": {
+	        "items": [
+	          {
+	            "item": "daboismod:ancient_ore"
+	          }
+	        ]
+	      }
+	    },
+	    "has_the_recipe": {
+	      "trigger": "minecraft:recipe_unlocked",
+	      "conditions": {
+	        "recipe": "daboismod:ancient_ingot_from_blasting"
+	      }
+	    }
+	  },
+	  "requirements": [
+	    [
+	      "has_ancient_ore",
+	      "has_the_recipe"
+	    ]
+	  ]
+}

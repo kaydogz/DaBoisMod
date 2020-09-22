@@ -1,0 +1,69 @@
+{
+  "parent": "daboismod:dabois/root",
+  "display": {
+    "icon": {
+      "item": "daboismod:ancient_chestplate",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.daboismod.dabois.shinier_gear.title"
+    },
+    "description": {
+      "translate": "advancements.daboismod.dabois.shinier_gear.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ancient_helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "daboismod:ancient_helmet"
+          }
+        ]
+      }
+    },
+    "ancient_chestplate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "daboismod:ancient_chestplate"
+          }
+        ]
+      }
+    },
+    "ancient_leggings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "daboismod:ancient_leggings"
+          }
+        ]
+      }
+    },
+    "ancient_boots": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "daboismod:ancient_boots"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ancient_helmet",
+      "ancient_chestplate",
+      "ancient_leggings",
+      "ancient_boots"
+    ]
+  ]
+}

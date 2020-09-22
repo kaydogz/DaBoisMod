@@ -1,0 +1,32 @@
+{
+	  "parent": "minecraft:recipes/root",
+	  "rewards": {
+	    "recipes": [
+	      "daboismod:marijuana"
+	    ]
+	  },
+	  "criteria": {
+	    "has_cannabis": {
+	      "trigger": "minecraft:inventory_changed",
+	      "conditions": {
+	        "items": [
+	          {
+	            "item": "daboismod:cannabis"
+	          }
+	        ]
+	      }
+	    },
+	    "has_the_recipe": {
+	      "trigger": "minecraft:recipe_unlocked",
+	      "conditions": {
+	        "recipe": "daboismod:marijuana"
+	      }
+	    }
+	  },
+	  "requirements": [
+	    [
+	      "has_cannabis",
+	      "has_the_recipe"
+	    ]
+	  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "bark",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "daboismod:stripped_padauk_log"
+    }
+  },
+  "result": {
+    "item": "daboismod:stripped_padauk_wood",
+    "count": 3
+  }
+}

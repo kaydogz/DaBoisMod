@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:blasting",
+	"ingredient": { "item": "daboismod:ancient_ore" },
+	"result": "daboismod:ancient_ingot",
+	"experience": 2.6,
+	"cookingtime": 100
+}

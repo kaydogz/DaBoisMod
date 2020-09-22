@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"II",
+		"IS",
+		" S"
+	],
+	
+	"key": {
+		"I": { "item": "daboismod:ancient_ingot" },
+		"S": { "item": "minecraft:stick" }
+	},
+	
+	"result": { 
+		"item": "daboismod:ancient_axe",
+		"count": 1
+	}
+}

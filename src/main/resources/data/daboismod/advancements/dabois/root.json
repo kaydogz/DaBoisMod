@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "item": "daboismod:gods_crown"
+    },
+    "title": {
+      "translate": "advancements.daboismod.dabois.root.title"
+    },
+    "description": {
+      "translate": "advancements.daboismod.dabois.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "daboismod:textures/gui/advancements/backgrounds/dabois.png"
+  },
+  "criteria": {
+    "ancient_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+      	"items": [
+          {
+            "item": "daboismod:ancient_ore"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ancient_ore"
+    ]
+  ]
+}
