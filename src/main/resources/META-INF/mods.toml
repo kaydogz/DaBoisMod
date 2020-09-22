@@ -3,10 +3,10 @@ loaderVersion="[31,)" #mandatory
 
 [[mods]] #mandatory
 modId="daboismod" #mandatory
-version="0.4.6" #mandatory
+version="0.5.0" #mandatory
 
 displayName="Da Bois Mod" #mandatory
-displayURL="" #optional
+displayURL="https://github.com/kaydogz/DaBoisMod" #optional
 
 credits="Thanks to all of Da Bois for the inspiration and fun times!" #optional
 authors="Kaydogz" #optional
@@ -22,7 +22,6 @@ Praise Jacob.
     versionRange="[31,)" #mandatory
     ordering="NONE"
     side="BOTH"
-# Here's another dependency
 [[dependencies.daboismod]]
     modId="minecraft"
     mandatory=true
