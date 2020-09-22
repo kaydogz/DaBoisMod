@@ -25,6 +25,7 @@ import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.model.Material;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,11 +52,17 @@ public class ClientHandler {
 
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-        DeferredWorkQueue.runLater(DBMWoodType::registerToSignMaterials);
+        DeferredWorkQueue.runLater(() -> {
+            DBMWoodType.getCustomValues().forEach((woodType) -> Atlases.SIGN_MATERIALS.put(woodType, getSignMaterial(woodType)));
+        });
         DBMKeyBindings.registerKeyBindings();
         DBMRenderManager.registerEntityRenderers();
         DBMRenderManager.bindTileEntityRenderers();
         DBMRenderManager.applyRenderLayers();
+    }
+
+    public static Material getSignMaterial(DBMWoodType woodType) {
+        return new Material(Atlases.SIGN_ATLAS, DaBoisMod.modLocation("entity/signs/" + woodType.getName()));
     }
 
     @Mod.EventBusSubscriber(modid = DaBoisMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

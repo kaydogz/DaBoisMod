@@ -1,6 +1,7 @@
 package com.github.kaydogz.daboismod.client.renderer;
 
 import com.github.kaydogz.daboismod.block.DBMWoodType;
+import com.github.kaydogz.daboismod.client.ClientHandler;
 import com.github.kaydogz.daboismod.tileentity.DBMSignTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -86,7 +87,7 @@ public class DBMSignTileEntityRenderer extends TileEntityRenderer<DBMSignTileEnt
             woodtype = DBMWoodType.padauk;
         }
 
-        return ((DBMWoodType) woodtype).getSignMaterial();
+        return ClientHandler.getSignMaterial((DBMWoodType) woodtype);
     }
 
     public static final class DBMSignModel extends Model {
