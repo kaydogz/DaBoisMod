@@ -4,6 +4,8 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.block.DBMBlocks;
 import com.github.kaydogz.daboismod.block.DBMWoodType;
 import com.github.kaydogz.daboismod.block.trees.PadaukTree;
+import com.github.kaydogz.daboismod.capability.base.IGodsCrownCap;
+import com.github.kaydogz.daboismod.capability.provider.GodsCrownCapability;
 import com.github.kaydogz.daboismod.client.gui.DBMEditSignScreen;
 import com.github.kaydogz.daboismod.client.gui.QuestScreen;
 import com.github.kaydogz.daboismod.client.renderer.DBMRenderManager;
@@ -40,6 +42,7 @@ import net.minecraft.world.GrassColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
@@ -50,11 +53,10 @@ import java.awt.*;
 
 public class ClientHandler {
 
+    @SuppressWarnings("deprecation")
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-        DeferredWorkQueue.runLater(() -> {
-            DBMWoodType.getCustomValues().forEach((woodType) -> Atlases.SIGN_MATERIALS.put(woodType, getSignMaterial(woodType)));
-        });
+        DeferredWorkQueue.runLater(() -> DBMWoodType.getCustomValues().forEach((woodType) -> Atlases.SIGN_MATERIALS.put(woodType, getSignMaterial(woodType))));
         DBMKeyBindings.registerKeyBindings();
         DBMRenderManager.registerEntityRenderers();
         DBMRenderManager.bindTileEntityRenderers();
@@ -86,12 +88,8 @@ public class ClientHandler {
 
         @SubscribeEvent
         public static void onItemColorHandler(final ColorHandlerEvent.Item event) {
-            event.getItemColors().register((stackIn, valIn) -> {
-                return event.getBlockColors().getColor(((BlockItem) stackIn.getItem()).getBlock().getDefaultState(), null, null, valIn);
-            }, DBMBlocks.BOTSWANIAN_GRASS_BLOCK.get(), DBMBlocks.BOTSWANIAN_GRASS.get(), DBMBlocks.BOTSWANIAN_TALL_GRASS.get());
-            event.getItemColors().register((stackIn, valIn) -> {
-                return event.getBlockColors().getColor(((BlockItem) stackIn.getItem()).getBlock().getDefaultState(), null, null, valIn);
-            }, DBMItems.PADAUK_LEAVES.get());
+            event.getItemColors().register((stackIn, valIn) -> event.getBlockColors().getColor(((BlockItem) stackIn.getItem()).getBlock().getDefaultState(), null, null, valIn), DBMBlocks.BOTSWANIAN_GRASS_BLOCK.get(), DBMBlocks.BOTSWANIAN_GRASS.get(), DBMBlocks.BOTSWANIAN_TALL_GRASS.get());
+            event.getItemColors().register((stackIn, valIn) -> event.getBlockColors().getColor(((BlockItem) stackIn.getItem()).getBlock().getDefaultState(), null, null, valIn), DBMItems.PADAUK_LEAVES.get());
         }
     }
 
@@ -120,7 +118,26 @@ public class ClientHandler {
 
                     // Activate God's Crown
                     if (DBMKeyBindings.activate_gods_crown.isActiveAndMatches(keyInput)) {
-                        DBMPacketHandler.sendToServer(new CToggleGodsCrownActivationPacket(true));
+                        ItemStack headSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+                        if (headSlotStack.getItem() instanceof GodsCrownItem) {
+                            LazyOptional<IGodsCrownCap> lazyCap = GodsCrownCapability.getCapabilityOf(headSlotStack);
+                            if (lazyCap.isPresent()) {
+                                IGodsCrownCap crownCap = DaBoisMod.get(lazyCap);
+                                boolean activated = !crownCap.isActivated();
+                                crownCap.setActivated(activated);
+
+                                DBMPacketHandler.sendToServer(new CToggleGodsCrownActivationPacket(true));
+
+                                Item insertedItem = crownCap.getInsertedGem().getItem();
+                                if (insertedItem instanceof CryptidGemItem) {
+                                    if (activated) {
+                                        ((CryptidGemItem) insertedItem).onActivation(headSlotStack, minecraft.player);
+                                    } else {
+                                        ((CryptidGemItem) insertedItem).onDeactivation(headSlotStack, minecraft.player);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -144,9 +161,9 @@ public class ClientHandler {
                 MainWindow window = minecraft.getMainWindow();
                 Tessellator tessellator = Tessellator.getInstance();
                 tessellator.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
-                tessellator.getBuffer().pos(0.0D, (double) window.getScaledHeight(), -90.0D).tex(0.0F, 1.0F).endVertex();
-                tessellator.getBuffer().pos((double) window.getScaledWidth(), (double) window.getScaledHeight(), -90.0D).tex(1.0F, 1.0F).endVertex();
-                tessellator.getBuffer().pos((double) window.getScaledWidth(), 0.0D, -90.0D).tex(1.0F, 0.0F).endVertex();
+                tessellator.getBuffer().pos(0.0D, window.getScaledHeight(), -90.0D).tex(0.0F, 1.0F).endVertex();
+                tessellator.getBuffer().pos(window.getScaledWidth(), window.getScaledHeight(), -90.0D).tex(1.0F, 1.0F).endVertex();
+                tessellator.getBuffer().pos(window.getScaledWidth(), 0.0D, -90.0D).tex(1.0F, 0.0F).endVertex();
                 tessellator.getBuffer().pos(0.0D, 0.0D, -90.0D).tex(0.0F, 0.0F).endVertex();
                 tessellator.draw();
                 RenderSystem.depthMask(true);
@@ -164,8 +181,9 @@ public class ClientHandler {
             if (minecraft.player != null) {
                 ItemStack helmetSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
                 if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                    Item insertedItem = GodsCrownHelper.getInsertedGem(helmetSlotStack).getItem();
-                    if (insertedItem instanceof CryptidGemItem) ((CryptidGemItem) insertedItem).onActivatedRenderWorldLast(
+                    ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
+                    if (insertedStack.getItem() instanceof CryptidGemItem) ((CryptidGemItem) insertedStack.getItem()).onActivatedRenderWorldLast(
+                            insertedStack,
                             event.getContext(),
                             event.getMatrixStack(),
                             event.getPartialTicks(),
@@ -183,8 +201,9 @@ public class ClientHandler {
             // Pre Activated Cryptid Gem Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                Item insertedItem = GodsCrownHelper.getInsertedGem(helmetSlotStack).getItem();
-                if (insertedItem instanceof CryptidGemItem) event.setCanceled(((CryptidGemItem) insertedItem).preRenderActivatedPlayer(
+                ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
+                if (insertedStack.getItem() instanceof CryptidGemItem) event.setCanceled(((CryptidGemItem) insertedStack.getItem()).preRenderActivatedPlayer(
+                        insertedStack,
                         event.getPlayer(),
                         event.getRenderer(),
                         event.getPartialRenderTick(),
@@ -202,8 +221,9 @@ public class ClientHandler {
             // Post Activated Cryptid Gem Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                Item insertedItem = GodsCrownHelper.getInsertedGem(helmetSlotStack).getItem();
-                if (insertedItem instanceof CryptidGemItem) ((CryptidGemItem) insertedItem).postRenderActivatedPlayer(
+                ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
+                if (insertedStack.getItem() instanceof CryptidGemItem) ((CryptidGemItem) insertedStack.getItem()).postRenderActivatedPlayer(
+                        insertedStack,
                         event.getPlayer(),
                         event.getRenderer(),
                         event.getPartialRenderTick(),

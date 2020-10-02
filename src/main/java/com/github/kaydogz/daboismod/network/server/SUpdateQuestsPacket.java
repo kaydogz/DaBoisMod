@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.ClientPacketHandler;
+import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
 import com.github.kaydogz.daboismod.quest.Quest;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -15,8 +15,8 @@ import java.util.function.Supplier;
 
 public class SUpdateQuestsPacket {
 	
-	public final ArrayList<Quest> quests;
-	public final int playerId;
+	private final ArrayList<Quest> quests;
+	private final int playerId;
 
 	public SUpdateQuestsPacket(ArrayList<Quest> quests, int playerId) {
 		this.quests = quests;
@@ -40,8 +40,7 @@ public class SUpdateQuestsPacket {
 		if (tag != null && tag.contains("Quests", Constants.NBT.TAG_LIST)) {
 			((ListNBT) tag.get("Quests")).forEach((data) -> {
 				if (data instanceof CompoundNBT) {
-					CompoundNBT questTag = (CompoundNBT) data;
-					Quest quest = Quest.read(questTag);
+					Quest quest = Quest.read((CompoundNBT) data);
 					if (quest != null) quests.add(quest);
 				}
 			});
@@ -52,9 +51,7 @@ public class SUpdateQuestsPacket {
 	public static class Handler {
 		
 		public static void handle(final SUpdateQuestsPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateQuests(msg, ctx));
-			});
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleUpdateQuests(msg.quests, msg.playerId, ctx)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

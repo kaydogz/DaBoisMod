@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.ClientPacketHandler;
+import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class SPlaySoundPacket {
 
-	public final SoundEvent sound;
-	public final boolean global;
+	private final SoundEvent sound;
+	private final boolean global;
 	
 	public SPlaySoundPacket(SoundEvent sound, boolean global) {
 		this.sound = sound;
@@ -32,9 +32,7 @@ public class SPlaySoundPacket {
 	public static class Handler {
 		
 		public static void handle(final SPlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePlaySound(msg, ctx));
-			});
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handlePlaySound(msg.sound, msg.global, ctx)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

@@ -1,8 +1,6 @@
 package com.github.kaydogz.daboismod.entity;
 
 import com.github.kaydogz.daboismod.item.DBMItems;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
-import com.github.kaydogz.daboismod.network.server.SSasquatchSmashLaunchPacket;
 import com.github.kaydogz.daboismod.tags.DBMBlockTags;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
 import net.minecraft.block.Block;
@@ -19,11 +17,11 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,9 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfo.Color;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
 
 public class SasquatchEntity extends CryptidEntity {
@@ -138,13 +136,15 @@ public class SasquatchEntity extends CryptidEntity {
 	@Override
 	public boolean onLivingFall(float distance, float damageMultiplier) {
 		if (this.dataManager.get(SasquatchEntity.IS_GIANT) && distance > 10.0F) {
-			List<Entity> entities = this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(7.0D, 2.0D, 7.0D), (entity) -> entity instanceof LivingEntity && entity.onGround);
-			entities.forEach((entity) -> {
-				if (!(entity instanceof ServerPlayerEntity)) entity.setMotion(entity.getMotion().add(0.0D, 1.5D, 0.0D));
-			});
-			
-			this.bossInfo.getPlayers().forEach((player) -> DBMPacketHandler.sendToPlayer(new SSasquatchSmashLaunchPacket(entities.contains(player), this.getPosition()), player));
-			
+			for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(7.0D, 2.0D, 7.0D), (entity) -> entity instanceof LivingEntity && entity.onGround)) {
+				entity.setMotion(entity.getMotion().add(0.0D, 1.5D, 0.0D));
+			}
+
+			double particleSpeedRadius = 0.5D;
+			for (int i = 0; i < 16; i++) {
+				this.world.addParticle(ParticleTypes.CLOUD, this.getPosX(), this.getPosY(), this.getPosZ(), particleSpeedRadius * Math.cos(i * Math.PI / 8), 0.1D, particleSpeedRadius * Math.sin(i * Math.PI / 8));
+			}
+
 			this.playSound(this.getSmashSound(), 3.0F, 1.0F);
 			return false;
 		}

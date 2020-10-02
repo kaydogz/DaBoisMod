@@ -72,11 +72,11 @@
 	"gui.daboismod.quest.claim": "Claim Reward",
 	"gui.daboismod.quest.cancel": "Cancel Quest",
 	"gui.daboismod.quest.difficulty": "Difficulty: %s",
-	"gui.daboismod.quest.difficulty.veryEasy": "Very Easy",
+	"gui.daboismod.quest.difficulty.very_easy": "Very Easy",
 	"gui.daboismod.quest.difficulty.easy": "Easy",
 	"gui.daboismod.quest.difficulty.medium": "Medium",
 	"gui.daboismod.quest.difficulty.hard": "Hard",
-	"gui.daboismod.quest.difficulty.veryHard": "Very Hard",
+	"gui.daboismod.quest.difficulty.very_hard": "Very Hard",
 
 	"item.daboismod.sasquatch_spawn_egg": "Sasquatch Spawn Egg",
 	"item.daboismod.werewolf_spawn_egg": "Werewolf Spawn Egg",

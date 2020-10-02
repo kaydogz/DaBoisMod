@@ -1,17 +1,17 @@
 package com.github.kaydogz.daboismod.quest;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.event.DBMEventHooks;
+import com.github.kaydogz.daboismod.world.storage.loot.DBMLootParameterSets;
+import com.github.kaydogz.daboismod.world.storage.loot.DBMLootParameters;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.LootTables;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 import java.util.UUID;
 
 public class Quest {
@@ -25,70 +25,47 @@ public class Quest {
 	protected final QuestTask task;
 	protected final Difficulty difficulty;
 	protected final UUID uniqueId;
-	protected final Random rand = new Random();
 
-	public Quest() {
-		this.task = QuestHelper.getRandomTask(this.rand);
-		this.quota = task.getRandomQuota(this.rand);
-		this.count = 0;
-		this.difficulty = QuestHelper.getAppropriateDifficulty(this);
-		this.completed = this.count >= this.quota;
-		final Pair<ItemStack, Integer> rewardPair = DBMEventHooks.getQuestReward(this, QuestHelper.getRandomReward(this), 15 * quota / task.getMaxQuota());
-		this.reward = rewardPair.getLeft();
-		this.experience = rewardPair.getRight();
-		this.uniqueId = UUID.randomUUID();
+	public Quest(ServerWorld world) {
+		this(world, QuestHelper.getRandomTask(world.getRandom()));
 	}
 	
-	public Quest(QuestTask task) {
-		this.task = task;
-		this.quota = task.getRandomQuota(this.rand);
-		this.count = 0;
-		this.difficulty = QuestHelper.getAppropriateDifficulty(this);
-		this.completed = this.count >= this.quota;
-		final Pair<ItemStack, Integer> rewardPair = DBMEventHooks.getQuestReward(this, QuestHelper.getRandomReward(this), 15 * quota / task.getMaxQuota());
-		this.reward = rewardPair.getLeft();
-		this.experience = rewardPair.getRight();
-		this.uniqueId = UUID.randomUUID();
+	public Quest(ServerWorld world, QuestTask task) {
+		this(world, task, task.getRandomQuota(world.getRandom()));
 	}
 
-	public Quest(QuestTask task, int quota) {
+	public Quest(ServerWorld world, QuestTask task, int quota) {
 		this.task = task;
 		this.quota = quota;
 		this.count = 0;
-		this.difficulty = QuestHelper.getAppropriateDifficulty(this);
+		this.difficulty = Difficulty.getAppropriateDifficulty(quota, task);
 		this.completed = this.count >= this.quota;
-		final Pair<ItemStack, Integer> rewardPair = DBMEventHooks.getQuestReward(this, QuestHelper.getRandomReward(this), 16 * quota / task.getMaxQuota());
-		this.reward = rewardPair.getLeft();
-		this.experience = rewardPair.getRight();
+		this.reward = this.getLootTableReward(world);
+		this.experience = 16 * quota / task.getMaxQuota();
 		this.uniqueId = UUID.randomUUID();
 	}
 
-	/**
-	 * Not meant for in game use, this is just used for the command and data syncing.
-	 */
 	public Quest(QuestTask task, int quota, int count, ItemStack reward, int experience, UUID uniqueId) {
+		this(task, quota, count, Difficulty.getAppropriateDifficulty(quota, task), reward, experience, uniqueId);
+	}
+
+	private Quest(QuestTask task, int quota, int count, Difficulty difficulty, ItemStack reward, int experience, UUID uniqueId) {
 		this.task = task;
 		this.quota = quota;
 		this.count = count;
 		this.reward = reward;
-		this.difficulty = QuestHelper.getAppropriateDifficulty(this);
+		this.difficulty = difficulty;
 		this.completed = this.count >= this.quota;
 		this.experience = experience;
 		this.uniqueId = uniqueId;
 	}
 
-	public CompoundNBT write(CompoundNBT tag) {
-		tag.putString("QuestTask", this.getQuestTask().getRegistryName().toString());
-		tag.putInt("Quota", this.getQuota());
-		tag.putInt("Count", this.getCount());
-		tag.put("Reward", this.getReward().serializeNBT());
-		tag.putInt("Experience", this.getExperience());
-		tag.putUniqueId("UUID", this.uniqueId);
-		return tag;
-	}
-
+	/**
+	 * Use {@code Quest.read(compound)} instead.
+	 */
+	@Deprecated
 	private Quest(CompoundNBT compound) {
-		this(QuestTasks.QUEST_TASKS_REGISTRY.get().getValue(new ResourceLocation(compound.getString("QuestTask"))), compound.getInt("Quota"), compound.getInt("Count"), ItemStack.read(compound.getCompound("Reward")), compound.getInt("Experience"), compound.getUniqueId("UUID"));
+		this(QuestTasks.QUEST_TASKS_REGISTRY.get().getValue(new ResourceLocation(compound.getString("QuestTask"))), compound.getInt("Quota"), compound.getInt("Count"), Difficulty.fromString(compound.getString("Difficulty")), ItemStack.read(compound.getCompound("Reward")), compound.getInt("Experience"), compound.getUniqueId("UUID"));
 	}
 
 	@Nullable
@@ -101,17 +78,40 @@ public class Quest {
 		}
 	}
 
+	public CompoundNBT write(CompoundNBT tag) {
+		tag.putString("QuestTask", this.getQuestTask().getRegistryName().toString());
+		tag.putInt("Quota", this.getQuota());
+		tag.putInt("Count", this.getCount());
+		tag.putString("Difficulty", this.getDifficulty().toString().toLowerCase());
+		tag.put("Reward", this.getReward().serializeNBT());
+		tag.putInt("Experience", this.getExperience());
+		tag.putUniqueId("UUID", this.getUniqueId());
+		return tag;
+	}
+
+	public void increaseCount() {
+		this.count++;
+		this.completed = this.count >= this.quota;
+	}
+
+	protected ItemStack getLootTableReward(ServerWorld worldIn) {
+		ResourceLocation location = this.difficulty.getLootTableResourceLocation();
+		if (location == LootTables.EMPTY) {
+			return ItemStack.EMPTY;
+		} else {
+			LootContext.Builder builder = (new LootContext.Builder(worldIn)).withRandom(worldIn.getRandom()).withParameter(DBMLootParameters.QUEST, this);
+			LootContext lootcontext = builder.build(DBMLootParameterSets.QUEST);
+			LootTable loottable = lootcontext.getWorld().getServer().getLootTableManager().getLootTableFromLocation(location);
+			return loottable.generate(lootcontext).get(0);
+		}
+	}
+
 	public ItemStack getReward() {
 		return this.reward;
 	}
 
 	public int getCount() {
 		return this.count;
-	}
-	
-	public void increaseCount() {
-		this.count = Math.min(this.task.getMaxQuota(), this.count + 1);
-		this.completed = this.count >= this.quota;
 	}
 	
 	public Difficulty getDifficulty() {
@@ -142,26 +142,6 @@ public class Quest {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Quest)) return false;
-		Quest quest = (Quest) o;
-		return quest.uniqueId.equals(this.uniqueId);
-	}
-
-	public enum Difficulty {
-		VERY_EASY("gui.daboismod.quest.difficulty.veryEasy", TextFormatting.GREEN),
-		EASY("gui.daboismod.quest.difficulty.easy", TextFormatting.DARK_GREEN),
-		MEDIUM("gui.daboismod.quest.difficulty.medium", TextFormatting.YELLOW),
-		HARD("gui.daboismod.quest.difficulty.hard", TextFormatting.RED),
-		VERY_HARD("gui.daboismod.quest.difficulty.veryHard", TextFormatting.DARK_RED);
-		
-		private final ITextComponent textComponent;
-
-		Difficulty(String translationKeyIn, TextFormatting colorIn) {
-			this.textComponent = new TranslationTextComponent(translationKeyIn);
-			this.textComponent.getStyle().setColor(colorIn).setBold(true);
-		}
-		
-		public ITextComponent getTextComponent() {
-			return this.textComponent;
-		}
+		return ((Quest) o).uniqueId.equals(this.uniqueId);
 	}
 }

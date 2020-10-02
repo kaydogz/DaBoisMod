@@ -1,6 +1,7 @@
 package com.github.kaydogz.daboismod.quest;
 
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
@@ -15,8 +16,8 @@ public abstract class QuestTask extends ForgeRegistryEntry<QuestTask> {
 	private String translationKey;
 	
 	public QuestTask(int minQuota, int maxQuota) {
-		this.minQuota = minQuota;
-		this.maxQuota = maxQuota;
+		this.maxQuota = Math.max(1, maxQuota);
+		this.minQuota = MathHelper.clamp(minQuota, 0, this.maxQuota - 1);
 	}
 
 	public int getMinQuota() {
@@ -28,18 +29,15 @@ public abstract class QuestTask extends ForgeRegistryEntry<QuestTask> {
 	}
 
 	/**
-	 * Both min and max quota are inclusive.
+	 * Gets a random quota between the min and max quotas. Both min and max quotas are inclusive.
 	 * @return a random quota between the bounds.
 	 */
 	public int getRandomQuota(Random rand) {
-		return rand.nextInt(1 + this.maxQuota - this.minQuota) + this.minQuota;
+		return rand.nextInt(1 + this.getMaxQuota() - this.getMinQuota()) + this.getMinQuota();
 	}
 	
 	protected String getDefaultTranslationKey() {
-		if (this.translationKey == null) {
-			this.translationKey = Util.makeTranslationKey("questTask", QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(this));
-	    }
-	    return this.translationKey;
+	    return this.translationKey == null ? this.translationKey = Util.makeTranslationKey("questTask", QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(this)) : this.translationKey;
 	}
 	
 	public String getTranslationKey() {

@@ -8,6 +8,8 @@ import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
 import com.github.kaydogz.daboismod.client.DBMKeyBindings;
 import com.github.kaydogz.daboismod.command.QuestCommand;
 import com.github.kaydogz.daboismod.command.TravelCommand;
+import com.github.kaydogz.daboismod.command.argument.DBMArgumentTypes;
+import com.github.kaydogz.daboismod.data.DBMLootTables;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.CryptidGemItem;
 import com.github.kaydogz.daboismod.item.GodsCrownHelper;
@@ -24,6 +26,7 @@ import com.github.kaydogz.daboismod.world.dimension.DBMDimensionTypes;
 import com.github.kaydogz.daboismod.world.dimension.RealmOfTheAncientsDimension;
 import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
 import com.github.kaydogz.daboismod.world.gen.feature.structure.DBMStructurePieceTypes;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,18 +51,37 @@ import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 public class CommonHandler {
 
+	@SuppressWarnings("deprecation")
 	public static void onCommonSetup(final FMLCommonSetupEvent event) {
 
 		DBMStructurePieceTypes.registerStructurePieceTypes();
 		DBMPacketHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
 		DBMGeneration.createFeatureConfigs();
-		DeferredWorkQueue.runLater(DBMGeneration::setupGeneration);
+		DeferredWorkQueue.runLater(() -> {
+			DBMGeneration.setupGeneration();
+			DBMArgumentTypes.registerSerializers();
+		});
 		DBMStats.registerStats();
+	}
+
+	@Mod.EventBusSubscriber(modid = DaBoisMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+	public static class ModEvents {
+
+		@SubscribeEvent
+		public static void onGatherData(final GatherDataEvent event) {
+			final DataGenerator generator = event.getGenerator();
+
+			// Server Data
+			if (event.includeServer()) {
+				generator.addProvider(new DBMLootTables(generator));
+			}
+		}
 	}
 
 	@Mod.EventBusSubscriber(modid = DaBoisMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -121,8 +143,9 @@ public class CommonHandler {
 				// Activated Cryptid Gem Eye Height Changing
 				ItemStack helmetSlotStack = (player.inventory != null) ? player.getItemStackFromSlot(EquipmentSlotType.HEAD) : ItemStack.EMPTY;
 				if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-					Item insertedItem = GodsCrownHelper.getInsertedGem(helmetSlotStack).getItem();
-					if (insertedItem instanceof CryptidGemItem) event.setNewHeight(((CryptidGemItem) insertedItem).onActivatedPlayerEyeHeight(
+					ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
+					if (insertedStack.getItem() instanceof CryptidGemItem) event.setNewHeight(((CryptidGemItem) insertedStack.getItem()).onActivatedPlayerEyeHeight(
+							insertedStack,
 							player,
 							event.getPose(),
 							event.getSize(),

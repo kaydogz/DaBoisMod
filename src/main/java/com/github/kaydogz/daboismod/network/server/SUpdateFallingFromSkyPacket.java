@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.ClientPacketHandler;
+import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 public class SUpdateFallingFromSkyPacket {
 
-	public final boolean fallingFromSky;
-	public final int entityId;
+	private final boolean fallingFromSky;
+	private final int entityId;
 
 	public SUpdateFallingFromSkyPacket(boolean fallingFromSky, int entityId) {
 		this.fallingFromSky = fallingFromSky;
@@ -30,9 +30,7 @@ public class SUpdateFallingFromSkyPacket {
 	public static class Handler {
 		
 		public static void handle(final SUpdateFallingFromSkyPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateFallingFromSky(msg, ctx));
-			});
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleUpdateFallingFromSky(msg.fallingFromSky, msg.entityId, ctx)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

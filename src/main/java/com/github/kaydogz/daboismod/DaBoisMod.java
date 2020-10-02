@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 public class DaBoisMod {
 	
 	public static final String MODID = "daboismod";
+	public static final String FORMATTED_NAME = "DaBoisMod";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 	
 	public DaBoisMod() {

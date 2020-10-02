@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.ClientPacketHandler;
+import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 public class SUpdateMagneticPacket {
 
-    public final boolean magnetic;
-    public final int playerId;
+    private final boolean magnetic;
+    private final int playerId;
 
     public SUpdateMagneticPacket(boolean magnetic, int playerId) {
         this.magnetic = magnetic;
@@ -30,9 +30,7 @@ public class SUpdateMagneticPacket {
     public static class Handler {
 
         public static void handle(final SUpdateMagneticPacket msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> {
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateMagnetic(msg, ctx));
-            });
+            ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleUpdateMagnetic(msg.magnetic, msg.playerId, ctx)));
             ctx.get().setPacketHandled(true);
         }
     }

@@ -8,12 +8,15 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class GodsCrownItem extends ArmorItem {
@@ -41,6 +44,28 @@ public class GodsCrownItem extends ArmorItem {
 			TranslationTextComponent activatedComponent = new TranslationTextComponent(isActivated ? "item.daboismod.gods_crown.on" : "item.daboismod.gods_crown.off");
 			activatedComponent.getStyle().setColor(isActivated ? TextFormatting.GREEN : TextFormatting.RED);
 			tooltip.add(new TranslationTextComponent("item.daboismod.gods_crown.activated", activatedComponent.getFormattedText()));
+		}
+	}
+
+	@Nullable
+	@Override
+	public CompoundNBT getShareTag(ItemStack stack) {
+		CompoundNBT tag = stack.getOrCreateTag();
+		IGodsCrownCap cap = DaBoisMod.get(GodsCrownCapability.getCapabilityOf(stack));
+		tag.putBoolean("Activated", cap.isActivated());
+		tag.put("InsertedGem", cap.getInsertedGem().serializeNBT());
+
+		return tag;
+	}
+
+	@Override
+	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
+		super.readShareTag(stack, nbt);
+
+		if (nbt != null) {
+			IGodsCrownCap cap = DaBoisMod.get(GodsCrownCapability.getCapabilityOf(stack));
+			if (nbt.contains("Activated", Constants.NBT.TAG_BYTE)) cap.setActivated(nbt.getBoolean("Activated"));
+			if (nbt.contains("InsertedGem", Constants.NBT.TAG_COMPOUND)) cap.setInsertedGem(ItemStack.read(nbt.getCompound("InsertedGem")));
 		}
 	}
 }

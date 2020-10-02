@@ -1,6 +1,7 @@
 package com.github.kaydogz.daboismod.item;
 
 import com.github.kaydogz.daboismod.entity.FireImmuneItemEntity;
+import com.github.kaydogz.daboismod.event.DBMEventHooks;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
@@ -56,6 +57,7 @@ public abstract class CryptidGemItem extends Item {
 
 	/**
 	 * Fired before a player with an activated God's Crown with this gem renders.
+	 * @param stackIn the gem stack.
 	 * @param playerIn the player.
 	 * @param rendererIn the player's renderer.
 	 * @param partialRenderTickIn the partial render tick.
@@ -64,12 +66,13 @@ public abstract class CryptidGemItem extends Item {
 	 * @param lightIn the amount of light.
 	 * @return if the rendering should be canceled.
 	 */
-	public boolean preRenderActivatedPlayer(PlayerEntity playerIn, PlayerRenderer rendererIn, float partialRenderTickIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int lightIn) {
+	public boolean preRenderActivatedPlayer(ItemStack stackIn, PlayerEntity playerIn, PlayerRenderer rendererIn, float partialRenderTickIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int lightIn) {
 		return false;
 	}
 
 	/**
 	 * Fired after a player with an activated God's Crown with this gem renders.
+	 * @param stackIn the gem stack.
 	 * @param playerIn the player.
 	 * @param rendererIn the player's renderer.
 	 * @param partialRenderTickIn the partial render tick.
@@ -77,27 +80,29 @@ public abstract class CryptidGemItem extends Item {
 	 * @param bufferIn the {@link IRenderTypeBuffer} used for rendering.
 	 * @param lightIn the amount of light.
 	 */
-	public void postRenderActivatedPlayer(PlayerEntity playerIn, PlayerRenderer rendererIn, float partialRenderTickIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int lightIn) {}
+	public void postRenderActivatedPlayer(ItemStack stackIn, PlayerEntity playerIn, PlayerRenderer rendererIn, float partialRenderTickIn, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int lightIn) {}
 
 	/**
 	 * Fired whenever a player's eye height changes or adjusts.
+	 * @param stackIn the gem stack.
 	 * @param playerIn the player.
 	 * @param poseIn the player's pose.
 	 * @param sizeIn the size of the player.
 	 * @param oldHeight the previous eye height of the player.
 	 * @return what the new height should be.
 	 */
-	public float onActivatedPlayerEyeHeight(PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldHeight) {
+	public float onActivatedPlayerEyeHeight(ItemStack stackIn, PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldHeight) {
 		return oldHeight;
 	}
 
 	/**
 	 * Fired when the world renders.
+	 * @param stackIn the gem stack.
 	 * @param contextIn the world renderer.
 	 * @param matrixStackIn the {@link MatrixStack} used for rendering.
 	 * @param partialTicksIn the partial ticks used for rendering.
 	 * @param projectionMatrixIn the projection {@link Matrix4f}.
 	 * @param finishTimeNanoIn the finish time nano.
 	 */
-	public void onActivatedRenderWorldLast(WorldRenderer contextIn, MatrixStack matrixStackIn, float partialTicksIn, Matrix4f projectionMatrixIn, long finishTimeNanoIn) {}
+	public void onActivatedRenderWorldLast(ItemStack stackIn, WorldRenderer contextIn, MatrixStack matrixStackIn, float partialTicksIn, Matrix4f projectionMatrixIn, long finishTimeNanoIn) {}
 }

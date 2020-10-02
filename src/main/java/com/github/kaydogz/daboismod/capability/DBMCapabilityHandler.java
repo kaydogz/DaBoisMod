@@ -4,11 +4,9 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.base.IGodsCrownCap;
 import com.github.kaydogz.daboismod.capability.base.ILivingCap;
 import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
-import com.github.kaydogz.daboismod.capability.base.IQuestScrollCap;
 import com.github.kaydogz.daboismod.capability.provider.GodsCrownCapability;
 import com.github.kaydogz.daboismod.capability.provider.LivingCapability;
 import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
-import com.github.kaydogz.daboismod.capability.provider.QuestScrollCapability;
 import com.github.kaydogz.daboismod.item.GodsCrownItem;
 import com.github.kaydogz.daboismod.item.QuestScrollItem;
 import net.minecraft.entity.Entity;
@@ -30,8 +28,7 @@ public class DBMCapabilityHandler {
 	
 	// Item Stack
 	public static final ResourceLocation GODS_CROWN_CAP_LOCATION = DaBoisMod.modLocation("gods_crown_cap");
-	public static final ResourceLocation QUEST_SCROLL_CAP_LOCATION = DaBoisMod.modLocation("quest_scroll_cap");
-	
+
 	@SubscribeEvent
 	public static void onAttachEntityCapability(final AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof LivingEntity) {
@@ -47,9 +44,6 @@ public class DBMCapabilityHandler {
 		if (event.getObject().getItem() instanceof GodsCrownItem) {
 			event.addCapability(GODS_CROWN_CAP_LOCATION, new GodsCrownCapability());
 		}
-		if (event.getObject().getItem() instanceof QuestScrollItem) {
-			event.addCapability(QUEST_SCROLL_CAP_LOCATION, new QuestScrollCapability());
-		}
 	}
 	
 	/**
@@ -59,6 +53,5 @@ public class DBMCapabilityHandler {
 		CapabilityManager.INSTANCE.register(IGodsCrownCap.class, new GodsCrownCap.Storage(), GodsCrownCap::new);
 		CapabilityManager.INSTANCE.register(ILivingCap.class, new LivingCap.Storage(), LivingCap::new);
 		CapabilityManager.INSTANCE.register(IPlayerCap.class, new PlayerCap.Storage(), PlayerCap::new);
-		CapabilityManager.INSTANCE.register(IQuestScrollCap.class, new QuestScrollCap.Storage(), QuestScrollCap::new);
 	}
 }

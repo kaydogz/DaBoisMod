@@ -31,7 +31,6 @@ public class DBMPacketHandler {
 		// Server to Client
 		HANDLER.registerMessage(packetId++, SUpdateQuestsPacket.class, SUpdateQuestsPacket::encode, SUpdateQuestsPacket::decode, SUpdateQuestsPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SDisplayItemActivationPacket.class, SDisplayItemActivationPacket::encode, SDisplayItemActivationPacket::decode, SDisplayItemActivationPacket.Handler::handle);
-		HANDLER.registerMessage(packetId++, SSasquatchSmashLaunchPacket.class, SSasquatchSmashLaunchPacket::encode, SSasquatchSmashLaunchPacket::decode, SSasquatchSmashLaunchPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SPlaySoundPacket.class, SPlaySoundPacket::encode, SPlaySoundPacket::decode, SPlaySoundPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SUpdateFallingFromSkyPacket.class, SUpdateFallingFromSkyPacket::encode, SUpdateFallingFromSkyPacket::decode, SUpdateFallingFromSkyPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SUpdateMagneticPacket.class, SUpdateMagneticPacket::encode, SUpdateMagneticPacket::decode, SUpdateMagneticPacket.Handler::handle);
@@ -40,8 +39,9 @@ public class DBMPacketHandler {
 		HANDLER.registerMessage(packetId++, CCancelQuestPacket.class, CCancelQuestPacket::encode, CCancelQuestPacket::decode, CCancelQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CClaimQuestPacket.class, CClaimQuestPacket::encode, CClaimQuestPacket::decode, CClaimQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CUpdateMagneticPacket.class, CUpdateMagneticPacket::encode, CUpdateMagneticPacket::decode, CUpdateMagneticPacket.Handler::handle);
-		HANDLER.registerMessage(packetId++, CToggleGodsCrownActivationPacket.class, CToggleGodsCrownActivationPacket::encode, CToggleGodsCrownActivationPacket::decode, CToggleGodsCrownActivationPacket.Handler::handle);
+		HANDLER.registerMessage(packetId, CToggleGodsCrownActivationPacket.class, CToggleGodsCrownActivationPacket::encode, CToggleGodsCrownActivationPacket::decode, CToggleGodsCrownActivationPacket.Handler::handle);
 	}
+
 	
 	/**
 	 * Sends a packet from a client to the server.
