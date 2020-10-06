@@ -2,6 +2,6 @@
   "replace": false,
   "values": [
     "#daboismod:storage_blocks/ancient",
-    "#daboismod:cryptid_gem_storage_blocks"
+    "#daboismod:gem_storage_blocks"
   ]
 }

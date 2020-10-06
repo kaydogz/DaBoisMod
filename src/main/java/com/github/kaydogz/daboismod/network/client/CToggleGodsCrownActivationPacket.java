@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.client;
 
-import com.github.kaydogz.daboismod.item.GodsCrownHelper;
+import com.github.kaydogz.daboismod.item.CrownHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -28,7 +28,7 @@ public class CToggleGodsCrownActivationPacket {
 		public static void handle(final CToggleGodsCrownActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().enqueueWork(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
-				if (player != null) GodsCrownHelper.toggleActivation(player, msg.sendMessages);
+				if (player != null) CrownHelper.toggleActivation(player, msg.sendMessages);
 			});
 			ctx.get().setPacketHandled(true);
 		}

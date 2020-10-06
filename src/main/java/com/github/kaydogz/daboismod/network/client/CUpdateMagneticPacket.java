@@ -1,8 +1,8 @@
 package com.github.kaydogz.daboismod.network.client;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.server.SUpdateMagneticPacket;
@@ -36,7 +36,7 @@ public class CUpdateMagneticPacket {
 
 				// Make sure request is valid before updating
 				if (!msg.magnetic || MagnetismEnchantment.isHoldingMagneticItem(player)) {
-					IPlayerCap cap = DaBoisMod.get(PlayerCapability.getCapabilityOf(player));
+					IPlayerCapability cap = DaBoisMod.get(PlayerProvider.getCapabilityOf(player));
 					cap.setMagnetic(msg.magnetic);
 					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateMagneticPacket(msg.magnetic, player.getEntityId()), player);
 				}

@@ -7,9 +7,9 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class CryptidGemBlockItem extends BlockItem {
+public class GemBlockItem extends BlockItem {
 
-	public CryptidGemBlockItem(Block blockIn, Properties builder) {
+	public GemBlockItem(Block blockIn, Properties builder) {
 		super(blockIn, builder);
 	}
 
@@ -20,6 +20,7 @@ public class CryptidGemBlockItem extends BlockItem {
 	
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
+		if (world.isRemote) return super.createEntity(world, location, itemstack);
 		FireImmuneItemEntity fireImmuneItem = new FireImmuneItemEntity(world, location.getPosX(), location.getPosY(), location.getPosZ(), itemstack);
 		fireImmuneItem.setMotion(location.getMotion().x, location.getMotion().y, location.getMotion().z);
 		fireImmuneItem.setDefaultPickupDelay();

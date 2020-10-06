@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.capability.provider;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,12 +10,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class PlayerCapability implements ICapabilitySerializable<INBT> {
+public class PlayerProvider implements ICapabilitySerializable<INBT> {
 
-	@CapabilityInject(IPlayerCap.class)
-	public static final Capability<IPlayerCap> PLAYER_CAPABILITY = null;
+	@CapabilityInject(IPlayerCapability.class)
+	public static final Capability<IPlayerCapability> PLAYER_CAPABILITY = null;
 	
-	private final LazyOptional<IPlayerCap> HOLDER = LazyOptional.of(PLAYER_CAPABILITY::getDefaultInstance);
+	private final LazyOptional<IPlayerCapability> HOLDER = LazyOptional.of(PLAYER_CAPABILITY::getDefaultInstance);
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
@@ -32,7 +32,7 @@ public class PlayerCapability implements ICapabilitySerializable<INBT> {
 		PLAYER_CAPABILITY.getStorage().readNBT(PLAYER_CAPABILITY, DaBoisMod.get(this.HOLDER), null, nbt);
 	}
 	
-	public static LazyOptional<IPlayerCap> getCapabilityOf(ICapabilityProvider provider) {
+	public static LazyOptional<IPlayerCapability> getCapabilityOf(ICapabilityProvider provider) {
 		return provider.getCapability(PLAYER_CAPABILITY, null);
 	}
 }

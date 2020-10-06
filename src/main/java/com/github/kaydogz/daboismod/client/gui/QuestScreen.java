@@ -1,8 +1,8 @@
 package com.github.kaydogz.daboismod.client.gui;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.client.CCancelQuestPacket;
 import com.github.kaydogz.daboismod.network.client.CClaimQuestPacket;
@@ -47,7 +47,7 @@ public class QuestScreen extends Screen {
 	 * Updates the current page and quests from the client player.
 	 */
 	public void updateQuests() {
-		LazyOptional<IPlayerCap> playerCap = PlayerCapability.getCapabilityOf(this.minecraft.player);
+		LazyOptional<IPlayerCapability> playerCap = PlayerProvider.getCapabilityOf(this.minecraft.player);
 		if (!playerCap.isPresent()) return;
 
 		// Quests and Current Page

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "daboismod:item/gods_crown"
+        "layer0": "daboismod:item/ruby_crown"
     }
 }

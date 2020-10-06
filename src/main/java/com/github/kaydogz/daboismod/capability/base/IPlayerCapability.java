@@ -4,7 +4,7 @@ import com.github.kaydogz.daboismod.quest.Quest;
 
 import java.util.ArrayList;
 
-public interface IPlayerCap {
+public interface IPlayerCapability {
 
 	ArrayList<Quest> getQuests();
 	void setQuests(ArrayList<Quest> quests);

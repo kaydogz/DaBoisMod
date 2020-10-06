@@ -6,32 +6,32 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public abstract class GodsCrownEvent extends Event {
+public abstract class CrownEvent extends Event {
 
 	private final ItemStack stack;
 	private final PlayerEntity player;
 	
-	protected GodsCrownEvent(ItemStack stackIn, PlayerEntity playerIn) {
+	protected CrownEvent(ItemStack stackIn, PlayerEntity playerIn) {
 		this.stack = stackIn;
 		this.player = playerIn;
 	}
 	
 	public ItemStack getCrownStack() {
-		return stack;
+		return this.stack;
 	}
 	
 	public PlayerEntity getPlayer() {
 		return this.player;
 	}
 	
-	public static class Activate extends GodsCrownEvent {
+	public static class Activate extends CrownEvent {
 
 		public Activate(ItemStack stackIn, PlayerEntity playerIn) {
 			super(stackIn, playerIn);
 		}
 	}
 	
-	public static class Deactivate extends GodsCrownEvent {
+	public static class Deactivate extends CrownEvent {
 
 		public Deactivate(ItemStack stackIn, PlayerEntity playerIn) {
 			super(stackIn, playerIn);

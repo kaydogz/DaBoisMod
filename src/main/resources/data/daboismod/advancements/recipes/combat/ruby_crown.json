@@ -1,0 +1,32 @@
+{
+	  "parent": "minecraft:recipes/root",
+	  "rewards": {
+	    "recipes": [
+	      "daboismod:ruby_crown"
+	    ]
+	  },
+	  "criteria": {
+	    "has_ruby": {
+	      "trigger": "minecraft:inventory_changed",
+	      "conditions": {
+	        "items": [
+	          {
+	            "item": "daboismod:ruby"
+	          }
+	        ]
+	      }
+	    },
+	    "has_the_recipe": {
+	      "trigger": "minecraft:recipe_unlocked",
+	      "conditions": {
+	        "recipe": "daboismod:ruby_crown"
+	      }
+	    }
+	  },
+	  "requirements": [
+	    [
+	      "has_ruby",
+	      "has_the_recipe"
+	    ]
+	  ]
+}

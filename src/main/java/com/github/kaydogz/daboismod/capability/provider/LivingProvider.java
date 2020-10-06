@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.capability.provider;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.ILivingCap;
+import com.github.kaydogz.daboismod.capability.base.ILivingCapability;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,12 +10,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class LivingCapability implements ICapabilitySerializable<INBT> {
+public class LivingProvider implements ICapabilitySerializable<INBT> {
 
-	@CapabilityInject(ILivingCap.class)
-	public static final Capability<ILivingCap> LIVING_CAPABILITY = null;
+	@CapabilityInject(ILivingCapability.class)
+	public static final Capability<ILivingCapability> LIVING_CAPABILITY = null;
 	
-	private final LazyOptional<ILivingCap> HOLDER = LazyOptional.of(LIVING_CAPABILITY::getDefaultInstance);
+	private final LazyOptional<ILivingCapability> HOLDER = LazyOptional.of(LIVING_CAPABILITY::getDefaultInstance);
 	
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
@@ -32,7 +32,7 @@ public class LivingCapability implements ICapabilitySerializable<INBT> {
 		LIVING_CAPABILITY.getStorage().readNBT(LIVING_CAPABILITY, DaBoisMod.get(this.HOLDER), null, nbt);
 	}
 	
-	public static LazyOptional<ILivingCap> getCapabilityOf(ICapabilityProvider provider) {
+	public static LazyOptional<ILivingCapability> getCapabilityOf(ICapabilityProvider provider) {
 		return provider.getCapability(LIVING_CAPABILITY, null);
 	}
 }

@@ -7,7 +7,6 @@ import com.github.kaydogz.daboismod.enchantment.DBMEnchantments;
 import com.github.kaydogz.daboismod.entity.DBMEntities;
 import com.github.kaydogz.daboismod.entity.DBMPaintingTypes;
 import com.github.kaydogz.daboismod.item.DBMItems;
-import com.github.kaydogz.daboismod.item.crafting.DBMRecipeSerializers;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.potion.DBMPotions;
 import com.github.kaydogz.daboismod.quest.QuestTasks;
@@ -50,7 +49,6 @@ public class DaBoisMod {
 		DBMModDimensions.registerModDimensions(eventBus);
 		DBMPaintingTypes.registerPaintingTypes(eventBus);
 		DBMPotions.registerPotions(eventBus);
-		DBMRecipeSerializers.registerRecipeSerializers(eventBus);
 		DBMSoundEvents.registerSoundEvents(eventBus);
 		DBMTileEntities.registerTileEntities(eventBus);
 		QuestTasks.registerQuestTasks(eventBus);

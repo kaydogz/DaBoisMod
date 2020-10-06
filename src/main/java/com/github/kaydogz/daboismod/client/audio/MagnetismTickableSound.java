@@ -1,8 +1,8 @@
 package com.github.kaydogz.daboismod.client.audio;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -34,7 +34,7 @@ public class MagnetismTickableSound extends TickableSound {
 		if (this.player == null || !this.player.isAlive()) {
 			this.donePlaying = true;
 		} else {
-			LazyOptional<IPlayerCap> playerCap = PlayerCapability.getCapabilityOf(this.player);
+			LazyOptional<IPlayerCapability> playerCap = PlayerProvider.getCapabilityOf(this.player);
 			if (!playerCap.isPresent() || !DaBoisMod.get(playerCap).isMagnetic()) this.donePlaying = true;
 			this.x = (float) this.player.getPosX();
 			this.y = (float) this.player.getPosY();

@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.command;
 
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.command.argument.QuestTaskArgument;
 import com.github.kaydogz.daboismod.quest.Quest;
 import com.github.kaydogz.daboismod.quest.QuestHelper;
@@ -60,7 +60,7 @@ public class QuestCommand {
 	private static int assignQuest(CommandSource source, Collection<? extends ServerPlayerEntity> targets, QuestTask task, int quota, ItemStack reward, int experience) throws CommandSyntaxException {
 
 		for (ServerPlayerEntity target : targets) {
-			if (PlayerCapability.getCapabilityOf(target).isPresent()) {
+			if (PlayerProvider.getCapabilityOf(target).isPresent()) {
 				QuestHelper.assignQuest(new Quest(task, quota, 0, reward, experience, UUID.randomUUID()), target);
 			} else {
 				throw ASSIGN_FAILED_EXCEPTION.create(target.getDisplayName());
@@ -80,7 +80,7 @@ public class QuestCommand {
 		int questsCleared = 0;
 
 		for (ServerPlayerEntity target : targets) {
-			if (PlayerCapability.getCapabilityOf(target).isPresent()) questsCleared += QuestHelper.clearQuests(target);
+			if (PlayerProvider.getCapabilityOf(target).isPresent()) questsCleared += QuestHelper.clearQuests(target);
 		}
 
 		if (questsCleared == 0) {

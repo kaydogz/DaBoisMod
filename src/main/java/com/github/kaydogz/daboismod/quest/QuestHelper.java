@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.quest;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,7 +22,7 @@ public class QuestHelper {
      */
     public static void assignQuest(Quest questIn, ServerPlayerEntity playerIn) {
         playerIn.sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + new TranslationTextComponent("gui.daboismod.quest.new").getFormattedText()), true);
-        ArrayList<Quest> quests = DaBoisMod.get(PlayerCapability.getCapabilityOf(playerIn)).getQuests();
+        ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         quests.add(questIn);
         DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
     }
@@ -33,7 +33,7 @@ public class QuestHelper {
      * @return the number of quests cleared.
      */
     public static int clearQuests(ServerPlayerEntity playerIn) {
-        ArrayList<Quest> quests = DaBoisMod.get(PlayerCapability.getCapabilityOf(playerIn)).getQuests();
+        ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         int cleared = quests.size();
         quests.clear();
         DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);

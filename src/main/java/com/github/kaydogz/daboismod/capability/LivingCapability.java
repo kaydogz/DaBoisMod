@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.capability;
 
-import com.github.kaydogz.daboismod.capability.base.ILivingCap;
+import com.github.kaydogz.daboismod.capability.base.ILivingCapability;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.util.Constants;
 
-public class LivingCap implements ILivingCap {
+public class LivingCapability implements ILivingCapability {
 
 	private boolean fallingFromSky = false;
 	private boolean radiated = false;
@@ -33,10 +33,10 @@ public class LivingCap implements ILivingCap {
 		this.radiated = radiated;
 	}
 	
-	public static class Storage implements IStorage<ILivingCap> {
+	public static class Storage implements IStorage<ILivingCapability> {
 
 		@Override
-		public INBT writeNBT(Capability<ILivingCap> capability, ILivingCap instance, Direction side) {
+		public INBT writeNBT(Capability<ILivingCapability> capability, ILivingCapability instance, Direction side) {
 			CompoundNBT tag = new CompoundNBT();
 			tag.putBoolean("FallingFromSky", instance.isFallingFromSky());
 			tag.putBoolean("Radiated", instance.isRadiated());
@@ -44,7 +44,7 @@ public class LivingCap implements ILivingCap {
 		}
 
 		@Override
-		public void readNBT(Capability<ILivingCap> capability, ILivingCap instance, Direction side, INBT nbt) {
+		public void readNBT(Capability<ILivingCapability> capability, ILivingCapability instance, Direction side, INBT nbt) {
 			if (nbt instanceof CompoundNBT) {
 				CompoundNBT tag = (CompoundNBT) nbt;
 				if (tag.contains("FallingFromSky", Constants.NBT.TAG_BYTE)) instance.setFallingFromSky(tag.getBoolean("FallingFromSky"));

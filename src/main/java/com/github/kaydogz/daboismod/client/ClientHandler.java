@@ -4,16 +4,13 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.block.DBMBlocks;
 import com.github.kaydogz.daboismod.block.DBMWoodType;
 import com.github.kaydogz.daboismod.block.trees.PadaukTree;
-import com.github.kaydogz.daboismod.capability.base.IGodsCrownCap;
-import com.github.kaydogz.daboismod.capability.provider.GodsCrownCapability;
+import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
+import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
 import com.github.kaydogz.daboismod.client.gui.DBMEditSignScreen;
 import com.github.kaydogz.daboismod.client.gui.QuestScreen;
 import com.github.kaydogz.daboismod.client.renderer.DBMRenderManager;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
-import com.github.kaydogz.daboismod.item.CryptidGemItem;
-import com.github.kaydogz.daboismod.item.DBMItems;
-import com.github.kaydogz.daboismod.item.GodsCrownHelper;
-import com.github.kaydogz.daboismod.item.GodsCrownItem;
+import com.github.kaydogz.daboismod.item.*;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.client.CToggleGodsCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
@@ -33,7 +30,6 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -116,25 +112,23 @@ public class ClientHandler {
                         DBMPacketHandler.sendToServer(new CUpdateMagneticPacket(true));
                     }
 
-                    // Activate God's Crown
-                    if (DBMKeyBindings.activate_gods_crown.isActiveAndMatches(keyInput)) {
+                    // Activate Crown
+                    if (DBMKeyBindings.activate_crown.isActiveAndMatches(keyInput)) {
                         ItemStack headSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                        if (headSlotStack.getItem() instanceof GodsCrownItem) {
-                            LazyOptional<IGodsCrownCap> lazyCap = GodsCrownCapability.getCapabilityOf(headSlotStack);
+                        if (headSlotStack.getItem() instanceof CrownItem) {
+                            LazyOptional<ICrownCapability> lazyCap = CrownProvider.getCapabilityOf(headSlotStack);
                             if (lazyCap.isPresent()) {
-                                IGodsCrownCap crownCap = DaBoisMod.get(lazyCap);
+                                CrownItem crownItem = (CrownItem) headSlotStack.getItem();
+                                ICrownCapability crownCap = DaBoisMod.get(lazyCap);
                                 boolean activated = !crownCap.isActivated();
                                 crownCap.setActivated(activated);
 
                                 DBMPacketHandler.sendToServer(new CToggleGodsCrownActivationPacket(true));
 
-                                Item insertedItem = crownCap.getInsertedGem().getItem();
-                                if (insertedItem instanceof CryptidGemItem) {
-                                    if (activated) {
-                                        ((CryptidGemItem) insertedItem).onActivation(headSlotStack, minecraft.player);
-                                    } else {
-                                        ((CryptidGemItem) insertedItem).onDeactivation(headSlotStack, minecraft.player);
-                                    }
+                                if (activated) {
+                                    crownItem.onActivation(headSlotStack, minecraft.player);
+                                } else {
+                                    crownItem.onDeactivation(headSlotStack, minecraft.player);
                                 }
                             }
                         }
@@ -180,16 +174,8 @@ public class ClientHandler {
             // Activated Cryptid Gem World Rendering
             if (minecraft.player != null) {
                 ItemStack helmetSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                    ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
-                    if (insertedStack.getItem() instanceof CryptidGemItem) ((CryptidGemItem) insertedStack.getItem()).onActivatedRenderWorldLast(
-                            insertedStack,
-                            event.getContext(),
-                            event.getMatrixStack(),
-                            event.getPartialTicks(),
-                            event.getProjectionMatrix(),
-                            event.getFinishTimeNano()
-                    );
+                if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
+
                 }
             }
         }
@@ -200,17 +186,13 @@ public class ClientHandler {
 
             // Pre Activated Cryptid Gem Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-            if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
-                if (insertedStack.getItem() instanceof CryptidGemItem) event.setCanceled(((CryptidGemItem) insertedStack.getItem()).preRenderActivatedPlayer(
-                        insertedStack,
-                        event.getPlayer(),
-                        event.getRenderer(),
-                        event.getPartialRenderTick(),
-                        event.getMatrixStack(),
-                        event.getBuffers(),
-                        event.getLight()
-                ));
+            if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
+                CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
+                if (crownItem instanceof AmberCrownItem) {
+                    event.getMatrixStack().push();
+                    float scale = ((AmberCrownItem) crownItem).getGiantScale(helmetSlotStack, player);
+                    event.getMatrixStack().scale(scale, scale, scale);
+                }
             }
         }
 
@@ -220,17 +202,11 @@ public class ClientHandler {
 
             // Post Activated Cryptid Gem Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-            if (helmetSlotStack.getItem() instanceof GodsCrownItem && GodsCrownHelper.isActivated(helmetSlotStack)) {
-                ItemStack insertedStack = GodsCrownHelper.getInsertedGem(helmetSlotStack);
-                if (insertedStack.getItem() instanceof CryptidGemItem) ((CryptidGemItem) insertedStack.getItem()).postRenderActivatedPlayer(
-                        insertedStack,
-                        event.getPlayer(),
-                        event.getRenderer(),
-                        event.getPartialRenderTick(),
-                        event.getMatrixStack(),
-                        event.getBuffers(),
-                        event.getLight()
-                );
+            if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
+                CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
+                if (crownItem instanceof AmberCrownItem) {
+                    event.getMatrixStack().pop();
+                }
             }
         }
 

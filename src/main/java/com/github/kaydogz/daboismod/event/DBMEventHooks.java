@@ -10,15 +10,15 @@ public class DBMEventHooks {
      * Returns true if the event was canceled.
      */
     public static boolean onGodsCrownActivation(ItemStack crownStack, PlayerEntity wearer) {
-        GodsCrownEvent.Activate event = new GodsCrownEvent.Activate(crownStack, wearer);
+        CrownEvent.Activate event = new CrownEvent.Activate(crownStack, wearer);
         return MinecraftForge.EVENT_BUS.post(event);
     }
 
     /**
      * Returns true if the event was canceled.
      */
-    public static boolean onGodsCrownDeactivation(ItemStack crownStack, PlayerEntity wearer) {
-        GodsCrownEvent.Deactivate event = new GodsCrownEvent.Deactivate(crownStack, wearer);
+    public static boolean onCrownDeactivation(ItemStack crownStack, PlayerEntity wearer) {
+        CrownEvent.Deactivate event = new CrownEvent.Deactivate(crownStack, wearer);
         return MinecraftForge.EVENT_BUS.post(event);
     }
 }

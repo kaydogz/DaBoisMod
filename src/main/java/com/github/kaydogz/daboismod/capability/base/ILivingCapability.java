@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.capability.base;
 
-public interface ILivingCap {
+public interface ILivingCapability {
 
 	boolean isFallingFromSky();
 	void setFallingFromSky(boolean fallingFromSky);

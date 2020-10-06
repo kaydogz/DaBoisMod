@@ -15,5 +15,5 @@ public class DBMBlockTags {
 	public static final Tag<Block> STORAGE_BLOCKS_AMBER = new BlockTags.Wrapper(DaBoisMod.modLocation("storage_blocks/amber"));
 	public static final Tag<Block> STORAGE_BLOCKS_AMETHYST = new BlockTags.Wrapper(DaBoisMod.modLocation("storage_blocks/amethyst"));
 	public static final Tag<Block> STORAGE_BLOCKS_RUBY = new BlockTags.Wrapper(DaBoisMod.modLocation("storage_blocks/ruby"));
-	public static final Tag<Block> STORAGE_BLOCKS_CRYPTID_GEMS = new BlockTags.Wrapper(DaBoisMod.modLocation("cryptid_gem_storage_blocks"));
+	public static final Tag<Block> STORAGE_BLOCKS_GEMS = new BlockTags.Wrapper(DaBoisMod.modLocation("gem_storage_blocks"));
 }

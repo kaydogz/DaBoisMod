@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A A",
+    "GIG",
+    "GGG"
+  ],
+
+  "key":
+  {
+    "I": { "item": "daboismod:amethyst" },
+    "A": { "item": "daboismod:ancient_ingot" },
+    "G": { "item": "minecraft:gold_ingot" }
+  },
+
+  "result": { "item": "daboismod:amethyst_crown" }
+}

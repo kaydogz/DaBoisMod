@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.capability;
 
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
 import com.github.kaydogz.daboismod.quest.Quest;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 
-public class PlayerCap implements IPlayerCap {
+public class PlayerCapability implements IPlayerCapability {
 
 	private ArrayList<Quest> quests = new ArrayList<>();
 	private boolean magnetic;
@@ -47,10 +47,10 @@ public class PlayerCap implements IPlayerCap {
 		this.quests.remove(quest);
 	}
 
-	public static class Storage implements IStorage<IPlayerCap>  {
+	public static class Storage implements IStorage<IPlayerCapability>  {
 		
 		@Override
-		public INBT writeNBT(Capability<IPlayerCap> capability, IPlayerCap instance, Direction side) {
+		public INBT writeNBT(Capability<IPlayerCapability> capability, IPlayerCapability instance, Direction side) {
 			CompoundNBT tag = new CompoundNBT();
 
 			// Quests
@@ -65,7 +65,7 @@ public class PlayerCap implements IPlayerCap {
 		}
 
 		@Override
-		public void readNBT(Capability<IPlayerCap> capability, IPlayerCap instance, Direction side, INBT nbt) {
+		public void readNBT(Capability<IPlayerCapability> capability, IPlayerCapability instance, Direction side, INBT nbt) {
 			if (nbt instanceof CompoundNBT) {
 				CompoundNBT tag = (CompoundNBT) nbt;
 

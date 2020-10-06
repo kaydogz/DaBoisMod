@@ -9,7 +9,7 @@ public class DBMKeyBindings {
 	
 	public static KeyBinding quest_menu;
 	public static KeyBinding activate_magnetism;
-	public static KeyBinding activate_gods_crown;
+	public static KeyBinding activate_crown;
 	
 	/**
 	 * Registers key bindings for DaBoisMod.
@@ -18,7 +18,7 @@ public class DBMKeyBindings {
 		final String daBoisCategory = new TranslationTextComponent("key.daboismod.categories.daBois").getFormattedText();
 		DBMKeyBindings.quest_menu = registerKeyBinding("key.daboismod.questMenu", GLFW.GLFW_KEY_Z, daBoisCategory);
 		DBMKeyBindings.activate_magnetism = registerKeyBinding("key.daboismod.magnetism", GLFW.GLFW_KEY_R, daBoisCategory);
-		DBMKeyBindings.activate_gods_crown = registerKeyBinding("key.daboismod.godsCrown", GLFW.GLFW_KEY_V, daBoisCategory);
+		DBMKeyBindings.activate_crown = registerKeyBinding("key.daboismod.crown", GLFW.GLFW_KEY_V, daBoisCategory);
 	}
 
 	private static KeyBinding registerKeyBinding(final String translationKeyIn, final int keyCodeIn, final String categoryIn) {

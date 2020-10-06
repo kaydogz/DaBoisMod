@@ -1,8 +1,8 @@
 package com.github.kaydogz.daboismod.network.client;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCap;
-import com.github.kaydogz.daboismod.capability.provider.PlayerCapability;
+import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
+import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
 import com.github.kaydogz.daboismod.quest.Quest;
@@ -36,9 +36,9 @@ public class CCancelQuestPacket {
 			ctx.get().enqueueWork(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
 				if (player != null) {
-					LazyOptional<IPlayerCap> lazyCap = PlayerCapability.getCapabilityOf(player);
+					LazyOptional<IPlayerCapability> lazyCap = PlayerProvider.getCapabilityOf(player);
 					if (lazyCap.isPresent()) {
-						IPlayerCap cap = DaBoisMod.get(lazyCap);
+						IPlayerCapability cap = DaBoisMod.get(lazyCap);
 						if (!msg.quest.isComplete() && cap.getQuests().remove(msg.quest)) {
 							DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(cap.getQuests(), player.getEntityId()), player);
 						}
