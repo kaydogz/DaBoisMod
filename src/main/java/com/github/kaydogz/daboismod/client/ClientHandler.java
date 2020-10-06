@@ -12,7 +12,7 @@ import com.github.kaydogz.daboismod.client.renderer.DBMRenderManager;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.*;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
-import com.github.kaydogz.daboismod.network.client.CToggleGodsCrownActivationPacket;
+import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.tileentity.DBMSignTileEntity;
@@ -123,7 +123,7 @@ public class ClientHandler {
                                 boolean activated = !crownCap.isActivated();
                                 crownCap.setActivated(activated);
 
-                                DBMPacketHandler.sendToServer(new CToggleGodsCrownActivationPacket(true));
+                                DBMPacketHandler.sendToServer(new CToggleCrownActivationPacket(true));
 
                                 if (activated) {
                                     crownItem.onActivation(headSlotStack, minecraft.player);
@@ -171,7 +171,7 @@ public class ClientHandler {
         public static void onRenderWorldLast(final RenderWorldLastEvent event) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            // Activated Cryptid Gem World Rendering
+            // Activated Crown World Rendering
             if (minecraft.player != null) {
                 ItemStack helmetSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
                 if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
@@ -184,7 +184,7 @@ public class ClientHandler {
         public static void preRenderPlayer(final RenderPlayerEvent.Pre event) {
             PlayerEntity player = event.getPlayer();
 
-            // Pre Activated Cryptid Gem Player Rendering
+            // Pre Activated Crown Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
                 CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
@@ -200,7 +200,7 @@ public class ClientHandler {
         public static void postRenderPlayer(final RenderPlayerEvent.Post event) {
             PlayerEntity player = event.getPlayer();
 
-            // Post Activated Cryptid Gem Player Rendering
+            // Post Activated Crown Player Rendering
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
                 CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();

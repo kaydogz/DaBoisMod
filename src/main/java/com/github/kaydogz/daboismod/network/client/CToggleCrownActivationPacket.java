@@ -7,25 +7,25 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class CToggleGodsCrownActivationPacket {
+public class CToggleCrownActivationPacket {
 
 	private final boolean sendMessages;
 
-	public CToggleGodsCrownActivationPacket(boolean sendMessages) {
+	public CToggleCrownActivationPacket(boolean sendMessages) {
 		this.sendMessages = sendMessages;
 	}
 
-	public static void encode(CToggleGodsCrownActivationPacket msg, PacketBuffer buf) {
+	public static void encode(CToggleCrownActivationPacket msg, PacketBuffer buf) {
 		buf.writeBoolean(msg.sendMessages);
 	}
 
-	public static CToggleGodsCrownActivationPacket decode(PacketBuffer buf) {
-		return new CToggleGodsCrownActivationPacket(buf.readBoolean());
+	public static CToggleCrownActivationPacket decode(PacketBuffer buf) {
+		return new CToggleCrownActivationPacket(buf.readBoolean());
 	}
 
 	public static class Handler {
 		
-		public static void handle(final CToggleGodsCrownActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
+		public static void handle(final CToggleCrownActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().enqueueWork(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
 				if (player != null) CrownHelper.toggleActivation(player, msg.sendMessages);

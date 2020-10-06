@@ -7,7 +7,7 @@ public class DBMStructurePieceTypes {
 
     public static IStructurePieceType tomb;
 
-    public static void registerStructurePieceTypes() {
+    public static void createStructurePieceTypes() {
         tomb = IStructurePieceType.register(TombPiece::new, DaBoisMod.modLocation("tomb").toString());
     }
 }

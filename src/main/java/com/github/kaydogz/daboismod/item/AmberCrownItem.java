@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 public class AmberCrownItem extends CrownItem {
 
@@ -16,40 +17,26 @@ public class AmberCrownItem extends CrownItem {
     @Override
     public void onActivation(ItemStack stackIn, PlayerEntity playerIn) {
         playerIn.recalculateSize();
-        float scale = this.getGiantScale(stackIn, playerIn);
-        playerIn.abilities.setWalkSpeed(playerIn.abilities.getWalkSpeed() * scale);
-        playerIn.abilities.setFlySpeed(playerIn.abilities.getFlySpeed() * scale);
+        playerIn.setPositionAndUpdate(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ());
     }
 
     @Override
     public void onDeactivation(ItemStack stackIn, PlayerEntity playerIn) {
         playerIn.recalculateSize();
-        float scale = this.getGiantScale(stackIn, playerIn);
-        playerIn.abilities.setWalkSpeed(playerIn.abilities.getWalkSpeed() / scale);
-        playerIn.abilities.setFlySpeed(playerIn.abilities.getFlySpeed() / scale);
     }
 
-    public float onActivatedPlayerEyeHeight(ItemStack stackIn, PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldHeight) {
-        scaleSize(this.getGiantScale(stackIn, playerIn), playerIn);
-        return oldHeight * this.getGiantScale(stackIn, playerIn);
+    public float scalePlayer(ItemStack stackIn, PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldEyeHeight) {
+        float scale = this.getGiantScale(stackIn, playerIn);
+        EntitySize originalSize = playerIn.getSize(playerIn.getPose());
+        playerIn.size = EntitySize.flexible(originalSize.width * scale, originalSize.height * scale);
+
+        float newWidthMagnitude = playerIn.size.width / 2;
+        playerIn.setBoundingBox(playerIn.getBoundingBox().expand(-newWidthMagnitude, 0, -newWidthMagnitude).expand(newWidthMagnitude, playerIn.size.height, newWidthMagnitude));
+
+        return oldEyeHeight * scale;
     }
 
     public float getGiantScale(ItemStack stackIn, PlayerEntity playerIn) {
         return 5.0F;
-    }
-
-    protected static void scaleSize(float scaleIn, PlayerEntity playerIn) {
-        EntitySize originalSize = playerIn.getSize(playerIn.getPose());
-        playerIn.size = EntitySize.flexible(originalSize.width * scaleIn, originalSize.height * scaleIn);
-
-        playerIn.setBoundingBox(playerIn.getBoundingBox().expand(
-                -playerIn.size.width / 2,
-                0,
-                -playerIn.size.width / 2
-        ).expand(
-                playerIn.size.width / 2,
-                playerIn.size.height,
-                playerIn.size.width / 2
-        ));
     }
 }

@@ -40,10 +40,10 @@ public class DBMItems {
 	public static final RegistryObject<GemItem> AMBER = ITEMS.register("amber", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
 
 	// Crowns
-	public static final RegistryObject<AmberCrownItem> AMBER_CROWN = ITEMS.register("amber_crown", () -> new AmberCrownItem(DBMArmorMaterial.GOD, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<TopazCrownItem> TOPAZ_CROWN = ITEMS.register("topaz_crown", () -> new TopazCrownItem(DBMArmorMaterial.GOD, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<AmethystCrownItem> AMETHYST_CROWN = ITEMS.register("amethyst_crown", () -> new AmethystCrownItem(DBMArmorMaterial.GOD, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<RubyCrownItem> RUBY_CROWN = ITEMS.register("ruby_crown", () -> new RubyCrownItem(DBMArmorMaterial.GOD, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<AmberCrownItem> AMBER_CROWN = ITEMS.register("amber_crown", () -> new AmberCrownItem(DBMArmorMaterial.AMBER_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<TopazCrownItem> TOPAZ_CROWN = ITEMS.register("topaz_crown", () -> new TopazCrownItem(DBMArmorMaterial.TOPAZ_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<AmethystCrownItem> AMETHYST_CROWN = ITEMS.register("amethyst_crown", () -> new AmethystCrownItem(DBMArmorMaterial.AMETHYST_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<RubyCrownItem> RUBY_CROWN = ITEMS.register("ruby_crown", () -> new RubyCrownItem(DBMArmorMaterial.RUBY_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
 
 	// Food
 	public static final RegistryObject<AncientFruitItem> ANCIENT_FRUIT = ITEMS.register("ancient_fruit", () -> new AncientFruitItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).food(DBMFoods.ANCIENT_FRUIT)));

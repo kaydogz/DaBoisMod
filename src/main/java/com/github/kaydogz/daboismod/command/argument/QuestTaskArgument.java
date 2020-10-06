@@ -23,18 +23,20 @@ import java.util.stream.Stream;
 
 public class QuestTaskArgument implements ArgumentType<QuestTask> {
 
-	private static final Collection<String> EXAMPLES = Stream.of(QuestTasks.KILL_ZOMBIES.get(), QuestTasks.PLACE_DIRT.get()).map((key) -> QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(key).toString()).collect(Collectors.toList());
+	private static Collection<String> examples;
 	
 	public static final DynamicCommandExceptionType INVALID_QUEST_TASK = new DynamicCommandExceptionType((msg) -> new TranslationTextComponent("argument.daboismod.questTask.invalid", msg));
-	
+
+	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> ctx, SuggestionsBuilder builder) {
 		return ISuggestionProvider.func_212476_a(Streams.stream(QuestTasks.QUEST_TASKS_REGISTRY.get()).map(QuestTasks.QUEST_TASKS_REGISTRY.get()::getKey), builder);
 	}
-	
+
+	@Override
 	public Collection<String> getExamples() {
-		return QuestTaskArgument.EXAMPLES;
+		return examples;
 	}
-	
+
 	public static QuestTaskArgument questTask() {
 		return new QuestTaskArgument();
 	}
@@ -43,12 +45,14 @@ public class QuestTaskArgument implements ArgumentType<QuestTask> {
 	public QuestTask parse(StringReader reader) throws CommandSyntaxException {
 		ResourceLocation resourcelocation = ResourceLocation.read(reader);
 		Optional<QuestTask> questTask = Optional.ofNullable(QuestTasks.QUEST_TASKS_REGISTRY.get().getValue(resourcelocation));
-	    return questTask.orElseThrow(() -> {
-	    	return QuestTaskArgument.INVALID_QUEST_TASK.create(resourcelocation);
-	    });
+	    return questTask.orElseThrow(() -> INVALID_QUEST_TASK.create(resourcelocation));
 	}
 
 	public static QuestTask getQuestTask(CommandContext<CommandSource> source, String arg) {
 		return source.getArgument(arg, QuestTask.class);
+	}
+
+	public static void createExamples() {
+		examples = Stream.of(QuestTasks.KILL_ZOMBIES.get(), QuestTasks.PLACE_DIRT.get()).map((key) -> QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(key).toString()).collect(Collectors.toList());
 	}
 }

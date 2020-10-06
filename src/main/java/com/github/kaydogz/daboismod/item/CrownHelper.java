@@ -48,8 +48,7 @@ public class CrownHelper {
                     if (sendMessages) {
                         TranslationTextComponent statusComponent = new TranslationTextComponent(isActivated ? "item.daboismod.crown.on" : "item.daboismod.crown.off");
                         statusComponent.getStyle().setColor(isActivated ? TextFormatting.GREEN : TextFormatting.RED);
-                        TranslationTextComponent component = new TranslationTextComponent("item.daboismod.crown.toggled", headSlotStack.getDisplayName().getFormattedText(), statusComponent.getFormattedText());
-                        playerIn.sendStatusMessage(component, true);
+                        playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", headSlotStack.getDisplayName().getFormattedText(), statusComponent.getFormattedText()), true);
                     }
                 }
             }

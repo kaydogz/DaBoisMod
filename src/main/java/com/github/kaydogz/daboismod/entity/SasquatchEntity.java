@@ -41,6 +41,7 @@ public class SasquatchEntity extends CryptidEntity {
 	
 	protected double maxLaunch = 2.5D;
 	protected double minLaunch = 0.5D;
+	protected float renderScale = 1.0F;
 		
 	public SasquatchEntity(EntityType<? extends CryptidEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -103,7 +104,7 @@ public class SasquatchEntity extends CryptidEntity {
 	
 	@Override
 	public float getRenderScale() {
-		return this.dataManager.get(SasquatchEntity.IS_GIANT) ? 2.5F : 1.0F;
+		return this.renderScale;
 	}
 	
 	@Override
@@ -169,6 +170,7 @@ public class SasquatchEntity extends CryptidEntity {
 				if (this.getPosY() > 125.0D) {
 					this.setInvulnerable(false);
 					this.dataManager.set(SasquatchEntity.IS_GIANT, true);
+					this.renderScale = 2.5F;
 					this.setMotion(this.getMotion().subtract(0.0D, 5.0D, 0.0D));
 					this.playSound(this.getTransitionSound(), 15.0F, 1.0F);
 				}

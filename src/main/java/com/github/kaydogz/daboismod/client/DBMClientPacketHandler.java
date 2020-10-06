@@ -43,8 +43,7 @@ public class DBMClientPacketHandler {
         if (entity instanceof AbstractClientPlayerEntity) {
             DaBoisMod.get(PlayerProvider.getCapabilityOf(entity)).setQuests(quests);
             if (entity instanceof ClientPlayerEntity && minecraft.currentScreen instanceof QuestScreen) {
-                QuestScreen screen = (QuestScreen) minecraft.currentScreen;
-                screen.updateQuests();
+                ((QuestScreen) minecraft.currentScreen).updateQuests();
             }
         }
     }

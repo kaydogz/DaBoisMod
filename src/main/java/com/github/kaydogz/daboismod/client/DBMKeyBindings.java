@@ -12,7 +12,7 @@ public class DBMKeyBindings {
 	public static KeyBinding activate_crown;
 	
 	/**
-	 * Registers key bindings for DaBoisMod.
+	 * Registers key bindings.
 	 */
 	public static void registerKeyBindings() {
 		final String daBoisCategory = new TranslationTextComponent("key.daboismod.categories.daBois").getFormattedText();

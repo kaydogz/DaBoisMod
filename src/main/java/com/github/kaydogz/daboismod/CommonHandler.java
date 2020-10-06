@@ -6,9 +6,9 @@ import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
 import com.github.kaydogz.daboismod.capability.provider.LivingProvider;
 import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
 import com.github.kaydogz.daboismod.client.DBMKeyBindings;
-import com.github.kaydogz.daboismod.command.QuestCommand;
-import com.github.kaydogz.daboismod.command.TravelCommand;
+import com.github.kaydogz.daboismod.command.DBMCommand;
 import com.github.kaydogz.daboismod.command.argument.DBMArgumentTypes;
+import com.github.kaydogz.daboismod.command.argument.QuestTaskArgument;
 import com.github.kaydogz.daboismod.data.DBMLootTables;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.AmberCrownItem;
@@ -40,6 +40,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -58,10 +59,11 @@ public class CommonHandler {
 	@SuppressWarnings("deprecation")
 	public static void onCommonSetup(final FMLCommonSetupEvent event) {
 
-		DBMStructurePieceTypes.registerStructurePieceTypes();
+		QuestTaskArgument.createExamples();
+		DBMStructurePieceTypes.createStructurePieceTypes();
+		DBMGeneration.createFeatureConfigs();
 		DBMPacketHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
-		DBMGeneration.createFeatureConfigs();
 		DeferredWorkQueue.runLater(() -> {
 			DBMGeneration.setupGeneration();
 			DBMArgumentTypes.registerSerializers();
@@ -93,8 +95,7 @@ public class CommonHandler {
 
 		@SubscribeEvent
 		public static void onServerStarting(final FMLServerStartingEvent event) {
-			TravelCommand.registerCommand(event.getCommandDispatcher());
-			QuestCommand.registerCommand(event.getCommandDispatcher());
+			DBMCommand.registerCommand(event.getCommandDispatcher());
 		}
 
 		@SubscribeEvent
@@ -139,12 +140,12 @@ public class CommonHandler {
 			if (event.getEntity() instanceof PlayerEntity) {
 				PlayerEntity player = (PlayerEntity) event.getEntity();
 
-				// Activated Cryptid Gem Eye Height Changing
+				// Activated Crown Eye Height Changing
 				ItemStack helmetSlotStack = (player.inventory != null) ? player.getItemStackFromSlot(EquipmentSlotType.HEAD) : ItemStack.EMPTY;
 				if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
 					CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
 					if (crownItem instanceof AmberCrownItem) {
-						event.setNewHeight(((AmberCrownItem) crownItem).onActivatedPlayerEyeHeight(helmetSlotStack, player, event.getPose(), event.getSize(), event.getOldHeight()));
+						event.setNewHeight(((AmberCrownItem) crownItem).scalePlayer(helmetSlotStack, player, event.getPose(), event.getSize(), event.getOldHeight()));
 					}
 					// TODO: Fix launching for squatches, crown toggle formatting, possible old God's Crown references, fix speed/jump height for amber activators, make these sort of methods more abstract
 				}
@@ -155,7 +156,7 @@ public class CommonHandler {
 		public static void onPlayerTick(final TickEvent.PlayerTickEvent event) {
 			PlayerEntity player = event.player;
 
-			// Activated Cryptid Gem Player Ticking
+			// Activated Crown Player Ticking
 			ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
 			if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
 				((CrownItem) helmetSlotStack.getItem()).activatedTick(helmetSlotStack, player);
@@ -289,6 +290,25 @@ public class CommonHandler {
 								if (quest.getQuestTask() instanceof KillEntitiesQuestTask && event.getEntity().getType() == ((KillEntitiesQuestTask) quest.getQuestTask()).getEntityTypeToKill()) quest.increaseCount();
 							}
 							DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), playerAttacker.getEntityId()), playerAttacker);
+						}
+					}
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public static void onLivingAttack(final LivingAttackEvent event) {
+
+			if (event.getEntity() instanceof PlayerEntity) {
+				PlayerEntity player = (PlayerEntity) event.getEntity();
+
+				// Activated Crown Player Projectile Impact
+				if (event.getSource().isProjectile()) {
+					ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+					if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
+						CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
+						if (crownItem instanceof AmberCrownItem) {
+							event.setCanceled(true);
 						}
 					}
 				}

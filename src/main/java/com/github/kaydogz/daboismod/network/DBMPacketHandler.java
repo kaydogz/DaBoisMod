@@ -3,7 +3,7 @@ package com.github.kaydogz.daboismod.network;
 import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.network.client.CCancelQuestPacket;
 import com.github.kaydogz.daboismod.network.client.CClaimQuestPacket;
-import com.github.kaydogz.daboismod.network.client.CToggleGodsCrownActivationPacket;
+import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.network.server.*;
 import net.minecraft.entity.Entity;
@@ -23,7 +23,7 @@ public class DBMPacketHandler {
 			.simpleChannel();
 	
 	/**
-	 * Registers network packets for DaBoisMod.
+	 * Registers network packets.
 	 */
 	public static void registerPackets() {
 		int packetId = 0;
@@ -39,9 +39,8 @@ public class DBMPacketHandler {
 		HANDLER.registerMessage(packetId++, CCancelQuestPacket.class, CCancelQuestPacket::encode, CCancelQuestPacket::decode, CCancelQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CClaimQuestPacket.class, CClaimQuestPacket::encode, CClaimQuestPacket::decode, CClaimQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CUpdateMagneticPacket.class, CUpdateMagneticPacket::encode, CUpdateMagneticPacket::decode, CUpdateMagneticPacket.Handler::handle);
-		HANDLER.registerMessage(packetId, CToggleGodsCrownActivationPacket.class, CToggleGodsCrownActivationPacket::encode, CToggleGodsCrownActivationPacket::decode, CToggleGodsCrownActivationPacket.Handler::handle);
+		HANDLER.registerMessage(packetId, CToggleCrownActivationPacket.class, CToggleCrownActivationPacket::encode, CToggleCrownActivationPacket::decode, CToggleCrownActivationPacket.Handler::handle);
 	}
-
 	
 	/**
 	 * Sends a packet from a client to the server.
