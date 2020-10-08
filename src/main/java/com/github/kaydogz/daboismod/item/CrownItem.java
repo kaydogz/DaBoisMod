@@ -3,11 +3,6 @@ package com.github.kaydogz.daboismod.item;
 import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
 import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
@@ -37,15 +32,13 @@ public abstract class CrownItem extends ArmorItem {
 	public void addInformation(ItemStack crownStack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(crownStack, worldIn, tooltip, flagIn);
 
-		LazyOptional<ICrownCapability> godsCrownCap = CrownProvider.getCapabilityOf(crownStack);
-		if (worldIn != null && godsCrownCap.isPresent()) {
-			ICrownCapability crownCap = DaBoisMod.get(godsCrownCap);
+		LazyOptional<ICrownCapability> lazyCrownCap = CrownProvider.getCapabilityOf(crownStack);
+		if (worldIn != null && lazyCrownCap.isPresent()) {
+			ICrownCapability crownCap = DaBoisMod.get(lazyCrownCap);
 			
 			// Activated Tooltip
 			boolean isActivated = crownCap.isActivated();
-			TranslationTextComponent activatedComponent = new TranslationTextComponent(isActivated ? "item.daboismod.crown.on" : "item.daboismod.crown.off");
-			activatedComponent.getStyle().setColor(isActivated ? TextFormatting.GREEN : TextFormatting.RED);
-			tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", activatedComponent.getFormattedText()));
+			tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", isActivated ? new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN) : new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)));
 		}
 	}
 
@@ -53,8 +46,12 @@ public abstract class CrownItem extends ArmorItem {
 	@Override
 	public CompoundNBT getShareTag(ItemStack stack) {
 		CompoundNBT tag = stack.getOrCreateTag();
-		ICrownCapability cap = DaBoisMod.get(CrownProvider.getCapabilityOf(stack));
-		tag.putBoolean("Activated", cap.isActivated());
+
+		LazyOptional<ICrownCapability> lazyCrownCap = CrownProvider.getCapabilityOf(stack);
+		if (lazyCrownCap.isPresent()) {
+			ICrownCapability cap = DaBoisMod.get(lazyCrownCap);
+			tag.putBoolean("Activated", cap.isActivated());
+		}
 
 		return tag;
 	}
@@ -64,9 +61,31 @@ public abstract class CrownItem extends ArmorItem {
 		super.readShareTag(stack, nbt);
 
 		if (nbt != null) {
-			ICrownCapability cap = DaBoisMod.get(CrownProvider.getCapabilityOf(stack));
-			if (nbt.contains("Activated", Constants.NBT.TAG_BYTE)) cap.setActivated(nbt.getBoolean("Activated"));
+			LazyOptional<ICrownCapability> lazyCrownCap = CrownProvider.getCapabilityOf(stack);
+			if (lazyCrownCap.isPresent()) {
+				ICrownCapability cap = DaBoisMod.get(lazyCrownCap);
+				if (nbt.contains("Activated", Constants.NBT.TAG_BYTE)) cap.setActivated(nbt.getBoolean("Activated"));
+			}
 		}
+	}
+
+	public boolean shouldScalePlayer(ItemStack stackIn, PlayerEntity playerIn) {
+		return false;
+	}
+
+	public float getScale(ItemStack stackIn, PlayerEntity playerIn) {
+		return 1.0F;
+	}
+
+	public final float scalePlayer(ItemStack stackIn, PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldEyeHeightIn) {
+		EntitySize originalSize = playerIn.getSize(playerIn.getPose());
+		float scale = this.getScale(stackIn, playerIn);
+		playerIn.size = EntitySize.flexible(originalSize.width * scale, originalSize.height * scale);
+
+		float newWidthMagnitude = playerIn.size.width / 2;
+		playerIn.setBoundingBox(playerIn.getBoundingBox().expand(-newWidthMagnitude, 0, -newWidthMagnitude).expand(newWidthMagnitude, playerIn.size.height, newWidthMagnitude));
+
+		return oldEyeHeightIn * scale;
 	}
 
 	/**

@@ -144,10 +144,9 @@ public class CommonHandler {
 				ItemStack helmetSlotStack = (player.inventory != null) ? player.getItemStackFromSlot(EquipmentSlotType.HEAD) : ItemStack.EMPTY;
 				if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
 					CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
-					if (crownItem instanceof AmberCrownItem) {
-						event.setNewHeight(((AmberCrownItem) crownItem).scalePlayer(helmetSlotStack, player, event.getPose(), event.getSize(), event.getOldHeight()));
+					if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
+						event.setNewHeight(crownItem.scalePlayer(helmetSlotStack, player, event.getPose(), event.getSize(), event.getOldHeight()));
 					}
-					// TODO: Fix launching for squatches, crown toggle formatting, possible old God's Crown references, fix speed/jump height for amber activators, make these sort of methods more abstract
 				}
 			}
 		}

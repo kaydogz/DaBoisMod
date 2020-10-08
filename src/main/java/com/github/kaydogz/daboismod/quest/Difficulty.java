@@ -20,8 +20,7 @@ public enum Difficulty {
     Difficulty(ResourceLocation locationIn, TextFormatting colorIn) {
         this.location = locationIn;
         this.lootTableLocation = new ResourceLocation(this.location.getNamespace(), "quests/" + this.location.getPath());
-        this.textComponent = new TranslationTextComponent("gui." + locationIn.getNamespace() + ".quest.difficulty." + locationIn.getPath());
-        this.textComponent.getStyle().setColor(colorIn).setBold(true);
+        this.textComponent = new TranslationTextComponent("gui." + locationIn.getNamespace() + ".quest.difficulty." + locationIn.getPath()).applyTextStyle(colorIn).applyTextStyle(TextFormatting.BOLD);
     }
 
     public ITextComponent getTextComponent() {

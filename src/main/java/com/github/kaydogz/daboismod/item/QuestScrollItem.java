@@ -18,10 +18,12 @@ public class QuestScrollItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+		ItemStack stack = playerIn.getHeldItem(handIn);
 		playerIn.setActiveHand(handIn);
 		if (!worldIn.isRemote) QuestHelper.assignQuest(new Quest(((ServerPlayerEntity) playerIn).getServerWorld()), (ServerPlayerEntity) playerIn);
-		if (!playerIn.abilities.isCreativeMode) itemstack.shrink(1);
-		return ActionResult.resultSuccess(itemstack);
+		if (!playerIn.abilities.isCreativeMode) {
+			stack.shrink(1);
+		}
+		return ActionResult.resultSuccess(stack);
 	}
 }

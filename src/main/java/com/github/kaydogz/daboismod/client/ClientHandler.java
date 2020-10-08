@@ -10,7 +10,9 @@ import com.github.kaydogz.daboismod.client.gui.DBMEditSignScreen;
 import com.github.kaydogz.daboismod.client.gui.QuestScreen;
 import com.github.kaydogz.daboismod.client.renderer.DBMRenderManager;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
-import com.github.kaydogz.daboismod.item.*;
+import com.github.kaydogz.daboismod.item.CrownHelper;
+import com.github.kaydogz.daboismod.item.CrownItem;
+import com.github.kaydogz.daboismod.item.DBMItems;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
@@ -122,14 +124,13 @@ public class ClientHandler {
                                 ICrownCapability crownCap = DaBoisMod.get(lazyCap);
                                 boolean activated = !crownCap.isActivated();
                                 crownCap.setActivated(activated);
-
-                                DBMPacketHandler.sendToServer(new CToggleCrownActivationPacket(true));
-
                                 if (activated) {
                                     crownItem.onActivation(headSlotStack, minecraft.player);
                                 } else {
                                     crownItem.onDeactivation(headSlotStack, minecraft.player);
                                 }
+
+                                DBMPacketHandler.sendToServer(new CToggleCrownActivationPacket(true));
                             }
                         }
                     }
@@ -168,19 +169,6 @@ public class ClientHandler {
         }
 
         @SubscribeEvent
-        public static void onRenderWorldLast(final RenderWorldLastEvent event) {
-            Minecraft minecraft = Minecraft.getInstance();
-
-            // Activated Crown World Rendering
-            if (minecraft.player != null) {
-                ItemStack helmetSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
-
-                }
-            }
-        }
-
-        @SubscribeEvent
         public static void preRenderPlayer(final RenderPlayerEvent.Pre event) {
             PlayerEntity player = event.getPlayer();
 
@@ -188,9 +176,9 @@ public class ClientHandler {
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
                 CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
-                if (crownItem instanceof AmberCrownItem) {
+                if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
                     event.getMatrixStack().push();
-                    float scale = ((AmberCrownItem) crownItem).getGiantScale(helmetSlotStack, player);
+                    float scale = crownItem.getScale(helmetSlotStack, player);
                     event.getMatrixStack().scale(scale, scale, scale);
                 }
             }
@@ -204,7 +192,7 @@ public class ClientHandler {
             ItemStack helmetSlotStack = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
             if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
                 CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
-                if (crownItem instanceof AmberCrownItem) {
+                if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
                     event.getMatrixStack().pop();
                 }
             }

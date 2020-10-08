@@ -21,8 +21,9 @@ import java.util.Map;
 /**
  * Since SpawnEggItems require a EntityType but are registered before EntityTypes, this class is needed to workaround that.
  * Thanks to Cadiboo for this class.
- * 
- *#TODO Once Forge fixes this, remove this.
+ * #TODO Once Forge fixes this, remove this.
+ *
+ * @author Cadiboo
  */
 public class DBMSpawnEggItem extends SpawnEggItem {
 

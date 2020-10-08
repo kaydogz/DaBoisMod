@@ -9,7 +9,7 @@ public class DBMEventHooks {
     /**
      * Returns true if the event was canceled.
      */
-    public static boolean onGodsCrownActivation(ItemStack crownStack, PlayerEntity wearer) {
+    public static boolean onCrownActivation(ItemStack crownStack, PlayerEntity wearer) {
         CrownEvent.Activate event = new CrownEvent.Activate(crownStack, wearer);
         return MinecraftForge.EVENT_BUS.post(event);
     }

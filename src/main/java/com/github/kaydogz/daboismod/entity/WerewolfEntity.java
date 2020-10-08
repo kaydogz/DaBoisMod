@@ -65,7 +65,6 @@ public class WerewolfEntity extends CryptidEntity {
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(WerewolfEntity.class));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SheepEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SasquatchEntity.class, true));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PigEntity.class, true));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, CowEntity.class, true));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, RabbitEntity.class, true));
@@ -121,7 +120,7 @@ public class WerewolfEntity extends CryptidEntity {
 	}
 	
 	@Override
-	public Item getCryptidDrop() {
+	public Item getCryptidDropItem() {
 		return DBMItems.RUBY.get();
 	}
 

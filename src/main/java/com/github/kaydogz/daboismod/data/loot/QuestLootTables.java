@@ -2,7 +2,6 @@ package com.github.kaydogz.daboismod.data.loot;
 
 import com.github.kaydogz.daboismod.item.DBMItems;
 import com.github.kaydogz.daboismod.quest.Difficulty;
-import net.minecraft.data.loot.ChestLootTables;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;

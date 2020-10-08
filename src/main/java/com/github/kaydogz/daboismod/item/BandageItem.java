@@ -16,20 +16,21 @@ public class BandageItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if (playerIn.getHealth() < playerIn.getMaxHealth() || playerIn.abilities.isCreativeMode) {
+		if (playerIn.shouldHeal()) {
 			ItemStack itemstack = playerIn.getHeldItem(handIn);
 			playerIn.setActiveHand(handIn);
 			playerIn.heal(this.getHealAmount(itemstack));
 			playerIn.removePotionEffect(DBMEffects.BLEEDING.get());
-			ActionResult<ItemStack> result = ActionResult.resultSuccess(itemstack.copy());
-			if (!playerIn.abilities.isCreativeMode) itemstack.shrink(1);
-            return result;
+			if (!playerIn.abilities.isCreativeMode) {
+				itemstack.shrink(1);
+			}
+            return ActionResult.resultSuccess(itemstack);
 		} else {
 			return ActionResult.resultPass(playerIn.getHeldItem(handIn));
 		}
 	}
 
 	public float getHealAmount(ItemStack stackIn) {
-		return stackIn.getItem() instanceof BandageItem ? 1.0F : 0.0F;
+		return 1.0F;
 	}
 }

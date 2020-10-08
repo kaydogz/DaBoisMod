@@ -168,67 +168,55 @@ public class QuestScreen extends Screen {
 			);
 
 		} else {
+			final Quest quest = this.quests.get(currentPage);
 
 			// 'Quest X / Y'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.questNumber",
-							currentPage + 1,
-							this.quests.size()
-					).getFormattedText(),
+			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.questNumber", currentPage + 1, this.quests.size()).getFormattedText(),
 					this.width / 2,
 					(this.height - this.ySize) / 2 - 9,
 					16777215
 			);
 
 			// 'Objective: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.objective",
-							new TranslationTextComponent(this.quests.get(currentPage).getQuestTask().getTranslationKey(), this.quests.get(currentPage).getQuota()).getFormattedText()
-					).getFormattedText(),
+			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.objective", new TranslationTextComponent(quest.getQuestTask().getTranslationKey(), quest.getQuota())).getFormattedText(),
 					this.width / 2,
 					this.height / 2 - 63,
 					16777215
 			);
 
 			// 'Difficulty: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.difficulty",
-							this.quests.get(currentPage).getDifficulty().getTextComponent().getFormattedText()
-					).getFormattedText(),
+			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.difficulty", quest.getDifficulty().getTextComponent()).getFormattedText(),
 					this.width / 2,
 					this.height / 2 - 45,
 					16777215
 			);
 
 			// 'Completed: X / Y'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.completed",
-							this.quests.get(currentPage).getCount(),
-							this.quests.get(currentPage).getQuota()
-					).getFormattedText(),
+			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.completed", quest.getCount(), quest.getQuota()).getFormattedText(),
 					this.width / 2,
 					this.height / 2,
 					16777215
 			);
 
 			// 'Reward: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.reward",
-							(this.quests.get(currentPage).getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing").getFormattedText() : "  ")
-					).getFormattedText(),
+			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.reward", (quest.getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing").getFormattedText() : "  ")).getFormattedText(),
 					this.width / 2 - 3,
 					this.height / 2 - 22,
 					16777215
 			);
 
 			// Render Item & Tooltip
-			ItemStack reward = this.quests.get(currentPage).getReward();
-			if (!(reward.getItem() instanceof AirItem)) {
+			if (!(quest.getReward().getItem() instanceof AirItem)) {
 				int itemPosX = this.width / 2 + 12;
 				int itemPosY = this.height / 2 - 28;
-				this.itemRenderer.renderItemAndEffectIntoGUI(reward, itemPosX, itemPosY);
-				this.itemRenderer.renderItemOverlays(this.font, reward, itemPosX, itemPosY);
-				if (mouseX > itemPosX - 4 && mouseX < itemPosX + 16 && mouseY > itemPosY - 2 && mouseY < itemPosY + 18) this.renderTooltip(reward, mouseX, mouseY);
+				this.itemRenderer.renderItemAndEffectIntoGUI(quest.getReward(), itemPosX, itemPosY);
+				this.itemRenderer.renderItemOverlays(this.font, quest.getReward(), itemPosX, itemPosY);
+				if (mouseX > itemPosX - 4 && mouseX < itemPosX + 16 && mouseY > itemPosY - 2 && mouseY < itemPosY + 18) this.renderTooltip(quest.getReward(), mouseX, mouseY);
 			}
 		}
 	}
 	
-	public void renderGuiBackground(int mouseX, int mouseY, float p_render_3_) {
+	public void renderGuiBackground(int mouseX, int mouseY, float val) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    this.minecraft.getTextureManager().bindTexture(QUEST_BACKGROUND);
 	    this.blit((this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, this.xSize, this.ySize);

@@ -1,11 +1,14 @@
 package com.github.kaydogz.daboismod.entity;
 
 import com.github.kaydogz.daboismod.item.DBMItems;
+import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.server.SSasquatchSmashPacket;
 import com.github.kaydogz.daboismod.tags.DBMBlockTags;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +20,7 @@ import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -29,8 +33,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfo.Color;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -38,11 +42,10 @@ public class SasquatchEntity extends CryptidEntity {
 
 	private static final DataParameter<Boolean> IS_GIANT = EntityDataManager.createKey(SasquatchEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> BECOMING_GIANT = EntityDataManager.createKey(SasquatchEntity.class, DataSerializers.BOOLEAN);
-	
+
 	protected double maxLaunch = 2.5D;
 	protected double minLaunch = 0.5D;
-	protected float renderScale = 1.0F;
-		
+
 	public SasquatchEntity(EntityType<? extends CryptidEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.getNavigator().setCanSwim(true);
@@ -52,15 +55,15 @@ public class SasquatchEntity extends CryptidEntity {
 	@Override
 	protected void registerData() {
 		super.registerData();
-		this.dataManager.register(SasquatchEntity.IS_GIANT, false);
-		this.dataManager.register(SasquatchEntity.BECOMING_GIANT, false);
+		this.dataManager.register(IS_GIANT, false);
+		this.dataManager.register(BECOMING_GIANT, false);
 	}
 	
 	@Override
 	protected void registerAttributes() {
 		super.registerAttributes();
 		this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(20.0D);
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(325.0D);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(275.0D);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
 		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(25.0D);
 		this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(14.0D);
@@ -81,14 +84,13 @@ public class SasquatchEntity extends CryptidEntity {
 		this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(SasquatchEntity.class));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, WerewolfEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
-		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, true));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PigEntity.class, true));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, CowEntity.class, true));
+		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, RabbitEntity.class, true));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
+		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractIllagerEntity.class, true));
 		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractHorseEntity.class, true));
-		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, RabbitEntity.class, true));
 		this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, BeeEntity.class, true));
 	}
 	
@@ -104,7 +106,7 @@ public class SasquatchEntity extends CryptidEntity {
 	
 	@Override
 	public float getRenderScale() {
-		return this.renderScale;
+		return this.isGiant() ? 5.0F : 1.0F;
 	}
 	
 	@Override
@@ -112,11 +114,10 @@ public class SasquatchEntity extends CryptidEntity {
 		boolean flag = super.attackEntityAsMob(entityIn);
 		Random rand = new Random();
 		if (flag && rand.nextBoolean()) {
-			boolean isGiant = this.dataManager.get(SasquatchEntity.IS_GIANT);
+			boolean isGiant = this.isGiant();
 			if (!isGiant || rand.nextBoolean()) {
-				double factor = (isGiant) ? 2.0D : 1.0D;
-				double factor1 = (entityIn instanceof PlayerEntity) ? 1.0D : 0.3D;
-				entityIn.setMotion(entityIn.getMotion().add(0.0D, factor * factor1 * (rand.nextDouble() * (this.maxLaunch - this.minLaunch) + this.minLaunch), 0.0D));
+				double factor = ((isGiant) ? 2.0D : 1.0D) * ((entityIn instanceof PlayerEntity) ? 1.0D : 0.3D);
+				entityIn.setMotion(entityIn.getMotion().add(0.0D, factor * (rand.nextDouble() * (this.maxLaunch - this.minLaunch) + this.minLaunch), 0.0D));
 			}
 		}
 		return flag;
@@ -136,15 +137,13 @@ public class SasquatchEntity extends CryptidEntity {
 	
 	@Override
 	public boolean onLivingFall(float distance, float damageMultiplier) {
-		if (this.dataManager.get(SasquatchEntity.IS_GIANT) && distance > 10.0F) {
+		if (this.isGiant() && distance > 10.0F) {
 			for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(7.0D, 2.0D, 7.0D), (entity) -> entity instanceof LivingEntity && entity.onGround)) {
-				entity.setMotion(entity.getMotion().add(0.0D, 1.5D, 0.0D));
+				entity.addVelocity(0.0D, 1.5D, 0.0D);
+				entity.velocityChanged = true;
 			}
 
-			double particleSpeedRadius = 0.5D;
-			for (int i = 0; i < 16; i++) {
-				this.world.addParticle(ParticleTypes.CLOUD, this.getPosX(), this.getPosY(), this.getPosZ(), particleSpeedRadius * Math.cos(i * Math.PI / 8), 0.1D, particleSpeedRadius * Math.sin(i * Math.PI / 8));
-			}
+			DBMPacketHandler.sendToAllTrackingEntity(new SSasquatchSmashPacket(this.getPosX(), this.getPosY(), this.getPosZ()), this);
 
 			this.playSound(this.getSmashSound(), 3.0F, 1.0F);
 			return false;
@@ -153,8 +152,8 @@ public class SasquatchEntity extends CryptidEntity {
 	}
 	
 	public void becomeGiant() {
-		if (this.dataManager.get(SasquatchEntity.IS_GIANT) || this.dataManager.get(SasquatchEntity.BECOMING_GIANT)) return;
-		this.dataManager.set(SasquatchEntity.BECOMING_GIANT, true);
+		if (!this.isNormal()) return;
+		this.setBecomingGiant(true);
 		this.setMotion(this.getMotion().add(0.0D, 2.0D, 0.0D));
 	}
 	
@@ -162,22 +161,21 @@ public class SasquatchEntity extends CryptidEntity {
 	public void livingTick() {
 		super.livingTick();
 
-		if (this.dataManager.get(SasquatchEntity.BECOMING_GIANT)) {
-			if (!this.dataManager.get(SasquatchEntity.IS_GIANT)) {
+		if (this.isBecomingGiant()) {
+			if (!this.isGiant()) {
 				this.setMotion(this.getMotion().add(0.0D, 1.2D, 0.0D));
 				this.noClip = this.collidedVertically && !this.noClip;
 				this.destroyBlocksInAABB(this.getBoundingBox());
 				if (this.getPosY() > 125.0D) {
 					this.setInvulnerable(false);
-					this.dataManager.set(SasquatchEntity.IS_GIANT, true);
-					this.renderScale = 2.5F;
+					this.setGiant(true);
 					this.setMotion(this.getMotion().subtract(0.0D, 5.0D, 0.0D));
 					this.playSound(this.getTransitionSound(), 15.0F, 1.0F);
 				}
 			} else {
 				this.recalculateSize();
 				this.noClip = false;
-				this.dataManager.set(SasquatchEntity.BECOMING_GIANT, false);
+				this.setBecomingGiant(false);
 			}
 		}
 	}
@@ -249,16 +247,28 @@ public class SasquatchEntity extends CryptidEntity {
 		return DBMSoundEvents.ENTITY_SASQUATCH_HURT.get();
 	}
 
-	public boolean isGiant() {
-		return this.dataManager.get(SasquatchEntity.IS_GIANT);
+	public final boolean isGiant() {
+		return this.dataManager.get(IS_GIANT);
+	}
+
+	protected final void setGiant(boolean giant) {
+		this.dataManager.set(IS_GIANT, giant);
+	}
+
+	public boolean isNormal() {
+		return !isGiant() && !isBecomingGiant();
 	}
 	
-	public boolean isBecomingGiant() {
-		return this.dataManager.get(SasquatchEntity.BECOMING_GIANT);
+	public final boolean isBecomingGiant() {
+		return this.dataManager.get(BECOMING_GIANT);
 	}
-	
+
+	protected final void setBecomingGiant(boolean becomingGiant) {
+		this.dataManager.set(BECOMING_GIANT, becomingGiant);
+	}
+
 	@Override
-	public Item getCryptidDrop() {
+	public Item getCryptidDropItem() {
 		return DBMItems.AMBER.get();
 	}
 

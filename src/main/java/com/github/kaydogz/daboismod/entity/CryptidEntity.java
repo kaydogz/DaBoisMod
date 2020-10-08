@@ -1,7 +1,5 @@
 package com.github.kaydogz.daboismod.entity;
 
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
-import com.github.kaydogz.daboismod.network.server.SPlaySoundPacket;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -28,7 +26,7 @@ public abstract class CryptidEntity extends MonsterEntity {
 		this.setHealth(this.getMaxHealth());
 	}
 	
-	public abstract Item getCryptidDrop();
+	public abstract Item getCryptidDropItem();
 	
 	protected abstract BossInfo.Color getBossBarColor();
 	
@@ -42,7 +40,7 @@ public abstract class CryptidEntity extends MonsterEntity {
 				serverWorld.addLightningBolt(new LightningBoltEntity(serverWorld, this.getPosX() + radius * Math.cos(i * 2 * Math.PI / bolts), this.getPosY(), this.getPosZ() + radius * Math.sin(i * 2 * Math.PI / bolts), true));
 			}
 		}
-		DBMPacketHandler.sendToAllTrackingEntity(new SPlaySoundPacket(DBMSoundEvents.HEAVENLY_CHOIR.get(), true), this);
+		this.playSound(DBMSoundEvents.HEAVENLY_CHOIR.get(), 10.0F, 1.0F);
 		super.onDeath(cause);
 	}
 
@@ -55,7 +53,7 @@ public abstract class CryptidEntity extends MonsterEntity {
 	@Override
 	protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
 		super.dropSpecialItems(source, looting, recentlyHitIn);
-		ItemEntity itemEntity = this.entityDropItem(this.getCryptidDrop());
+		ItemEntity itemEntity = this.entityDropItem(this.getCryptidDropItem());
 		if (itemEntity != null) itemEntity.setNoDespawn();
 	}
 

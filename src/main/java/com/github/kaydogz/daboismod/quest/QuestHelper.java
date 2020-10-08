@@ -11,6 +11,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 public class QuestHelper {
@@ -21,10 +22,10 @@ public class QuestHelper {
      * @param playerIn the player to assign it to.
      */
     public static void assignQuest(Quest questIn, ServerPlayerEntity playerIn) {
-        playerIn.sendStatusMessage(new StringTextComponent(TextFormatting.GOLD + new TranslationTextComponent("gui.daboismod.quest.new").getFormattedText()), true);
         ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         quests.add(questIn);
         DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
+        playerIn.sendStatusMessage(new TranslationTextComponent("gui.daboismod.quest.new").applyTextStyle(TextFormatting.GOLD), true);
     }
 
     /**
