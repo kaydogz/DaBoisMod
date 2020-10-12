@@ -9,16 +9,16 @@ import java.util.function.Function;
 
 public class DBMTeleporter implements ITeleporter {
 	
-	private final boolean fallingFromSky;
+	private final boolean realmFalling;
 	
-	public DBMTeleporter(boolean fallingFromSky) {
-		this.fallingFromSky = fallingFromSky;
+	public DBMTeleporter(boolean realmFalling) {
+		this.realmFalling = realmFalling;
 	}
 	
 	@Override
 	public Entity placeEntity(Entity entityIn, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
 		Entity entity = repositionEntity.apply(false);
-		if (!this.fallingFromSky) return entity;
+		if (!this.realmFalling) return entity;
 		entity.setPositionAndUpdate(entity.getPosX(), destWorld.getActualHeight() + 10, entity.getPosZ());
 		return entity;
 	}

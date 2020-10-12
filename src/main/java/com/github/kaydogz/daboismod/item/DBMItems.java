@@ -31,7 +31,7 @@ public class DBMItems {
 	public static final RegistryObject<Item> MARIJUANA = ITEMS.register("marijuana", () -> new Item(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<QuestScrollItem> QUEST_SCROLL = ITEMS.register("quest_scroll", () -> new QuestScrollItem(new Item.Properties().maxStackSize(1).group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<BandageItem> BANDAGE = ITEMS.register("bandage", () -> new BandageItem(new Item.Properties().maxStackSize(16).group(DBMItemGroup.DA_BOIS_GROUP)));
-	public static final RegistryObject<BoatItem> PADAUK_BOAT = ITEMS.register("padauk_boat", () -> new BoatItem(BoatEntity.Type.ACACIA, (new Item.Properties()).maxStackSize(1).group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<BoatItem> PADAUK_BOAT = ITEMS.register("padauk_boat", () -> new BoatItem(BoatEntity.Type.ACACIA, new Item.Properties().maxStackSize(1).group(DBMItemGroup.DA_BOIS_GROUP)));
 
 	// Gems
 	public static final RegistryObject<GemItem> TOPAZ = ITEMS.register("topaz", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
@@ -96,11 +96,11 @@ public class DBMItems {
 	public static final RegistryObject<BlockItem> PADAUK_WOOD = registerBlockItem(DBMBlocks.PADAUK_WOOD);
 	public static final RegistryObject<BlockItem> STRIPPED_PADAUK_WOOD = registerBlockItem(DBMBlocks.STRIPPED_PADAUK_WOOD);
 	public static final RegistryObject<BlockItem> PADAUK_BUTTON = registerBlockItem(DBMBlocks.PADAUK_BUTTON);
-	public static final RegistryObject<BlockItem> PADAUK_DOOR = ITEMS.register(DBMBlocks.PADAUK_DOOR.getId().getPath(), () -> new TallBlockItem(DBMBlocks.PADAUK_DOOR.get(), (new Item.Properties()).group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<BlockItem> PADAUK_DOOR = ITEMS.register(DBMBlocks.PADAUK_DOOR.getId().getPath(), () -> new TallBlockItem(DBMBlocks.PADAUK_DOOR.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<BlockItem> PADAUK_FENCE = registerBlockItem(DBMBlocks.PADAUK_FENCE);
 	public static final RegistryObject<BlockItem> PADAUK_FENCE_GATE = registerBlockItem(DBMBlocks.PADAUK_FENCE_GATE);
 	public static final RegistryObject<BlockItem> PADAUK_PRESSURE_PLATE = registerBlockItem(DBMBlocks.PADAUK_PRESSURE_PLATE);
-	public static final RegistryObject<BlockItem> PADAUK_SIGN = ITEMS.register(DBMBlocks.PADAUK_SIGN.getId().getPath(), () -> new SignItem((new Item.Properties()).maxStackSize(16).group(DBMItemGroup.DA_BOIS_GROUP), DBMBlocks.PADAUK_SIGN.get(), DBMBlocks.PADAUK_WALL_SIGN.get()));
+	public static final RegistryObject<BlockItem> PADAUK_SIGN = ITEMS.register(DBMBlocks.PADAUK_SIGN.getId().getPath(), () -> new SignItem(new Item.Properties().maxStackSize(16).group(DBMItemGroup.DA_BOIS_GROUP), DBMBlocks.PADAUK_SIGN.get(), DBMBlocks.PADAUK_WALL_SIGN.get()));
 	public static final RegistryObject<BlockItem> PADAUK_STAIRS = registerBlockItem(DBMBlocks.PADAUK_STAIRS);
 	public static final RegistryObject<BlockItem> PADAUK_SLAB = registerBlockItem(DBMBlocks.PADAUK_SLAB);
 	public static final RegistryObject<BlockItem> PADAUK_TRAPDOOR = registerBlockItem(DBMBlocks.PADAUK_TRAPDOOR);

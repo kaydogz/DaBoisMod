@@ -4,17 +4,19 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class CommonConfig {
 
-	// OreGen
+	public final ForgeConfigSpec.IntValue skinToneCount;
 	public final ForgeConfigSpec.IntValue ancientVeinCount;
 	public final ForgeConfigSpec.BooleanValue generateAncientOre;
-	
-	// PlantGen
 	public final ForgeConfigSpec.BooleanValue generateCannabis;
 	
 	public CommonConfig(ForgeConfigSpec.Builder builder) {
 		
 		builder.comment("Common configuration settings")
 				.push("common");
+
+		this.skinToneCount = builder
+				.comment("The number of skin tones for villagers. Only increase this value if you have more skin tone textures.")
+				.defineInRange("skinToneCount", 5, 1, 64);
 
 		this.ancientVeinCount = builder
 				.comment("Maximum number of Ancient Ores to spawn in a vein.")

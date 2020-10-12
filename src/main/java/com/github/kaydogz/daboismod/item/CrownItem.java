@@ -4,6 +4,7 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
 import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,12 +35,20 @@ public abstract class CrownItem extends ArmorItem {
 
 		LazyOptional<ICrownCapability> lazyCrownCap = CrownProvider.getCapabilityOf(crownStack);
 		if (worldIn != null && lazyCrownCap.isPresent()) {
-			ICrownCapability crownCap = DaBoisMod.get(lazyCrownCap);
-			
+
 			// Activated Tooltip
-			boolean isActivated = crownCap.isActivated();
-			tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", isActivated ? new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN) : new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)));
+			if (DaBoisMod.get(lazyCrownCap).isActivated()) {
+				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN)));
+			} else {
+				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)));
+			}
 		}
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+		DaBoisMod.debug(DaBoisMod.get(CrownProvider.getCapabilityOf(stack)).isActivated());
 	}
 
 	@Nullable

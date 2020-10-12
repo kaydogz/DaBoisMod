@@ -10,17 +10,17 @@ import net.minecraftforge.common.util.Constants;
 
 public class LivingCapability implements ILivingCapability {
 
-	private boolean fallingFromSky = false;
+	private boolean realmFalling = false;
 	private boolean radiated = false;
 
 	@Override
-	public boolean isFallingFromSky() {
-		return this.fallingFromSky;
+	public boolean isRealmFalling() {
+		return this.realmFalling;
 	}
 
 	@Override
-	public void setFallingFromSky(boolean fallingFromSky) {
-		this.fallingFromSky = fallingFromSky;
+	public void setRealmFalling(boolean realmFalling) {
+		this.realmFalling = realmFalling;
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class LivingCapability implements ILivingCapability {
 		@Override
 		public INBT writeNBT(Capability<ILivingCapability> capability, ILivingCapability instance, Direction side) {
 			CompoundNBT tag = new CompoundNBT();
-			tag.putBoolean("FallingFromSky", instance.isFallingFromSky());
+			tag.putBoolean("RealmFalling", instance.isRealmFalling());
 			tag.putBoolean("Radiated", instance.isRadiated());
 			return tag;
 		}
@@ -47,7 +47,7 @@ public class LivingCapability implements ILivingCapability {
 		public void readNBT(Capability<ILivingCapability> capability, ILivingCapability instance, Direction side, INBT nbt) {
 			if (nbt instanceof CompoundNBT) {
 				CompoundNBT tag = (CompoundNBT) nbt;
-				if (tag.contains("FallingFromSky", Constants.NBT.TAG_BYTE)) instance.setFallingFromSky(tag.getBoolean("FallingFromSky"));
+				if (tag.contains("RealmFalling", Constants.NBT.TAG_BYTE)) instance.setRealmFalling(tag.getBoolean("RealmFalling"));
 				if (tag.contains("Radiated", Constants.NBT.TAG_BYTE)) instance.setRadiated(tag.getBoolean("Radiated"));
 			}
 		}

@@ -31,9 +31,11 @@ public class DBMPacketHandler {
 		// Server to Client
 		HANDLER.registerMessage(packetId++, SUpdateQuestsPacket.class, SUpdateQuestsPacket::encode, SUpdateQuestsPacket::decode, SUpdateQuestsPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SDisplayItemActivationPacket.class, SDisplayItemActivationPacket::encode, SDisplayItemActivationPacket::decode, SDisplayItemActivationPacket.Handler::handle);
-		HANDLER.registerMessage(packetId++, SUpdateFallingFromSkyPacket.class, SUpdateFallingFromSkyPacket::encode, SUpdateFallingFromSkyPacket::decode, SUpdateFallingFromSkyPacket.Handler::handle);
+		HANDLER.registerMessage(packetId++, SUpdateRealmFallingPacket.class, SUpdateRealmFallingPacket::encode, SUpdateRealmFallingPacket::decode, SUpdateRealmFallingPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SUpdateMagneticPacket.class, SUpdateMagneticPacket::encode, SUpdateMagneticPacket::decode, SUpdateMagneticPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SSasquatchSmashPacket.class, SSasquatchSmashPacket::encode, SSasquatchSmashPacket::decode, SSasquatchSmashPacket.Handler::handle);
+		HANDLER.registerMessage(packetId++, SUpdateSkinTonePacket.class, SUpdateSkinTonePacket::encode, SUpdateSkinTonePacket::decode, SUpdateSkinTonePacket.Handler::handle);
+
 
 		// Client to Server
 		HANDLER.registerMessage(packetId++, CCancelQuestPacket.class, CCancelQuestPacket::encode, CCancelQuestPacket::decode, CCancelQuestPacket.Handler::handle);

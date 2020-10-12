@@ -3,12 +3,15 @@ package com.github.kaydogz.daboismod;
 import com.github.kaydogz.daboismod.capability.DBMCapabilityHandler;
 import com.github.kaydogz.daboismod.capability.base.ILivingCapability;
 import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
+import com.github.kaydogz.daboismod.capability.base.IVillagerCapability;
 import com.github.kaydogz.daboismod.capability.provider.LivingProvider;
 import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
+import com.github.kaydogz.daboismod.capability.provider.VillagerProvider;
 import com.github.kaydogz.daboismod.client.DBMKeyBindings;
 import com.github.kaydogz.daboismod.command.DBMCommand;
 import com.github.kaydogz.daboismod.command.argument.DBMArgumentTypes;
 import com.github.kaydogz.daboismod.command.argument.QuestTaskArgument;
+import com.github.kaydogz.daboismod.config.DBMConfigHandler;
 import com.github.kaydogz.daboismod.data.DBMLootTables;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.AmberCrownItem;
@@ -16,11 +19,13 @@ import com.github.kaydogz.daboismod.item.CrownHelper;
 import com.github.kaydogz.daboismod.item.CrownItem;
 import com.github.kaydogz.daboismod.network.DBMPacketHandler;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
-import com.github.kaydogz.daboismod.network.server.SUpdateFallingFromSkyPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
+import com.github.kaydogz.daboismod.network.server.SUpdateRealmFallingPacket;
+import com.github.kaydogz.daboismod.network.server.SUpdateSkinTonePacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.quest.*;
 import com.github.kaydogz.daboismod.stats.DBMStats;
+import com.github.kaydogz.daboismod.util.DBMConstants;
 import com.github.kaydogz.daboismod.world.DBMTeleporter;
 import com.github.kaydogz.daboismod.world.dimension.DBMDimensionTypes;
 import com.github.kaydogz.daboismod.world.dimension.RealmOfTheAncientsDimension;
@@ -28,7 +33,9 @@ import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
 import com.github.kaydogz.daboismod.world.gen.feature.structure.DBMStructurePieceTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -37,12 +44,12 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.RegisterDimensionsEvent;
@@ -131,7 +138,45 @@ public class CommonHandler {
 		public static void onPlayerStartTracking(final PlayerEvent.StartTracking event) {
 			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			if (event.getTarget() instanceof LivingEntity) {
-				DBMPacketHandler.sendToPlayer(new SUpdateFallingFromSkyPacket(DaBoisMod.get(LivingProvider.getCapabilityOf(event.getTarget())).isFallingFromSky(), event.getTarget().getEntityId()), player);
+				int entityId = event.getTarget().getEntityId();
+				DBMPacketHandler.sendToPlayer(new SUpdateRealmFallingPacket(DaBoisMod.get(LivingProvider.getCapabilityOf(event.getTarget())).isRealmFalling(), entityId), player);
+				if (event.getTarget() instanceof VillagerEntity) {
+					DBMPacketHandler.sendToPlayer(new SUpdateSkinTonePacket(DaBoisMod.get(VillagerProvider.getCapabilityOf(event.getTarget())).getSkinTone(), entityId), player);
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public static void onEntityJoinWorld(final EntityJoinWorldEvent event) {
+
+			// Add and Sync Villager Skin Tone
+			if (event.getEntity() instanceof VillagerEntity) {
+				VillagerEntity villager = (VillagerEntity) event.getEntity();
+				LazyOptional<IVillagerCapability> lazyCap = VillagerProvider.getCapabilityOf(villager);
+				if (lazyCap.isPresent()) {
+					IVillagerCapability cap = DaBoisMod.get(lazyCap);
+					if (!cap.hasSpawned()) {
+						cap.setSpawned(true);
+						if (!event.getWorld().isRemote) {
+							int skinTone = villager.world.getRandom().nextInt(DBMConfigHandler.COMMON.skinToneCount.get()) + 1;
+							DaBoisMod.get(lazyCap).setSkinTone(skinTone);
+							DBMPacketHandler.sendToAllTrackingEntity(new SUpdateSkinTonePacket(skinTone, villager.getEntityId()), villager);
+						}
+					}
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public static void onLivingEquipmentChange(final LivingEquipmentChangeEvent event) {
+			if (event.getEntityLiving() instanceof PlayerEntity && event.getSlot().equals(EquipmentSlotType.HEAD)) {
+				PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+
+				// Deactivate Crown When Unequipped
+				ItemStack fromStack = event.getFrom();
+				if (fromStack.getItem() instanceof CrownItem && CrownHelper.isActivated(fromStack)) {
+					CrownHelper.deactivateCrown(fromStack, player, false);
+				}
 			}
 		}
 
@@ -192,15 +237,15 @@ public class CommonHandler {
 		public static void onWorldTick(final TickEvent.WorldTickEvent event) {
 
 			// Manages Falling From Sky
-			if (event.side.isServer() && event.phase == TickEvent.Phase.END) {
+			if (!event.world.isRemote && event.phase == TickEvent.Phase.END) {
 				ServerWorld world = (ServerWorld) event.world;
 
 				if (world.dimension.getType() == DimensionType.byName(DBMDimensionTypes.REALM_OF_THE_ANCIENTS_LOCATION)) {
 					world.getEntities().forEach((entity) -> {
 						if (((RealmOfTheAncientsDimension) world.dimension).shouldFallFromSky(entity) && entity.getPosition().getY() < 0) {
 							if (entity instanceof LivingEntity) {
-								DaBoisMod.get(LivingProvider.getCapabilityOf(entity)).setFallingFromSky(true);
-								DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateFallingFromSkyPacket(true, entity.getEntityId()), entity);
+								DaBoisMod.get(LivingProvider.getCapabilityOf(entity)).setRealmFalling(true);
+								DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(true, entity.getEntityId()), entity);
 							}
 							DBMTeleporter.teleportEntityToOverworldTop(entity);
 						}
@@ -263,11 +308,14 @@ public class CommonHandler {
 			LivingEntity entity = event.getEntityLiving();
 
 			// Manages Canceling Falling From Sky Damage
-			ILivingCapability livingCap = DaBoisMod.get(LivingProvider.getCapabilityOf(entity));
-			if (livingCap.isFallingFromSky()) {
-				event.setCanceled(true);
-				livingCap.setFallingFromSky(false);
-				DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateFallingFromSkyPacket(false, entity.getEntityId()), entity);
+			LazyOptional<ILivingCapability> lazyCap = LivingProvider.getCapabilityOf(entity);
+			if (lazyCap.isPresent()) {
+				ILivingCapability livingCap = DaBoisMod.get(lazyCap);
+				if (livingCap.isRealmFalling()) {
+					event.setCanceled(true);
+					livingCap.setRealmFalling(false);
+					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(false, entity.getEntityId()), entity);
+				}
 			}
 
 			// Nullify Fall Damage For Indica Stonage

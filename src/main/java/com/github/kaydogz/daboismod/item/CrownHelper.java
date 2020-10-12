@@ -4,7 +4,7 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
 import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
 import com.github.kaydogz.daboismod.event.DBMEventHooks;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -22,33 +22,45 @@ public class CrownHelper {
         return DaBoisMod.get(CrownProvider.getCapabilityOf(stackIn)).isActivated();
     }
 
+    public static void activateCrown(ItemStack stackIn, PlayerEntity playerIn, boolean sendMessages) {
+        if (DBMEventHooks.onCrownActivation(stackIn, playerIn)) return;
+        DaBoisMod.get(CrownProvider.getCapabilityOf(stackIn)).setActivated(true);
+        ((CrownItem) stackIn.getItem()).onActivation(stackIn, playerIn);
+        if (!playerIn.world.isRemote && sendMessages) {
+            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN)), true);
+        }
+    }
+
+    public static void deactivateCrown(ItemStack stackIn, PlayerEntity playerIn, boolean sendMessages) {
+        if (DBMEventHooks.onCrownDeactivation(stackIn, playerIn)) return;
+        DaBoisMod.get(CrownProvider.getCapabilityOf(stackIn)).setActivated(false);
+        ((CrownItem) stackIn.getItem()).onDeactivation(stackIn, playerIn);
+        if (!playerIn.world.isRemote && sendMessages) {
+            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)), true);
+        }
+    }
+
+    /**
+     * Toggles activation of the crown a player is wearing, assuming the player is wearing the crown.
+     * @param playerIn the player who is wearing the crown.
+     * @param sendMessages whether or not to send hotbar notification messages to the player.
+     */
+    public static void toggleActivation(PlayerEntity playerIn, boolean sendMessages) {
+        toggleActivation(playerIn.getItemStackFromSlot(EquipmentSlotType.HEAD), playerIn, sendMessages);
+    }
+
     /**
      * Toggles activation of the crown a player is wearing.
+     * @param stackIn the crown stack.
      * @param playerIn the player who is wearing the crown.
+     * @param sendMessages whether or not to send hotbar notification messages to the player.
      */
-    public static void toggleActivation(ServerPlayerEntity playerIn, boolean sendMessages) {
-        ItemStack headSlotStack = playerIn.getItemStackFromSlot(EquipmentSlotType.HEAD);
-        if (headSlotStack.getItem() instanceof CrownItem) {
-            LazyOptional<ICrownCapability> lazyCap = CrownProvider.getCapabilityOf(headSlotStack);
+    public static void toggleActivation(ItemStack stackIn, PlayerEntity playerIn, boolean sendMessages) {
+        if (stackIn.getItem() instanceof CrownItem) {
+            LazyOptional<ICrownCapability> lazyCap = CrownProvider.getCapabilityOf(stackIn);
             if (lazyCap.isPresent()) {
-                CrownItem crownItem = (CrownItem) headSlotStack.getItem();
-                ICrownCapability crownCap = DaBoisMod.get(lazyCap);
-                boolean isActivated = !crownCap.isActivated();
-
-                if (!(isActivated ? DBMEventHooks.onCrownActivation(headSlotStack, playerIn) : DBMEventHooks.onCrownDeactivation(headSlotStack, playerIn))) {
-                    crownCap.setActivated(isActivated);
-
-                    if (isActivated) {
-                        crownItem.onActivation(headSlotStack, playerIn);
-                    } else {
-                        crownItem.onDeactivation(headSlotStack, playerIn);
-                    }
-
-                    // Displays the Activation Status to the Player
-                    if (sendMessages) {
-                        playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", headSlotStack.getDisplayName(), isActivated ? new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN) : new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)), true);
-                    }
-                }
+                if (DaBoisMod.get(lazyCap).isActivated()) deactivateCrown(stackIn, playerIn, sendMessages);
+                else activateCrown(stackIn, playerIn, sendMessages);
             }
         } else if (sendMessages) {
 
