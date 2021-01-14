@@ -3,7 +3,7 @@ package com.github.kaydogz.daboismod.client.gui;
 import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
 import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.client.CCancelQuestPacket;
 import com.github.kaydogz.daboismod.network.client.CClaimQuestPacket;
 import com.github.kaydogz.daboismod.quest.Quest;
@@ -99,11 +99,11 @@ public class QuestScreen extends Screen {
 	}
 
 	protected void onClaimButtonPress(Button b) {
-		DBMPacketHandler.sendToServer(new CClaimQuestPacket(this.quests.get(currentPage)));
+		DBMNetworkHandler.sendToServer(new CClaimQuestPacket(this.quests.get(currentPage)));
 	}
 
 	protected void onCancelButtonPress(Button b) {
-		DBMPacketHandler.sendToServer(new CCancelQuestPacket(this.quests.get(currentPage)));
+		DBMNetworkHandler.sendToServer(new CCancelQuestPacket(this.quests.get(currentPage)));
 	}
 
 	@Override

@@ -20,9 +20,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
-public class DBMClientPacketHandler {
+public class ClientPacketHandler {
 
-    public static void handleUpdateMagnetic(boolean magnetic, int playerId, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleUpdateMagnetic(Supplier<NetworkEvent.Context> ctx, boolean magnetic, int playerId) {
         Minecraft minecraft = Minecraft.getInstance();
         Entity entity = minecraft.world.getEntityByID(playerId);
         if (entity instanceof AbstractClientPlayerEntity) {
@@ -31,7 +31,7 @@ public class DBMClientPacketHandler {
         }
     }
 
-    public static void handleUpdateQuests(ArrayList<Quest> quests, int playerId, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleUpdateQuests(Supplier<NetworkEvent.Context> ctx, ArrayList<Quest> quests, int playerId) {
         Minecraft minecraft = Minecraft.getInstance();
         Entity entity = minecraft.world.getEntityByID(playerId);
         if (entity instanceof AbstractClientPlayerEntity) {
@@ -42,23 +42,23 @@ public class DBMClientPacketHandler {
         }
     }
 
-    public static void handleUpdateRealmFalling(boolean realmFalling, int entityId, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleUpdateRealmFalling(Supplier<NetworkEvent.Context> ctx, boolean realmFalling, int entityId) {
         Entity entity = Minecraft.getInstance().world.getEntityByID(entityId);
         if (entity instanceof LivingEntity) DaBoisMod.get(LivingProvider.getCapabilityOf(entity)).setRealmFalling(realmFalling);
     }
 
-    public static void handleDisplayItemActivation(ItemStack stack, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleDisplayItemActivation(Supplier<NetworkEvent.Context> ctx, ItemStack stack) {
         Minecraft.getInstance().gameRenderer.displayItemActivation(stack);
     }
 
-    public static void handleSasquatchSmash(double posX, double posY, double posZ, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleSasquatchSmash(Supplier<NetworkEvent.Context> ctx, double posX, double posY, double posZ) {
         double particleSpeedRadius = 0.5D;
         for (int i = 0; i < 16; i++) {
             Minecraft.getInstance().world.addParticle(ParticleTypes.CLOUD, posX, posY, posZ, particleSpeedRadius * Math.cos(i * Math.PI / 8), 0.1D, particleSpeedRadius * Math.sin(i * Math.PI / 8));
         }
     }
 
-    public static void handleUpdateSkinTone(int skinTone, int entityId, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleUpdateSkinTone(Supplier<NetworkEvent.Context> ctx, int skinTone, int entityId) {
         Entity entity = Minecraft.getInstance().world.getEntityByID(entityId);
         if (entity instanceof VillagerEntity) DaBoisMod.get(VillagerProvider.getCapabilityOf(entity)).setSkinTone(skinTone);
     }

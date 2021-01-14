@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +28,7 @@ public class SDisplayItemActivationPacket {
 	public static class Handler {
 		
 		public static void handle(final SDisplayItemActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleDisplayItemActivation(msg.stack, ctx)));
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleDisplayItemActivation(ctx, msg.stack)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

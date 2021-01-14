@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import com.github.kaydogz.daboismod.quest.Quest;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -51,7 +51,7 @@ public class SUpdateQuestsPacket {
 	public static class Handler {
 		
 		public static void handle(final SUpdateQuestsPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleUpdateQuests(msg.quests, msg.playerId, ctx)));
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateQuests(ctx, msg.quests, msg.playerId)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

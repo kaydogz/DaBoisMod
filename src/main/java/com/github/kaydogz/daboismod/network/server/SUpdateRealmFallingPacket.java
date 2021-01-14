@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -30,7 +30,7 @@ public class SUpdateRealmFallingPacket {
 	public static class Handler {
 		
 		public static void handle(final SUpdateRealmFallingPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleUpdateRealmFalling(msg.realmFalling, msg.entityId, ctx)));
+			ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleUpdateRealmFalling(ctx, msg.realmFalling, msg.entityId)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

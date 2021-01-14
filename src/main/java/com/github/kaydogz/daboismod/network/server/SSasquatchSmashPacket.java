@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.network.server;
 
-import com.github.kaydogz.daboismod.client.DBMClientPacketHandler;
+import com.github.kaydogz.daboismod.client.ClientPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -33,7 +33,7 @@ public class SSasquatchSmashPacket {
     public static class Handler {
 
         public static void handle(final SSasquatchSmashPacket msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DBMClientPacketHandler.handleSasquatchSmash(msg.posX, msg.posY, msg.posZ, ctx)));
+            ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleSasquatchSmash(ctx, msg.posX, msg.posY, msg.posZ)));
             ctx.get().setPacketHandled(true);
         }
     }

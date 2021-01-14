@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.entity;
 
 import com.github.kaydogz.daboismod.item.DBMItems;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.server.SSasquatchSmashPacket;
 import com.github.kaydogz.daboismod.tags.DBMBlockTags;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
@@ -139,7 +139,7 @@ public class SasquatchEntity extends CryptidEntity {
 				entity.velocityChanged = true;
 			}
 
-			DBMPacketHandler.sendToAllTrackingEntity(new SSasquatchSmashPacket(this.getPosX(), this.getPosY(), this.getPosZ()), this);
+			DBMNetworkHandler.sendToAllTrackingEntity(new SSasquatchSmashPacket(this.getPosX(), this.getPosY(), this.getPosZ()), this);
 
 			this.playSound(this.getSmashSound(), 3.0F, 1.0F);
 			return false;

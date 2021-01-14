@@ -12,7 +12,7 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class DBMPacketHandler {
+public class DBMNetworkHandler {
 	
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
 	private static final SimpleChannel HANDLER = NetworkRegistry.ChannelBuilder

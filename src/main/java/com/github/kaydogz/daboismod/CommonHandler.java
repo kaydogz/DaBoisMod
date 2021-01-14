@@ -17,13 +17,14 @@ import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.AmberCrownItem;
 import com.github.kaydogz.daboismod.item.CrownHelper;
 import com.github.kaydogz.daboismod.item.CrownItem;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateRealmFallingPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateSkinTonePacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
-import com.github.kaydogz.daboismod.quest.*;
+import com.github.kaydogz.daboismod.quest.KillEntitiesQuestTask;
+import com.github.kaydogz.daboismod.quest.Quest;
 import com.github.kaydogz.daboismod.stats.DBMStats;
 import com.github.kaydogz.daboismod.world.DBMTeleporter;
 import com.github.kaydogz.daboismod.world.biome.BotswanaBiome;
@@ -34,7 +35,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -50,7 +50,6 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.RegisterDimensionsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -60,8 +59,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
-import java.util.List;
-
 public class CommonHandler {
 
 	@SuppressWarnings("deprecation")
@@ -69,7 +66,7 @@ public class CommonHandler {
 
 		QuestTaskArgument.createExamples();
 		DBMGeneration.createFeatureConfigs();
-		DBMPacketHandler.registerPackets();
+		DBMNetworkHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
 		DeferredWorkQueue.runLater(() -> {
 			DBMGeneration.setupGeneration();
@@ -109,7 +106,7 @@ public class CommonHandler {
 		public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
 			PlayerEntity player = event.getPlayer();
 			if (!player.world.isRemote) {
-				DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
+				DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
 			}
 		}
 
@@ -117,7 +114,7 @@ public class CommonHandler {
 		public static void onPlayerChangedDimension(final PlayerEvent.PlayerChangedDimensionEvent event) {
 			PlayerEntity player = event.getPlayer();
 			if (!player.world.isRemote) {
-				DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
+				DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
 			}
 		}
 
@@ -125,7 +122,7 @@ public class CommonHandler {
 		public static void onPlayerRespawn(final PlayerEvent.PlayerRespawnEvent event) {
 			PlayerEntity player = event.getPlayer();
 			if (!player.world.isRemote) {
-				DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
+				DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).getQuests(), player.getEntityId()), player);
 			}
 		}
 
@@ -139,9 +136,9 @@ public class CommonHandler {
 			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			if (event.getTarget() instanceof LivingEntity) {
 				int entityId = event.getTarget().getEntityId();
-				DBMPacketHandler.sendToPlayer(new SUpdateRealmFallingPacket(DaBoisMod.get(LivingProvider.getCapabilityOf(event.getTarget())).isRealmFalling(), entityId), player);
+				DBMNetworkHandler.sendToPlayer(new SUpdateRealmFallingPacket(DaBoisMod.get(LivingProvider.getCapabilityOf(event.getTarget())).isRealmFalling(), entityId), player);
 				if (event.getTarget() instanceof VillagerEntity) {
-					DBMPacketHandler.sendToPlayer(new SUpdateSkinTonePacket(DaBoisMod.get(VillagerProvider.getCapabilityOf(event.getTarget())).getSkinTone(), entityId), player);
+					DBMNetworkHandler.sendToPlayer(new SUpdateSkinTonePacket(DaBoisMod.get(VillagerProvider.getCapabilityOf(event.getTarget())).getSkinTone(), entityId), player);
 				}
 			}
 		}
@@ -160,7 +157,7 @@ public class CommonHandler {
 						if (!event.getWorld().isRemote) {
 							int skinTone = villager.world.getRandom().nextInt(DBMConfigHandler.COMMON.skinToneCount.get()) + 1;
 							DaBoisMod.get(lazyCap).setSkinTone(skinTone);
-							DBMPacketHandler.sendToAllTrackingEntity(new SUpdateSkinTonePacket(skinTone, villager.getEntityId()), villager);
+							DBMNetworkHandler.sendToAllTrackingEntity(new SUpdateSkinTonePacket(skinTone, villager.getEntityId()), villager);
 						}
 					}
 				}
@@ -240,7 +237,7 @@ public class CommonHandler {
 							);
 						}
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-							if (!DBMKeyBindings.activate_magnetism.isKeyDown()) DBMPacketHandler.sendToServer(new CUpdateMagneticPacket(false));
+							if (!DBMKeyBindings.activate_magnetism.isKeyDown()) DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(false));
 						});
 					} else {
 						playerCap.setMagnetic(false);
@@ -261,7 +258,7 @@ public class CommonHandler {
 						if (((RealmOfTheAncientsDimension) world.dimension).shouldFallFromSky(entity) && entity.getPosition().getY() < 0) {
 							if (entity instanceof LivingEntity) {
 								DaBoisMod.get(LivingProvider.getCapabilityOf(entity)).setRealmFalling(true);
-								DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(true, entity.getEntityId()), entity);
+								DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(true, entity.getEntityId()), entity);
 							}
 							DBMTeleporter.teleportEntityToOverworldTop(entity);
 						}
@@ -281,7 +278,7 @@ public class CommonHandler {
 				if (livingCap.isRealmFalling()) {
 					event.setCanceled(true);
 					livingCap.setRealmFalling(false);
-					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(false, entity.getEntityId()), entity);
+					DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateRealmFallingPacket(false, entity.getEntityId()), entity);
 				}
 			}
 
@@ -303,7 +300,7 @@ public class CommonHandler {
 							for (Quest quest : playerCap.getQuests()) {
 								if (quest.getQuestTask() instanceof KillEntitiesQuestTask && event.getEntity().getType() == ((KillEntitiesQuestTask) quest.getQuestTask()).getEntityTypeToKill()) quest.increaseCount();
 							}
-							DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), playerAttacker.getEntityId()), playerAttacker);
+							DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), playerAttacker.getEntityId()), playerAttacker);
 						}
 					}
 				}

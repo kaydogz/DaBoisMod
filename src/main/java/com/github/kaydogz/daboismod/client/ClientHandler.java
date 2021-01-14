@@ -13,7 +13,7 @@ import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
 import com.github.kaydogz.daboismod.item.CrownHelper;
 import com.github.kaydogz.daboismod.item.CrownItem;
 import com.github.kaydogz.daboismod.item.DBMItems;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
@@ -113,7 +113,7 @@ public class ClientHandler {
 
                     // Magnetism
                     if (DBMKeyBindings.activate_magnetism.isActiveAndMatches(keyInput) && MagnetismEnchantment.isHoldingMagneticItem(minecraft.player)) {
-                        DBMPacketHandler.sendToServer(new CUpdateMagneticPacket(true));
+                        DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(true));
                     }
 
                     // Activate Crown
@@ -132,7 +132,7 @@ public class ClientHandler {
                                     crownItem.onDeactivation(headSlotStack, minecraft.player);
                                 }
 
-                                DBMPacketHandler.sendToServer(new CToggleCrownActivationPacket(true));
+                                DBMNetworkHandler.sendToServer(new CToggleCrownActivationPacket(true));
                             }
                         }
                     }

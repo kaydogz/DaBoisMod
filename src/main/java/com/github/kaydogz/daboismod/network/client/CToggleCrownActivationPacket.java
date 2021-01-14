@@ -1,7 +1,6 @@
 package com.github.kaydogz.daboismod.network.client;
 
-import com.github.kaydogz.daboismod.item.CrownHelper;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.github.kaydogz.daboismod.util.ServerPacketHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -26,10 +25,7 @@ public class CToggleCrownActivationPacket {
 	public static class Handler {
 		
 		public static void handle(final CToggleCrownActivationPacket msg, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().enqueueWork(() -> {
-				ServerPlayerEntity player = ctx.get().getSender();
-				if (player != null) CrownHelper.toggleActivation(player, msg.sendMessages);
-			});
+			ctx.get().enqueueWork(() -> ServerPacketHandler.handleToggleCrownActivation(ctx, msg.sendMessages));
 			ctx.get().setPacketHandled(true);
 		}
 	}

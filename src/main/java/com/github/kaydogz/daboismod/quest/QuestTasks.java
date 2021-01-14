@@ -1,9 +1,7 @@
 package com.github.kaydogz.daboismod.quest;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

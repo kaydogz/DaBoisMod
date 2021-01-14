@@ -35,6 +35,6 @@ public class DBMLootTables extends LootTableProvider {
 
     @Override
     public String getName() {
-        return DaBoisMod.FORMATTED_NAME + " " + super.getName();
+        return DaBoisMod.DISPLAY_NAME + " " + super.getName();
     }
 }

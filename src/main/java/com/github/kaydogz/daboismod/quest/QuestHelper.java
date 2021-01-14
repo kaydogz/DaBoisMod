@@ -2,7 +2,7 @@ package com.github.kaydogz.daboismod.quest;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
-import com.github.kaydogz.daboismod.network.DBMPacketHandler;
+import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TextFormatting;
@@ -22,7 +22,7 @@ public class QuestHelper {
     public static void assignQuest(Quest questIn, ServerPlayerEntity playerIn) {
         ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         quests.add(questIn);
-        DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
+        DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
         playerIn.sendStatusMessage(new TranslationTextComponent("gui.daboismod.quest.new").applyTextStyle(TextFormatting.GOLD), true);
     }
 
@@ -35,7 +35,7 @@ public class QuestHelper {
         ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         int cleared = quests.size();
         quests.clear();
-        DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
+        DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
         return cleared;
     }
 
