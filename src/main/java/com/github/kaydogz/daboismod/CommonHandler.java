@@ -25,26 +25,25 @@ import com.github.kaydogz.daboismod.network.server.SUpdateSkinTonePacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.quest.*;
 import com.github.kaydogz.daboismod.stats.DBMStats;
-import com.github.kaydogz.daboismod.util.DBMConstants;
 import com.github.kaydogz.daboismod.world.DBMTeleporter;
+import com.github.kaydogz.daboismod.world.biome.BotswanaBiome;
 import com.github.kaydogz.daboismod.world.dimension.DBMDimensionTypes;
 import com.github.kaydogz.daboismod.world.dimension.RealmOfTheAncientsDimension;
 import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
-import com.github.kaydogz.daboismod.world.gen.feature.structure.DBMStructurePieceTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -61,13 +60,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
+import java.util.List;
+
 public class CommonHandler {
 
 	@SuppressWarnings("deprecation")
 	public static void onCommonSetup(final FMLCommonSetupEvent event) {
 
 		QuestTaskArgument.createExamples();
-		DBMStructurePieceTypes.createStructurePieceTypes();
 		DBMGeneration.createFeatureConfigs();
 		DBMPacketHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
@@ -168,6 +168,22 @@ public class CommonHandler {
 		}
 
 		@SubscribeEvent
+		public static void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
+			LivingEntity entity = event.getEntityLiving();
+
+			// Manage Botswana Radiation
+			if (entity.world.getBiome(entity.getPosition()) instanceof BotswanaBiome) {
+				if (!entity.isPotionActive(DBMEffects.RADIATION.get())) {
+					entity.addPotionEffect(new EffectInstance(DBMEffects.RADIATION.get(), 120000, 0, false, false, true));
+				}
+			} else {
+				if (entity.isInWaterRainOrBubbleColumn()) {
+					entity.removePotionEffect(DBMEffects.RADIATION.get());
+				}
+			}
+		}
+
+		@SubscribeEvent
 		public static void onLivingEquipmentChange(final LivingEquipmentChangeEvent event) {
 			if (event.getEntityLiving() instanceof PlayerEntity && event.getSlot().equals(EquipmentSlotType.HEAD)) {
 				PlayerEntity player = (PlayerEntity) event.getEntityLiving();
@@ -250,55 +266,6 @@ public class CommonHandler {
 							DBMTeleporter.teleportEntityToOverworldTop(entity);
 						}
 					});
-				}
-			}
-		}
-
-
-		@SubscribeEvent
-		public static void onBlockBreak(final BlockEvent.BreakEvent event) {
-			if (!event.getPlayer().world.isRemote) {
-				ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-
-				// Break Blocks Quests
-				IPlayerCapability playerCap = DaBoisMod.get(PlayerProvider.getCapabilityOf(player));
-				if (!playerCap.getQuests().isEmpty()) {
-					for (Quest quest : playerCap.getQuests()) {
-						if (quest.getQuestTask() instanceof BreakBlocksQuestTask && event.getState().getBlock() == ((BreakBlocksQuestTask) quest.getQuestTask()).getBlockToBreak()) quest.increaseCount();
-					}
-					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), player.getEntityId()), player);
-				}
-			}
-		}
-
-		@SubscribeEvent
-		public static void onEntityPlaceBlock(final BlockEvent.EntityPlaceEvent event) {
-			if (event.getEntity() instanceof PlayerEntity && !event.getEntity().world.isRemote) {
-				ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-
-				// Place Blocks Quests
-				IPlayerCapability playerCap = DaBoisMod.get(PlayerProvider.getCapabilityOf(player));
-				if (!playerCap.getQuests().isEmpty()) {
-					for (Quest quest : playerCap.getQuests()) {
-						if (quest.getQuestTask() instanceof PlaceBlocksQuestTask && event.getState().getBlock() == ((PlaceBlocksQuestTask) quest.getQuestTask()).getBlockToPlace()) quest.increaseCount();
-					}
-					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), player.getEntityId()), player);
-				}
-			}
-		}
-
-		@SubscribeEvent
-		public static void onPlayerItemCrafted(final PlayerEvent.ItemCraftedEvent event) {
-			if (!event.getPlayer().world.isRemote) {
-				ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-
-				// Craft Items Quests
-				IPlayerCapability playerCap = DaBoisMod.get(PlayerProvider.getCapabilityOf(player));
-				if (!playerCap.getQuests().isEmpty()) {
-					for (Quest quest : playerCap.getQuests()) {
-						if (quest.getQuestTask() instanceof CraftItemsQuestTask && event.getCrafting().getItem() == ((CraftItemsQuestTask) quest.getQuestTask()).getItemToCraft()) quest.increaseCount();
-					}
-					DBMPacketHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(playerCap.getQuests(), player.getEntityId()), player);
 				}
 			}
 		}

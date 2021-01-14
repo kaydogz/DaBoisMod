@@ -18,10 +18,12 @@ import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.tileentity.DBMSignTileEntity;
+import com.github.kaydogz.daboismod.world.biome.BotswanaBiome;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Atlases;
@@ -40,8 +42,6 @@ import net.minecraft.world.GrassColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -197,6 +197,27 @@ public class ClientHandler {
                 if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
                     event.getMatrixStack().pop();
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onFogDensity(final EntityViewRenderEvent.FogDensity event) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+
+            if (player.world.getBiome(player.getPosition()) instanceof BotswanaBiome) {
+                event.setCanceled(true);
+                event.setDensity(0.008F);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onFogColors(final EntityViewRenderEvent.FogColors event) {
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+
+            if (player.world.getBiome(player.getPosition()) instanceof BotswanaBiome) {
+                event.setRed(185F / 255F);
+                event.setGreen(229F / 255F);
+                event.setBlue(41F / 255F);
             }
         }
 

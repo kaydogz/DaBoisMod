@@ -57,7 +57,7 @@ public class BotswanaBiome extends Biome {
 	    this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.ENDERMAN, 20, 1, 5));
 	    this.addSpawn(EntityClassification.MONSTER, new Biome.SpawnListEntry(EntityType.WITCH, 10, 1, 2));
 	}
-	
+
 	@Override
 	public int getSkyColor() {
 		return MathHelper.hsvToRGB(0.04F, 0.6F + this.temperature * 0.07F, 1.0F);

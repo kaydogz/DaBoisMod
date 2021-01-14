@@ -48,7 +48,6 @@ public abstract class CrownItem extends ArmorItem {
 	@Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-		DaBoisMod.debug(DaBoisMod.get(CrownProvider.getCapabilityOf(stack)).isActivated());
 	}
 
 	@Nullable

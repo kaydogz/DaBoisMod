@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "daboismod:item/music_disc_here_comes_the_sun"
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "daboismod:gems"
+    },
+    {
+      "tag": "daboismod:gems"
+    },
+    {
+      "tag": "daboismod:gems"
+    },
+    {
+      "tag": "daboismod:gems"
+    },
+    {
+      "item": "daboismod:ancient_rod"
+    }
+  ],
+  "result": {
+    "item": "daboismod:chandlers_wrath",
+    "count": 1
+  }
+}

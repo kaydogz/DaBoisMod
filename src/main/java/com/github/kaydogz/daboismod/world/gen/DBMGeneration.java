@@ -52,18 +52,11 @@ public class DBMGeneration {
 				biome.addFeature(Decoration.VEGETAL_DECORATION, Feature.RANDOM_PATCH.withConfiguration(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(DBMBlocks.CANNABIS.get().getDefaultState()), new ColumnBlockPlacer(1, 2)).tries(5).xSpread(2).ySpread(0).zSpread(2).func_227317_b_().build()).withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(15, 40, 0, 120))));
 			}
 		}
-
-		for (Biome biome : BiomeDictionary.getBiomes(BiomeDictionary.Type.OVERWORLD)) {
-			biome.addStructure(DBMFeatures.TOMB.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-
-			biome.addFeature(Decoration.SURFACE_STRUCTURES, DBMFeatures.TOMB.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG).withPlacement(Placement.NOPE.configure(IPlacementConfig.NO_PLACEMENT_CONFIG)));
-		}
 		
 		DBMBiomes.BOTSWANA.get().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, DBMFeatures.PADAUK_TREE.get().withConfiguration(padauk_tree_config).withPlacement(Placement.COUNT_EXTRA_HEIGHTMAP.configure(new AtSurfaceWithExtraConfig(1, 0.1F, 1))));
 		DBMBiomes.BOTSWANA.get().addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, DBMFeatures.CUSTOM_LAKE.get().withConfiguration(new BlockStateFeatureConfig(Blocks.WATER.getDefaultState())).withPlacement(Placement.WATER_LAKE.configure(new ChanceConfig(4))));
 		DBMBiomes.BOTSWANA.get().addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, DBMFeatures.CUSTOM_LAKE.get().withConfiguration(new BlockStateFeatureConfig(Blocks.LAVA.getDefaultState())).withPlacement(Placement.LAVA_LAKE.configure(new ChanceConfig(80))));
 		DBMBiomes.BOTSWANA.get().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_PATCH.withConfiguration(botswanian_grass_config).withPlacement(Placement.COUNT_HEIGHTMAP_DOUBLE.configure(new FrequencyConfig(2))));
 		DBMBiomes.BOTSWANA.get().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Feature.RANDOM_PATCH.withConfiguration(botswanian_tall_grass_config).withPlacement(Placement.COUNT_HEIGHTMAP_32.configure(new FrequencyConfig(7))));
-
 	}
 }

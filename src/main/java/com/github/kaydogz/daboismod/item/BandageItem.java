@@ -16,11 +16,12 @@ public class BandageItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if (playerIn.shouldHeal()) {
+		if (playerIn.shouldHeal() || playerIn.isPotionActive(DBMEffects.BLEEDING.get())) {
 			ItemStack itemstack = playerIn.getHeldItem(handIn);
 			playerIn.setActiveHand(handIn);
 			playerIn.heal(this.getHealAmount(itemstack));
 			playerIn.removePotionEffect(DBMEffects.BLEEDING.get());
+			if (itemstack.getCount() == 1) playerIn.playEquipSound(itemstack);
 			if (!playerIn.abilities.isCreativeMode) {
 				itemstack.shrink(1);
 			}

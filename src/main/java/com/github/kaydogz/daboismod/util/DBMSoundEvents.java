@@ -27,7 +27,9 @@ public class DBMSoundEvents {
 	public static final RegistryObject<SoundEvent> MR_BLUE_SKY = SOUND_EVENTS.register("music_disc.mr_blue_sky", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.mr_blue_sky")));
 	public static final RegistryObject<SoundEvent> SPHERE = SOUND_EVENTS.register("music_disc.sphere", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.sphere")));
 	public static final RegistryObject<SoundEvent> MEGALOVANIA = SOUND_EVENTS.register("music_disc.megalovania", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.megalovania")));
-	
+	public static final RegistryObject<SoundEvent> A_DAY_IN_THE_LIFE = SOUND_EVENTS.register("music_disc.a_day_in_the_life", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.a_day_in_the_life")));
+	public static final RegistryObject<SoundEvent> HERE_COMES_THE_SUN = SOUND_EVENTS.register("music_disc.here_comes_the_sun", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.here_comes_the_sun")));
+
 	// Player Sounds
 	public static final RegistryObject<SoundEvent> MAGNETIC_HUM = SOUND_EVENTS.register("player.magnetic_hum", () -> new SoundEvent(DaBoisMod.modLocation("player.magnetic_hum")));
 	

@@ -73,6 +73,8 @@ public class DBMItems {
 	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_SPHERE = ITEMS.register("music_disc_sphere", () -> new MusicDiscItem(13, DBMSoundEvents.SPHERE, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
 	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_CARNIVORES = ITEMS.register("music_disc_carnivores", () -> new MusicDiscItem(13, DBMSoundEvents.CARNIVORES, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
 	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_MEGALOVANIA = ITEMS.register("music_disc_megalovania", () -> new MusicDiscItem(14, DBMSoundEvents.MEGALOVANIA, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
+	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_A_DAY_IN_THE_LIFE = ITEMS.register("music_disc_a_day_in_the_life", () -> new MusicDiscItem(13, DBMSoundEvents.A_DAY_IN_THE_LIFE, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
+	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_HERE_COMES_THE_SUN = ITEMS.register("music_disc_here_comes_the_sun", () -> new MusicDiscItem(13, DBMSoundEvents.HERE_COMES_THE_SUN, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
 
 	// Gem Block Items
 	public static final RegistryObject<GemBlockItem> TOPAZ_BLOCK = ITEMS.register(DBMBlocks.TOPAZ_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.TOPAZ_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));

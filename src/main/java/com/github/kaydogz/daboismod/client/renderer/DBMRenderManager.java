@@ -3,11 +3,9 @@ package com.github.kaydogz.daboismod.client.renderer;
 import com.github.kaydogz.daboismod.block.DBMBlocks;
 import com.github.kaydogz.daboismod.entity.DBMEntities;
 import com.github.kaydogz.daboismod.tileentity.DBMTileEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityType;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 

@@ -53,6 +53,6 @@ public class QuestTaskArgument implements ArgumentType<QuestTask> {
 	}
 
 	public static void createExamples() {
-		examples = Stream.of(QuestTasks.KILL_ZOMBIES.get(), QuestTasks.PLACE_DIRT.get()).map((key) -> QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(key).toString()).collect(Collectors.toList());
+		examples = Stream.of(QuestTasks.KILL_ZOMBIES.get(), QuestTasks.KILL_ZOMBIES.get()).map((key) -> QuestTasks.QUEST_TASKS_REGISTRY.get().getKey(key).toString()).collect(Collectors.toList());
 	}
 }

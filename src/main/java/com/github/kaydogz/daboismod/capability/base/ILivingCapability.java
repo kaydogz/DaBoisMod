@@ -4,7 +4,4 @@ public interface ILivingCapability {
 
 	boolean isRealmFalling();
 	void setRealmFalling(boolean realmFalling);
-	
-	boolean isRadiated();
-	void setRadiated(boolean radiated);
 }

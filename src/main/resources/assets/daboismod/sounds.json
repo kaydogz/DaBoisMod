@@ -51,6 +51,26 @@
 			}
 		]
 	},
+	"music_disc.a_day_in_the_life": {
+		"sounds": [
+			{
+				"name": "daboismod:records/a_day_in_the_life",
+				"stream": true,
+				"volume": 0.15,
+				"attenuation_distance": 64
+			}
+		]
+	},
+	"music_disc.here_comes_the_sun": {
+		"sounds": [
+			{
+				"name": "daboismod:records/here_comes_the_sun",
+				"stream": true,
+				"volume": 0.15,
+				"attenuation_distance": 64
+			}
+		]
+	},
 	"music_disc.mr_blue_sky": {
 		"sounds": [
 			{
