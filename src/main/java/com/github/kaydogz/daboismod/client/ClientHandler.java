@@ -18,17 +18,15 @@ import com.github.kaydogz.daboismod.network.client.CToggleCrownActivationPacket;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.tileentity.DBMSignTileEntity;
-import com.github.kaydogz.daboismod.world.biome.BotswanaBiome;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.Material;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +42,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
@@ -53,18 +50,17 @@ import java.awt.*;
 
 public class ClientHandler {
 
-    @SuppressWarnings("deprecation")
     public static void onClientSetup(final FMLClientSetupEvent event) {
 
-        DeferredWorkQueue.runLater(() -> DBMWoodType.getCustomValues().forEach((woodType) -> Atlases.SIGN_MATERIALS.put(woodType, getSignMaterial(woodType))));
+        event.enqueueWork(() -> DBMWoodType.getCustomValues().forEach((woodType) -> Atlases.SIGN_MATERIALS.put(woodType, getSignMaterial(woodType))));
         DBMKeyBindings.registerKeyBindings();
         DBMRenderManager.registerEntityRenderers();
         DBMRenderManager.bindTileEntityRenderers();
         DBMRenderManager.applyRenderLayers();
     }
 
-    public static Material getSignMaterial(DBMWoodType woodType) {
-        return new Material(Atlases.SIGN_ATLAS, DaBoisMod.modLocation("entity/signs/" + woodType.getName()));
+    public static RenderMaterial getSignMaterial(DBMWoodType woodType) {
+        return new RenderMaterial(Atlases.SIGN_ATLAS, DaBoisMod.modLocation("entity/signs/" + woodType.getName()));
     }
 
     @Mod.EventBusSubscriber(modid = DaBoisMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -197,27 +193,6 @@ public class ClientHandler {
                 if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
                     event.getMatrixStack().pop();
                 }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onFogDensity(final EntityViewRenderEvent.FogDensity event) {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
-
-            if (player.world.getBiome(player.getPosition()) instanceof BotswanaBiome) {
-                event.setCanceled(true);
-                event.setDensity(0.008F);
-            }
-        }
-
-        @SubscribeEvent
-        public static void onFogColors(final EntityViewRenderEvent.FogColors event) {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
-
-            if (player.world.getBiome(player.getPosition()) instanceof BotswanaBiome) {
-                event.setRed(185F / 255F);
-                event.setGreen(229F / 255F);
-                event.setBlue(41F / 255F);
             }
         }
 

@@ -6,7 +6,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
@@ -40,16 +41,15 @@ public class WerewolfEntity extends CryptidEntity {
 		this.dataManager.register(WerewolfEntity.IS_MOLTEN, false);
 	}
 	
-	@Override
-	protected void registerAttributes() {
-		super.registerAttributes();
-		this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(10.0D);
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(275.0D);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.65D);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(35.0D);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2.0D);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.15D);
-		this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
+	public static AttributeModifierMap.MutableAttribute registerAttributes() {
+		return MonsterEntity.registerAttributes()
+				.createMutableAttribute(Attributes.ARMOR, 10.0D)
+				.createMutableAttribute(Attributes.MAX_HEALTH, 275.0D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.65D)
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 35.0D)
+				.createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 2.0D)
+				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.2D)
+				.createMutableAttribute(Attributes.FOLLOW_RANGE, 50.0D);
 	}
 	
 	@Override

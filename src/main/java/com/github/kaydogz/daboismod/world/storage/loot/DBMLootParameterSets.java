@@ -1,9 +1,9 @@
 package com.github.kaydogz.daboismod.world.storage.loot;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
+import net.minecraft.loot.LootParameterSet;
+import net.minecraft.loot.LootParameterSets;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootParameterSet;
-import net.minecraft.world.storage.loot.LootParameterSets;
 
 import java.util.function.Consumer;
 

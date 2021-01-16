@@ -14,6 +14,7 @@ import com.github.kaydogz.daboismod.command.argument.QuestTaskArgument;
 import com.github.kaydogz.daboismod.config.DBMConfigHandler;
 import com.github.kaydogz.daboismod.data.DBMLootTables;
 import com.github.kaydogz.daboismod.enchantment.MagnetismEnchantment;
+import com.github.kaydogz.daboismod.entity.DBMEntities;
 import com.github.kaydogz.daboismod.item.AmberCrownItem;
 import com.github.kaydogz.daboismod.item.CrownHelper;
 import com.github.kaydogz.daboismod.item.CrownItem;
@@ -26,12 +27,13 @@ import com.github.kaydogz.daboismod.potion.DBMEffects;
 import com.github.kaydogz.daboismod.quest.KillEntitiesQuestTask;
 import com.github.kaydogz.daboismod.quest.Quest;
 import com.github.kaydogz.daboismod.stats.DBMStats;
-import com.github.kaydogz.daboismod.world.DBMTeleporter;
-import com.github.kaydogz.daboismod.world.biome.BotswanaBiome;
-import com.github.kaydogz.daboismod.world.dimension.DBMDimensionTypes;
-import com.github.kaydogz.daboismod.world.dimension.RealmOfTheAncientsDimension;
+import com.github.kaydogz.daboismod.world.biome.DBMBiomeMaker;
+import com.github.kaydogz.daboismod.world.biome.DBMBiomes;
+import com.github.kaydogz.daboismod.world.gen.DBMConfiguredFeatures;
+import com.github.kaydogz.daboismod.world.gen.DBMConfiguredSurfaceBuilders;
 import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -41,35 +43,38 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.util.RegistryKey;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.RegisterDimensionsEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CommonHandler {
 
-	@SuppressWarnings("deprecation")
 	public static void onCommonSetup(final FMLCommonSetupEvent event) {
 
 		QuestTaskArgument.createExamples();
-		DBMGeneration.createFeatureConfigs();
+		DBMGeneration.createGenerationConfigs();
 		DBMNetworkHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
-		DeferredWorkQueue.runLater(() -> {
-			DBMGeneration.setupGeneration();
+		event.enqueueWork(() -> {
+			DBMEntities.applyEntityAttributes();
+			DBMBiomes.setupBiomes();
+			DBMConfiguredFeatures.registerConfiguredFeatures();
+			DBMConfiguredSurfaceBuilders.registerConfiguredSurfaceBuilders();
 			DBMArgumentTypes.registerSerializers();
 		});
 		DBMStats.registerStats();
@@ -93,13 +98,8 @@ public class CommonHandler {
 	public static class ForgeEvents {
 
 		@SubscribeEvent
-		public static void onRegisterDimensions(final RegisterDimensionsEvent event) {
-			DBMDimensionTypes.registerDimensions();
-		}
-
-		@SubscribeEvent
-		public static void onServerStarting(final FMLServerStartingEvent event) {
-			DBMCommand.registerCommand(event.getCommandDispatcher());
+		public static void onRegisterCommands(final RegisterCommandsEvent event) {
+			DBMCommand.registerCommand(event.getDispatcher());
 		}
 
 		@SubscribeEvent
@@ -164,12 +164,19 @@ public class CommonHandler {
 			}
 		}
 
+		@SubscribeEvent(priority = EventPriority.HIGHEST)
+		public static void onBiomeLoading(final BiomeLoadingEvent event) {
+			if (event.getName() != null) {
+				DeferredWorkQueue.runLater(() -> DBMBiomeMaker.modifyBiomes(RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName()), event.getSpawns(), event.getGeneration()));
+			}
+		}
+
 		@SubscribeEvent
 		public static void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
 			LivingEntity entity = event.getEntityLiving();
 
 			// Manage Botswana Radiation
-			if (entity.world.getBiome(entity.getPosition()) instanceof BotswanaBiome) {
+			if (entity.world.getBiome(entity.getPosition()) == DBMBiomes.BOTSWANA.get()) {
 				if (!entity.isPotionActive(DBMEffects.RADIATION.get())) {
 					entity.addPotionEffect(new EffectInstance(DBMEffects.RADIATION.get(), 120000, 0, false, false, true));
 				}
@@ -194,8 +201,8 @@ public class CommonHandler {
 		}
 
 		@SubscribeEvent
-		public static void onEntityEyeHeight(final EntityEvent.EyeHeight event) {
-			if (event.getEntity() instanceof PlayerEntity) {
+		public static void onEntityEyeHeight(final EntityEvent.Size event) {
+			if (event.getEntity() instanceof PlayerEntity && event.getEntity().isAddedToWorld()) {
 				PlayerEntity player = (PlayerEntity) event.getEntity();
 
 				// Activated Crown Eye Height Changing
@@ -203,7 +210,9 @@ public class CommonHandler {
 				if (helmetSlotStack.getItem() instanceof CrownItem && CrownHelper.isActivated(helmetSlotStack)) {
 					CrownItem crownItem = (CrownItem) helmetSlotStack.getItem();
 					if (crownItem.shouldScalePlayer(helmetSlotStack, player)) {
-						event.setNewHeight(crownItem.scalePlayer(helmetSlotStack, player, event.getPose(), event.getSize(), event.getOldHeight()));
+						float scale = crownItem.getScale(helmetSlotStack, player);
+						event.setNewEyeHeight(event.getOldEyeHeight() * scale);
+						event.setNewSize(EntitySize.flexible(event.getOldSize().width * scale, event.getOldSize().height * scale));
 					}
 				}
 			}
@@ -248,7 +257,7 @@ public class CommonHandler {
 
 		@SubscribeEvent
 		public static void onWorldTick(final TickEvent.WorldTickEvent event) {
-
+			/*
 			// Manages Falling From Sky
 			if (!event.world.isRemote && event.phase == TickEvent.Phase.END) {
 				ServerWorld world = (ServerWorld) event.world;
@@ -265,6 +274,7 @@ public class CommonHandler {
 					});
 				}
 			}
+			 */
 		}
 
 		@SubscribeEvent

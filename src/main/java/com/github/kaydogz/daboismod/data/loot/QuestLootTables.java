@@ -3,10 +3,10 @@ package com.github.kaydogz.daboismod.data.loot;
 import com.github.kaydogz.daboismod.item.DBMItems;
 import com.github.kaydogz.daboismod.quest.Difficulty;
 import net.minecraft.item.Items;
+import net.minecraft.loot.*;
+import net.minecraft.loot.functions.EnchantWithLevels;
+import net.minecraft.loot.functions.SetCount;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.functions.EnchantWithLevels;
-import net.minecraft.world.storage.loot.functions.SetCount;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

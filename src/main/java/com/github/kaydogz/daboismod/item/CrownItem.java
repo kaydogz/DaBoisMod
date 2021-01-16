@@ -5,8 +5,6 @@ import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
 import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
@@ -38,9 +36,9 @@ public abstract class CrownItem extends ArmorItem {
 
 			// Activated Tooltip
 			if (DaBoisMod.get(lazyCrownCap).isActivated()) {
-				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN)));
+				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.on").mergeStyle(TextFormatting.GREEN)));
 			} else {
-				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)));
+				tooltip.add(new TranslationTextComponent("item.daboismod.crown.activated", new TranslationTextComponent("item.daboismod.crown.off").mergeStyle(TextFormatting.RED)));
 			}
 		}
 	}
@@ -83,17 +81,6 @@ public abstract class CrownItem extends ArmorItem {
 
 	public float getScale(ItemStack stackIn, PlayerEntity playerIn) {
 		return 1.0F;
-	}
-
-	public final float scalePlayer(ItemStack stackIn, PlayerEntity playerIn, Pose poseIn, EntitySize sizeIn, float oldEyeHeightIn) {
-		EntitySize originalSize = playerIn.getSize(playerIn.getPose());
-		float scale = this.getScale(stackIn, playerIn);
-		playerIn.size = EntitySize.flexible(originalSize.width * scale, originalSize.height * scale);
-
-		float newWidthMagnitude = playerIn.size.width / 2;
-		playerIn.setBoundingBox(playerIn.getBoundingBox().expand(-newWidthMagnitude, 0, -newWidthMagnitude).expand(newWidthMagnitude, playerIn.size.height, newWidthMagnitude));
-
-		return oldEyeHeightIn * scale;
 	}
 
 	/**

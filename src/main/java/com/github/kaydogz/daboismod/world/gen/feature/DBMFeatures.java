@@ -1,9 +1,9 @@
 package com.github.kaydogz.daboismod.world.gen.feature;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
+import com.github.kaydogz.daboismod.block.DBMBlocks;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.foliageplacer.AcaciaFoliagePlacer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,7 +16,6 @@ public class DBMFeatures {
 	public static void registerFeatures(IEventBus eventBus) {
 		FEATURES.register(eventBus);
 	}
-	
-	public static final RegistryObject<Feature<TreeFeatureConfig>> PADAUK_TREE = FEATURES.register("padauk_tree", () -> new PadaukTreeFeature(DBMTreeFeatureConfig::deserializePadauk));
-	public static final RegistryObject<Feature<BlockStateFeatureConfig>> CUSTOM_LAKE = FEATURES.register("custom_lake", () -> new DBMLakeFeature(BlockStateFeatureConfig::deserialize));
+
+	public static final RegistryObject<Feature<BlockStateFeatureConfig>> CUSTOM_LAKE = FEATURES.register("custom_lake", () -> new DBMLakeFeature(BlockStateFeatureConfig.field_236455_a_));
 }

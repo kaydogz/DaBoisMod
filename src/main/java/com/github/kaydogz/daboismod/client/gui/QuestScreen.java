@@ -7,6 +7,7 @@ import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.client.CCancelQuestPacket;
 import com.github.kaydogz.daboismod.network.client.CClaimQuestPacket;
 import com.github.kaydogz.daboismod.quest.Quest;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -15,6 +16,7 @@ import net.minecraft.item.AirItem;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import org.lwjgl.glfw.GLFW;
@@ -111,16 +113,16 @@ public class QuestScreen extends Screen {
 		super.init();
 
 		// Left Arrow Button
-		addButton(this.leftButton = new Button((this.width - this.xSize) / 2 - 30, this.height / 2 - 10, 20, 20, "<", this::onLeftButtonPress));
+		addButton(this.leftButton = new Button((this.width - this.xSize) / 2 - 30, this.height / 2 - 10, 20, 20, new StringTextComponent("<"), this::onLeftButtonPress));
 
 		// Right Arrow Button
-		addButton(this.rightButton = new Button((this.width + this.xSize) / 2 + 10, this.height / 2 - 10, 20, 20, ">", this::onRightButtonPress));
+		addButton(this.rightButton = new Button((this.width + this.xSize) / 2 + 10, this.height / 2 - 10, 20, 20, new StringTextComponent("<"), this::onRightButtonPress));
 
 		// Claim Button
-		addButton(this.claimButton = new Button(this.width / 2 - 90, (this.height - this.ySize) / 2 + 135, 80, 20, new TranslationTextComponent("gui.daboismod.quest.claim").getFormattedText(), this::onClaimButtonPress));
+		addButton(this.claimButton = new Button(this.width / 2 - 90, (this.height - this.ySize) / 2 + 135, 80, 20, new TranslationTextComponent("gui.daboismod.quest.claim"), this::onClaimButtonPress));
 
 		// Cancel Button
-		addButton(this.cancelButton = new Button(this.width / 2 + 10, (this.height - this.ySize) / 2 + 135, 80, 20, new TranslationTextComponent("gui.daboismod.quest.cancel").getFormattedText(), this::onCancelButtonPress));
+		addButton(this.cancelButton = new Button(this.width / 2 + 10, (this.height - this.ySize) / 2 + 135, 80, 20, new TranslationTextComponent("gui.daboismod.quest.cancel"), this::onCancelButtonPress));
 
 		this.updateQuests();
 	}
@@ -140,17 +142,18 @@ public class QuestScreen extends Screen {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float p_render_3_) {
-		this.renderBackground();
-		this.renderGuiBackground(mouseX, mouseY, p_render_3_);
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+		this.renderBackground(matrixStack);
+		this.renderGuiBackground(matrixStack, mouseX, mouseY, partialTicks);
 
-		super.render(mouseX, mouseY, p_render_3_);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		// Render Progress Bar (Always Rendered So The Bar Can Be Covered When Quests are Empty)
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.minecraft.getTextureManager().bindTexture(QUEST_BACKGROUND);
-		this.blit((this.width - this.xSize) / 2 + 52,						// X Position to Render At
-				(this.height - this.ySize) / 2 + 94,						// Y Position to Render At
+		this.blit(matrixStack,
+				(this.width - this.xSize) / 2 + 52,								// X Position to Render At
+				(this.height - this.ySize) / 2 + 94,								// Y Position to Render At
 				0,															// Texture Offset X
 				this.ySize + 1 + (this.quests.isEmpty() ? 20 : 0),			// Texture Offset Y
 				(int) (149 * this.percentage),										// Width
@@ -160,9 +163,9 @@ public class QuestScreen extends Screen {
 		if (this.quests.isEmpty()) {
 
 			// 'You have no quests available.'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.none").getFormattedText(),
-					this.width / 2,
-					this.height / 2 - 4,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.none").getUnformattedComponentText(),
+					this.width / 2F,
+					this.height / 2F - 4F,
 					16777215
 			);
 
@@ -170,37 +173,37 @@ public class QuestScreen extends Screen {
 			final Quest quest = this.quests.get(currentPage);
 
 			// 'Quest X / Y'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.questNumber", currentPage + 1, this.quests.size()).getFormattedText(),
-					this.width / 2,
-					(this.height - this.ySize) / 2 - 9,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.questNumber", currentPage + 1, this.quests.size()).getUnformattedComponentText(),
+					this.width / 2F,
+					(this.height - this.ySize) / 2F - 9F,
 					16777215
 			);
 
 			// 'Objective: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.objective", new TranslationTextComponent(quest.getQuestTask().getTranslationKey(), quest.getQuota())).getFormattedText(),
-					this.width / 2,
-					this.height / 2 - 63,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.objective", new TranslationTextComponent(quest.getQuestTask().getTranslationKey(), quest.getQuota())).getUnformattedComponentText(),
+					this.width / 2F,
+					this.height / 2F - 63F,
 					16777215
 			);
 
 			// 'Difficulty: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.difficulty", quest.getDifficulty().getTextComponent()).getFormattedText(),
-					this.width / 2,
-					this.height / 2 - 45,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.difficulty", quest.getDifficulty().getTextComponent()).getUnformattedComponentText(),
+					this.width / 2F,
+					this.height / 2F - 45F,
 					16777215
 			);
 
 			// 'Completed: X / Y'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.completed", quest.getCount(), quest.getQuota()).getFormattedText(),
-					this.width / 2,
-					this.height / 2,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.completed", quest.getCount(), quest.getQuota()).getUnformattedComponentText(),
+					this.width / 2F,
+					this.height / 2F,
 					16777215
 			);
 
 			// 'Reward: X'
-			this.drawCenteredString(this.font, new TranslationTextComponent("gui.daboismod.quest.reward", (quest.getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing").getFormattedText() : "  ")).getFormattedText(),
-					this.width / 2 - 3,
-					this.height / 2 - 22,
+			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.reward", (quest.getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing").getUnformattedComponentText() : "  ")).getUnformattedComponentText(),
+					this.width / 2F - 3F,
+					this.height / 2F - 22F,
 					16777215
 			);
 
@@ -210,15 +213,15 @@ public class QuestScreen extends Screen {
 				int itemPosY = this.height / 2 - 28;
 				this.itemRenderer.renderItemAndEffectIntoGUI(quest.getReward(), itemPosX, itemPosY);
 				this.itemRenderer.renderItemOverlays(this.font, quest.getReward(), itemPosX, itemPosY);
-				if (mouseX > itemPosX - 4 && mouseX < itemPosX + 16 && mouseY > itemPosY - 2 && mouseY < itemPosY + 18) this.renderTooltip(quest.getReward(), mouseX, mouseY);
+				if (mouseX > itemPosX - 4 && mouseX < itemPosX + 16 && mouseY > itemPosY - 2 && mouseY < itemPosY + 18) this.renderTooltip(matrixStack, quest.getReward(), mouseX, mouseY);
 			}
 		}
 	}
 	
-	public void renderGuiBackground(int mouseX, int mouseY, float val) {
+	public void renderGuiBackground(MatrixStack matrixStack, int mouseX, int mouseY, float val) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    this.minecraft.getTextureManager().bindTexture(QUEST_BACKGROUND);
-	    this.blit((this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, this.xSize, this.ySize);
+	    this.blit(matrixStack, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2, 0, 0, this.xSize, this.ySize);
 	}
 	
 	@Override

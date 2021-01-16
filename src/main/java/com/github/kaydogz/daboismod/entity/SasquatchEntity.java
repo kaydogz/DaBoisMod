@@ -11,11 +11,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfo.Color;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.IServerWorldInfo;
 
 import java.util.Random;
 
@@ -54,17 +57,16 @@ public class SasquatchEntity extends CryptidEntity {
 		this.dataManager.register(IS_GIANT, false);
 		this.dataManager.register(BECOMING_GIANT, false);
 	}
-	
-	@Override
-	protected void registerAttributes() {
-		super.registerAttributes();
-		this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(20.0D);
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(275.0D);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(25.0D);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(14.0D);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.15D);
-		this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
+
+	public static AttributeModifierMap.MutableAttribute registerAttributes() {
+		return MonsterEntity.registerAttributes()
+				.createMutableAttribute(Attributes.ARMOR, 20.0D)
+				.createMutableAttribute(Attributes.MAX_HEALTH, 275.0D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D)
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 25.0D)
+				.createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 14.0D)
+				.createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.15D)
+				.createMutableAttribute(Attributes.FOLLOW_RANGE, 50.0D);
 	}
 
 	@Override
@@ -95,7 +97,7 @@ public class SasquatchEntity extends CryptidEntity {
 		super.updateAITasks();
 		if (this.getHealth() <= 3 * this.getMaxHealth() / 4 && !this.world.getWorldInfo().isThundering()) {
 			if (!this.world.getWorldInfo().isRaining()) this.world.getWorldInfo().setRaining(true);
-			this.world.getWorldInfo().setThundering(true);
+			if (!this.world.isRemote) ((IServerWorldInfo) this.world.getWorldInfo()).setThundering(true);
 		}
 		if (this.getHealth() <= this.getMaxHealth() / 2) this.becomeGiant();
 	}
@@ -127,14 +129,14 @@ public class SasquatchEntity extends CryptidEntity {
 	@Override
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
-		this.world.getWorldInfo().setThundering(false);
+		if (!this.world.isRemote) ((IServerWorldInfo) this.world.getWorldInfo()).setThundering(false);
 		this.world.getWorldInfo().setRaining(false);
 	}
 	
 	@Override
 	public boolean onLivingFall(float distance, float damageMultiplier) {
 		if (this.isGiant() && distance > 10.0F) {
-			for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(7.0D, 2.0D, 7.0D), (entity) -> entity instanceof LivingEntity && entity.onGround)) {
+			for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox().grow(7.0D, 2.0D, 7.0D), (entity) -> entity instanceof LivingEntity && entity.isOnGround())) {
 				entity.addVelocity(0.0D, 1.5D, 0.0D);
 				entity.velocityChanged = true;
 			}

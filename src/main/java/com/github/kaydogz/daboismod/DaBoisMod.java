@@ -13,7 +13,6 @@ import com.github.kaydogz.daboismod.quest.QuestTasks;
 import com.github.kaydogz.daboismod.tileentity.DBMTileEntities;
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
 import com.github.kaydogz.daboismod.world.biome.DBMBiomes;
-import com.github.kaydogz.daboismod.world.dimension.DBMModDimensions;
 import com.github.kaydogz.daboismod.world.gen.feature.DBMFeatures;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +45,6 @@ public class DaBoisMod {
 		DBMEntities.registerEntities(eventBus);
 		DBMEffects.registerEffects(eventBus);
 		DBMFeatures.registerFeatures(eventBus);
-		DBMModDimensions.registerModDimensions(eventBus);
 		DBMPaintingTypes.registerPaintingTypes(eventBus);
 		DBMPotions.registerPotions(eventBus);
 		DBMSoundEvents.registerSoundEvents(eventBus);

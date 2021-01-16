@@ -32,10 +32,10 @@ public class MagnetismTickableSound extends TickableSound {
 	@Override
 	public void tick() {
 		if (this.player == null || !this.player.isAlive()) {
-			this.donePlaying = true;
+			this.finishPlaying();
 		} else {
 			LazyOptional<IPlayerCapability> playerCap = PlayerProvider.getCapabilityOf(this.player);
-			if (!playerCap.isPresent() || !DaBoisMod.get(playerCap).isMagnetic()) this.donePlaying = true;
+			if (!playerCap.isPresent() || !DaBoisMod.get(playerCap).isMagnetic()) this.finishPlaying();
 			this.x = (float) this.player.getPosX();
 			this.y = (float) this.player.getPosY();
 			this.z = (float) this.player.getPosZ();

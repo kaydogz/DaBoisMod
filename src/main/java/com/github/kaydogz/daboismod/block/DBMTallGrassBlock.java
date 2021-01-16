@@ -18,8 +18,7 @@ public class DBMTallGrassBlock extends TallGrassBlock {
 
 	@Override
 	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		Block block = state.getBlock();
-		return super.isValidGround(state, worldIn, pos) || block == DBMBlocks.BOTSWANIAN_GRASS_BLOCK.get() || block == DBMBlocks.BOTSWANIAN_DIRT.get();
+		return super.isValidGround(state, worldIn, pos) || state.isIn(DBMBlocks.BOTSWANIAN_GRASS_BLOCK.get()) || state.isIn(DBMBlocks.BOTSWANIAN_DIRT.get());
 	}
 	
 	@Override

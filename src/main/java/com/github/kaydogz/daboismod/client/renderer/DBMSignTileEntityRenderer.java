@@ -7,17 +7,16 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.*;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.RenderComponentsUtil;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.model.Material;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.renderer.model.RenderMaterial;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class DBMSignTileEntityRenderer extends TileEntityRenderer<DBMSignTileEnt
 
     public void render(DBMSignTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState blockstate = tileEntityIn.getBlockState();
-
         matrixStackIn.push();
         float f = 0.6666667F;
         if (blockstate.getBlock() instanceof StandingSignBlock) {
@@ -49,8 +47,8 @@ public class DBMSignTileEntityRenderer extends TileEntityRenderer<DBMSignTileEnt
 
         matrixStackIn.push();
         matrixStackIn.scale(0.6666667F, -0.6666667F, -0.6666667F);
-        Material material = getDBMMaterial(blockstate.getBlock());
-        IVertexBuilder ivertexbuilder = material.getBuffer(bufferIn, this.model::getRenderType);
+        RenderMaterial rendermaterial = getDBMMaterial(blockstate.getBlock());
+        IVertexBuilder ivertexbuilder = rendermaterial.getBuffer(bufferIn, this.model::getRenderType);
         this.model.signBoard.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
         this.model.signStick.render(matrixStackIn, ivertexbuilder, combinedLightIn, combinedOverlayIn);
         matrixStackIn.pop();
@@ -60,26 +58,27 @@ public class DBMSignTileEntityRenderer extends TileEntityRenderer<DBMSignTileEnt
         matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
         int i = tileEntityIn.getTextColor().getTextColor();
         double d0 = 0.4D;
-        int j = (int)((double) NativeImage.getRed(i) * 0.4D);
+        int j = (int)((double)NativeImage.getRed(i) * 0.4D);
         int k = (int)((double)NativeImage.getGreen(i) * 0.4D);
         int l = (int)((double)NativeImage.getBlue(i) * 0.4D);
         int i1 = NativeImage.getCombined(0, l, k, j);
+        int j1 = 20;
 
-        for(int j1 = 0; j1 < 4; ++j1) {
-            String s = tileEntityIn.getRenderText(j1, (p_212491_1_) -> {
-                List<ITextComponent> list = RenderComponentsUtil.splitText(p_212491_1_, 90, fontrenderer, false, true);
-                return list.isEmpty() ? "" : list.get(0).getFormattedText();
+        for(int k1 = 0; k1 < 4; ++k1) {
+            IReorderingProcessor ireorderingprocessor = tileEntityIn.func_242686_a(k1, (p_243502_1_) -> {
+                List<IReorderingProcessor> list = fontrenderer.trimStringToWidth(p_243502_1_, 90);
+                return list.isEmpty() ? IReorderingProcessor.field_242232_a : list.get(0);
             });
-            if (s != null) {
-                float f3 = (float)(-fontrenderer.getStringWidth(s) / 2);
-                fontrenderer.renderString(s, f3, (float)(j1 * 10 - tileEntityIn.signText.length * 5), i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, combinedLightIn);
+            if (ireorderingprocessor != null) {
+                float f3 = (float)(-fontrenderer.func_243245_a(ireorderingprocessor) / 2);
+                fontrenderer.func_238416_a_(ireorderingprocessor, f3, (float)(k1 * 10 - 20), i1, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, 0, combinedLightIn);
             }
         }
 
         matrixStackIn.pop();
     }
 
-    public static Material getDBMMaterial(Block blockIn) {
+    public static RenderMaterial getDBMMaterial(Block blockIn) {
         WoodType woodtype;
         if (blockIn instanceof AbstractSignBlock) {
             woodtype = ((AbstractSignBlock) blockIn).getWoodType();

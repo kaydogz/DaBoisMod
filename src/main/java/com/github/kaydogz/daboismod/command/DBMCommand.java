@@ -98,7 +98,7 @@ public class DBMCommand {
 
 		if (questsCleared == 0) {
 			if (targets.size() == 1) {
-				throw CLEAR_SINGLE_FAILED_EXCEPTION.create(targets.iterator().next().getName().getFormattedText());
+				throw CLEAR_SINGLE_FAILED_EXCEPTION.create(targets.iterator().next().getName().getUnformattedComponentText());
 			} else {
 				throw CLEAR_MULTIPLE_FAILED_EXCEPTION.create(targets.size());
 			}

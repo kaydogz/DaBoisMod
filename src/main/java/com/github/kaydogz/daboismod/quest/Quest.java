@@ -4,12 +4,12 @@ import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.world.storage.loot.DBMLootParameterSets;
 import com.github.kaydogz.daboismod.world.storage.loot.DBMLootParameters;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootTable;
-import net.minecraft.world.storage.loot.LootTables;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

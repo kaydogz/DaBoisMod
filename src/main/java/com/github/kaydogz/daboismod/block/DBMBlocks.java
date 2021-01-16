@@ -5,6 +5,7 @@ import com.github.kaydogz.daboismod.block.trees.PadaukTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -17,6 +18,12 @@ public class DBMBlocks {
 	
 	public static void registerBlocks(IEventBus eventBus) {
 		BLOCKS.register(eventBus);
+	}
+
+	private static RotatedPillarBlock createLogBlock(MaterialColor topColor, MaterialColor barkColor) {
+		return new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD, (state) -> {
+			return state.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor;
+		}).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
 	}
 	
 	// General Blocks
@@ -42,9 +49,9 @@ public class DBMBlocks {
 	public static final RegistryObject<Block> PADAUK_PLANKS = BLOCKS.register("padauk_planks", () -> new Block(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMSaplingBlock> PADAUK_SAPLING = BLOCKS.register("padauk_sapling", () -> new DBMSaplingBlock(new PadaukTree(), Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0F).sound(SoundType.PLANT)));
 	public static final RegistryObject<FlowerPotBlock> POTTED_PADAUK_SAPLING = BLOCKS.register("potted_padauk_sapling", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, PADAUK_SAPLING, Block.Properties.create(Material.MISCELLANEOUS).hardnessAndResistance(0.0F).notSolid()));
-	public static final RegistryObject<LogBlock> PADAUK_LOG = BLOCKS.register("padauk_log", () -> new LogBlock(MaterialColor.QUARTZ, Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<RotatedPillarBlock> PADAUK_LOG = BLOCKS.register("padauk_log", () -> createLogBlock(MaterialColor.QUARTZ, MaterialColor.RED));
 	public static final RegistryObject<LeavesBlock> PADAUK_LEAVES = BLOCKS.register("padauk_leaves", () -> new LeavesBlock(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid()));
-	public static final RegistryObject<LogBlock> STRIPPED_PADAUK_LOG = BLOCKS.register("stripped_padauk_log", () -> new LogBlock(MaterialColor.QUARTZ, Block.Properties.create(Material.WOOD, MaterialColor.QUARTZ).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<RotatedPillarBlock> STRIPPED_PADAUK_LOG = BLOCKS.register("stripped_padauk_log", () -> createLogBlock(MaterialColor.QUARTZ, MaterialColor.QUARTZ));
 	public static final RegistryObject<RotatedPillarBlock> PADAUK_WOOD = BLOCKS.register("padauk_wood", () -> new RotatedPillarBlock(Block.Properties.create(Material.WOOD, MaterialColor.QUARTZ).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<RotatedPillarBlock> STRIPPED_PADAUK_WOOD = BLOCKS.register("stripped_padauk_wood", () -> new RotatedPillarBlock(Block.Properties.create(Material.WOOD, MaterialColor.QUARTZ).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMWoodButtonBlock> PADAUK_BUTTON = BLOCKS.register("padauk_button", () -> new DBMWoodButtonBlock(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
@@ -53,7 +60,7 @@ public class DBMBlocks {
 	public static final RegistryObject<FenceGateBlock> PADAUK_FENCE_GATE = BLOCKS.register("padauk_fence_gate", () -> new FenceGateBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMPressurePlateBlock> PADAUK_PRESSURE_PLATE = BLOCKS.register("padauk_pressure_plate", () -> new DBMPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.create(Material.WOOD, MaterialColor.RED).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMStandingSignBlock> PADAUK_SIGN = BLOCKS.register("padauk_sign", () -> new DBMStandingSignBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD), DBMWoodType.padauk));
-	public static final RegistryObject<DBMWallSignBlock> PADAUK_WALL_SIGN = BLOCKS.register("padauk_wall_sign", () -> new DBMWallSignBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD).lootFrom(PADAUK_SIGN.get()), DBMWoodType.padauk));
+	public static final RegistryObject<DBMWallSignBlock> PADAUK_WALL_SIGN = BLOCKS.register("padauk_wall_sign", () -> new DBMWallSignBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD).lootFrom(PADAUK_SIGN), DBMWoodType.padauk));
 	public static final RegistryObject<SlabBlock> PADAUK_SLAB = BLOCKS.register("padauk_slab", () -> new SlabBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<StairsBlock> PADAUK_STAIRS = BLOCKS.register("padauk_stairs", () -> new StairsBlock(() -> PADAUK_PLANKS.get().getDefaultState(), Block.Properties.from(PADAUK_PLANKS.get())));
 	public static final RegistryObject<DBMTrapDoorBlock> PADAUK_TRAPDOOR = BLOCKS.register("padauk_trapdoor", () -> new DBMTrapDoorBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid()));

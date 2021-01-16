@@ -16,13 +16,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = DaBoisMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DBMRegistryHandler {
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void postRegisterBiomes(final RegistryEvent.Register<Biome> event) {
-		BiomeDictionary.addTypes(DBMBiomes.ANCIENT_ISLANDS.get());
-		BiomeDictionary.addTypes(DBMBiomes.BOTSWANA.get(), BiomeDictionary.Type.HOT, BiomeDictionary.Type.HILLS, BiomeDictionary.Type.OVERWORLD, BiomeDictionary.Type.DEAD);
-		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(DBMBiomes.BOTSWANA.get(), 3));
-	}
 	
 	/**
 	 * Exists to work around a limitation with Spawn Eggs:

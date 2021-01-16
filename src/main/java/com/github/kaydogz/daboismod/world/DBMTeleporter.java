@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.world;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.ITeleporter;
 
@@ -19,7 +19,7 @@ public class DBMTeleporter implements ITeleporter {
 	public Entity placeEntity(Entity entityIn, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
 		Entity entity = repositionEntity.apply(false);
 		if (!this.realmFalling) return entity;
-		entity.setPositionAndUpdate(entity.getPosX(), destWorld.getActualHeight() + 10, entity.getPosZ());
+		entity.setPositionAndUpdate(entity.getPosX(), destWorld.getHeight() + 10, entity.getPosZ());
 		return entity;
 	}
 
@@ -28,7 +28,7 @@ public class DBMTeleporter implements ITeleporter {
 	 * @param entityIn the entity.
 	 */
 	public static void teleportEntityToOverworldTop(Entity entityIn) {
-		entityIn.changeDimension(DimensionType.OVERWORLD, new DBMTeleporter(true));
+		entityIn.changeDimension(entityIn.getServer().getWorld(World.OVERWORLD), new DBMTeleporter(true));
     }
 	
 }

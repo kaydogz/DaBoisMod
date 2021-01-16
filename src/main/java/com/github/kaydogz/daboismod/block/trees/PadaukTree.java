@@ -1,18 +1,23 @@
 package com.github.kaydogz.daboismod.block.trees;
 
-import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
-import com.github.kaydogz.daboismod.world.gen.feature.DBMFeatures;
+import com.github.kaydogz.daboismod.world.gen.DBMConfiguredFeatures;
 import net.minecraft.block.trees.Tree;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
+import net.minecraft.world.gen.feature.Features;
 
 import java.util.Random;
 
 public class PadaukTree extends Tree {
 
-	@Override
-	public ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean p_225546_2_) {
-		return DBMFeatures.PADAUK_TREE.get().withConfiguration(DBMGeneration.padauk_tree_config);
+	@Override @SuppressWarnings("unchecked")
+	public ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean p_225546_2_) {
+		ConfiguredFeature<?, ?> feature = WorldGenRegistries.CONFIGURED_FEATURE.getOrThrow(DBMConfiguredFeatures.PADAUK);
+		if (feature.config instanceof BaseTreeFeatureConfig) {
+			return (ConfiguredFeature<BaseTreeFeatureConfig, ?>) feature;
+		}
+		return Features.OAK;
 	}
 	
 	public static int getPadaukLeavesColor() {

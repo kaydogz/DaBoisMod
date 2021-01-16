@@ -1,9 +1,10 @@
 modLoader="javafml" #mandatory
-loaderVersion="[31,)" #mandatory
+loaderVersion="[35,)" #mandatory
+license="LGPL v2.1"
 
 [[mods]] #mandatory
 modId="daboismod" #mandatory
-version="0.5.0" #mandatory
+version="0.6.0" #mandatory
 
 displayName="Da Bois Mod" #mandatory
 displayURL="https://github.com/kaydogz/DaBoisMod" #optional
@@ -19,12 +20,12 @@ Praise Jacob.
 [[dependencies.daboismod]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[31,)" #mandatory
+    versionRange="[35,)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.daboismod]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.4]"
     ordering="NONE"
     side="BOTH"

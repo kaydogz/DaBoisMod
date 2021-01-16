@@ -23,7 +23,7 @@ public class QuestHelper {
         ArrayList<Quest> quests = DaBoisMod.get(PlayerProvider.getCapabilityOf(playerIn)).getQuests();
         quests.add(questIn);
         DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateQuestsPacket(quests, playerIn.getEntityId()), playerIn);
-        playerIn.sendStatusMessage(new TranslationTextComponent("gui.daboismod.quest.new").applyTextStyle(TextFormatting.GOLD), true);
+        playerIn.sendStatusMessage(new TranslationTextComponent("gui.daboismod.quest.new").mergeStyle(TextFormatting.GOLD), true);
     }
 
     /**

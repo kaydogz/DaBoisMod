@@ -12,22 +12,22 @@ import net.minecraft.util.SoundEvents;
 import java.util.function.Supplier;
 
 public enum DBMArmorMaterial implements IArmorMaterial {
-	GOD(DaBoisMod.modLocation("god").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, () -> {
+	GOD(DaBoisMod.modLocation("god").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, 0.0F, () -> {
 		return Ingredient.fromItems(Items.ENCHANTED_GOLDEN_APPLE);
 	}),
-	AMBER_CROWN(DaBoisMod.modLocation("amber_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, () -> {
+	AMBER_CROWN(DaBoisMod.modLocation("amber_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, 0.0F, () -> {
 		return Ingredient.fromItems(DBMItems.AMBER.get());
 	}),
-	TOPAZ_CROWN(DaBoisMod.modLocation("topaz_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, () -> {
+	TOPAZ_CROWN(DaBoisMod.modLocation("topaz_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, 0.0F, () -> {
 		return Ingredient.fromItems(DBMItems.TOPAZ.get());
 	}),
-	RUBY_CROWN(DaBoisMod.modLocation("ruby_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, () -> {
+	RUBY_CROWN(DaBoisMod.modLocation("ruby_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, 0.0F, () -> {
 		return Ingredient.fromItems(DBMItems.RUBY.get());
 	}),
-	AMETHYST_CROWN(DaBoisMod.modLocation("amethyst_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, () -> {
+	AMETHYST_CROWN(DaBoisMod.modLocation("amethyst_crown").toString(), 35, new int[] {1, 2, 3, 1}, 8, SoundEvents.ITEM_ARMOR_EQUIP_GOLD, 2.1F, 0.0F, () -> {
 		return Ingredient.fromItems(DBMItems.AMETHYST.get());
 	}),
-	ANCIENT(DaBoisMod.modLocation("ancient").toString(), 40, new int[] {5, 8, 11, 5}, 9, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.2F, () -> {
+	ANCIENT(DaBoisMod.modLocation("ancient").toString(), 40, new int[] {5, 8, 11, 5}, 9, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.2F, 0.15F, () -> {
 		return Ingredient.fromItems(DBMItems.ANCIENT_INGOT.get());
 	});
 
@@ -38,15 +38,17 @@ public enum DBMArmorMaterial implements IArmorMaterial {
 	private final int enchantability;
 	private final SoundEvent soundEvent;
 	private final float toughness;
+	private final float knockbackResistance;
 	private final LazyValue<Ingredient> repairMaterial;
 
-	DBMArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountsIn, int enchantabilityIn, SoundEvent equipSoundIn, float toughness, Supplier<Ingredient> repairMaterialSupplier) {
+	DBMArmorMaterial(String nameIn, int maxDamageFactorIn, int[] damageReductionAmountsIn, int enchantabilityIn, SoundEvent equipSoundIn, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterialSupplier) {
 		this.name = nameIn;
 	    this.maxDamageFactor = maxDamageFactorIn;
 	    this.damageReductionAmountArray = damageReductionAmountsIn;
 	    this.enchantability = enchantabilityIn;
 	    this.soundEvent = equipSoundIn;
 	    this.toughness = toughness;
+	    this.knockbackResistance = knockbackResistance;
 	    this.repairMaterial = new LazyValue<>(repairMaterialSupplier);
 	}
 	
@@ -83,5 +85,10 @@ public enum DBMArmorMaterial implements IArmorMaterial {
 	@Override
 	public float getToughness() {
 	    return this.toughness;
+	}
+
+	@Override
+	public float getKnockbackResistance() {
+		return this.knockbackResistance;
 	}
 }

@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
 import net.minecraft.world.gen.feature.FlowersFeature;
 import net.minecraft.world.lighting.LightEngine;
 import net.minecraft.world.server.ServerWorld;
@@ -26,9 +25,11 @@ public class BotswanianGrassBlock extends GrassBlock {
 		world.setBlockState(pos, DBMBlocks.BOTSWANIAN_DIRT.get().getDefaultState(), 2);
 	}
 
-	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-		if (!func_220257_b(state, worldIn, pos)) {
+	/**
+	 * Performs a random tick on a block.
+	 */
+	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+		if (!isSnowyConditions(state, worldIn, pos)) {
 			if (!worldIn.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
 			worldIn.setBlockState(pos, DBMBlocks.BOTSWANIAN_DIRT.get().getDefaultState());
 		} else {
@@ -36,12 +37,13 @@ public class BotswanianGrassBlock extends GrassBlock {
 				BlockState blockstate = this.getDefaultState();
 
 				for(int i = 0; i < 4; ++i) {
-					BlockPos blockpos = pos.add(rand.nextInt(3) - 1, rand.nextInt(5) - 3, rand.nextInt(3) - 1);
-					if (worldIn.getBlockState(blockpos).getBlock() == DBMBlocks.BOTSWANIAN_DIRT.get() && func_220256_c(blockstate, worldIn, blockpos)) {
-						worldIn.setBlockState(blockpos, blockstate.with(SNOWY, worldIn.getBlockState(blockpos.up()).getBlock() == Blocks.SNOW));
+					BlockPos blockpos = pos.add(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
+					if (worldIn.getBlockState(blockpos).isIn(DBMBlocks.BOTSWANIAN_DIRT.get()) && isSnowyAndNotUnderwater(blockstate, worldIn, blockpos)) {
+						worldIn.setBlockState(blockpos, blockstate.with(SNOWY, Boolean.valueOf(worldIn.getBlockState(blockpos.up()).isIn(Blocks.SNOW))));
 					}
 				}
 			}
+
 		}
 	}
 	
@@ -51,63 +53,59 @@ public class BotswanianGrassBlock extends GrassBlock {
 		BlockPos blockpos = pos.up();
 		BlockState blockstate = DBMBlocks.BOTSWANIAN_GRASS.get().getDefaultState();
 
+		label48:
 		for(int i = 0; i < 128; ++i) {
 			BlockPos blockpos1 = blockpos;
-			int j = 0;
 
-			while(true) {
-				if (j >= i / 16) {
-					BlockState blockstate2 = worldIn.getBlockState(blockpos1);
-					if (blockstate2.getBlock() == blockstate.getBlock() && rand.nextInt(10) == 0) {
-						((IGrowable)blockstate.getBlock()).grow(worldIn, rand, blockpos1, blockstate2);
-					}
-
-					if (!blockstate2.isAir()) {
-						break;
-					}
-
-					BlockState blockstate1;
-					if (rand.nextInt(8) == 0) {
-						List<ConfiguredFeature<?, ?>> list = worldIn.getBiome(blockpos1).getFlowers();
-						if (list.isEmpty()) {
-							break;
-						}
-
-						ConfiguredFeature<?, ?> configuredfeature = ((DecoratedFeatureConfig) (list.get(0)).config).feature;
-						blockstate1 = ((FlowersFeature) configuredfeature.feature).getFlowerToPlace(rand, blockpos1, configuredfeature.config);
-					} else {
-						blockstate1 = blockstate;
-					}
-
-					if (blockstate1.isValidPosition(worldIn, blockpos1)) {
-						worldIn.setBlockState(blockpos1, blockstate1, 3);
-					}
-					break;
-				}
-
+			for(int j = 0; j < i / 16; ++j) {
 				blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
-				if (worldIn.getBlockState(blockpos1.down()).getBlock() != this || worldIn.getBlockState(blockpos1).isCollisionShapeOpaque(worldIn, blockpos1)) {
-					break;
+				if (!worldIn.getBlockState(blockpos1.down()).isIn(this) || worldIn.getBlockState(blockpos1).hasOpaqueCollisionShape(worldIn, blockpos1)) {
+					continue label48;
+				}
+			}
+
+			BlockState blockstate2 = worldIn.getBlockState(blockpos1);
+			if (blockstate2.isIn(blockstate.getBlock()) && rand.nextInt(10) == 0) {
+				((IGrowable)blockstate.getBlock()).grow(worldIn, rand, blockpos1, blockstate2);
+			}
+
+			if (blockstate2.isAir()) {
+				BlockState blockstate1;
+				if (rand.nextInt(8) == 0) {
+					List<ConfiguredFeature<?, ?>> list = worldIn.getBiome(blockpos1).getGenerationSettings().getFlowerFeatures();
+					if (list.isEmpty()) {
+						continue;
+					}
+
+					ConfiguredFeature<?, ?> configuredfeature = list.get(0);
+					FlowersFeature flowersfeature = (FlowersFeature)configuredfeature.feature;
+					blockstate1 = flowersfeature.getFlowerToPlace(rand, blockpos1, configuredfeature.getConfig());
+				} else {
+					blockstate1 = blockstate;
 				}
 
-				++j;
+				if (blockstate1.isValidPosition(worldIn, blockpos1)) {
+					worldIn.setBlockState(blockpos1, blockstate1, 3);
+				}
 			}
 		}
 	}
-	
-	private static boolean func_220257_b(BlockState stateIn, IWorldReader worldIn, BlockPos blockPosIn) {
-		BlockPos blockpos = blockPosIn.up();
-		BlockState blockstate = worldIn.getBlockState(blockpos);
-		if (blockstate.getBlock() == Blocks.SNOW && blockstate.get(SnowBlock.LAYERS) == 1) {
+
+	private static boolean isSnowyConditions(BlockState state, IWorldReader worldReader, BlockPos pos) {
+		BlockPos blockpos = pos.up();
+		BlockState blockstate = worldReader.getBlockState(blockpos);
+		if (blockstate.isIn(Blocks.SNOW) && blockstate.get(SnowBlock.LAYERS) == 1) {
 			return true;
+		} else if (blockstate.getFluidState().getLevel() == 8) {
+			return false;
 		} else {
-			int i = LightEngine.func_215613_a(worldIn, stateIn, blockPosIn, blockstate, blockpos, Direction.UP, blockstate.getOpacity(worldIn, blockpos));
-			return i < worldIn.getMaxLightLevel();
+			int i = LightEngine.func_215613_a(worldReader, state, pos, blockstate, blockpos, Direction.UP, blockstate.getOpacity(worldReader, blockpos));
+			return i < worldReader.getMaxLightLevel();
 		}
 	}
 
-	private static boolean func_220256_c(BlockState stateIn, IWorldReader worldIn, BlockPos blockPosIn) {
-		BlockPos blockpos = blockPosIn.up();
-		return func_220257_b(stateIn, worldIn, blockPosIn) && !worldIn.getFluidState(blockpos).isTagged(FluidTags.WATER);
+	private static boolean isSnowyAndNotUnderwater(BlockState state, IWorldReader worldReader, BlockPos pos) {
+		BlockPos blockpos = pos.up();
+		return isSnowyConditions(state, worldReader, pos) && !worldReader.getFluidState(blockpos).isTagged(FluidTags.WATER);
 	}
 }

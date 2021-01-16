@@ -37,7 +37,7 @@ public abstract class CryptidEntity extends MonsterEntity {
 			final double radius = 1.5D;
 			final int bolts = 8;
 			for (int i = 0; i < bolts; i++) {
-				serverWorld.addLightningBolt(new LightningBoltEntity(serverWorld, this.getPosX() + radius * Math.cos(i * 2 * Math.PI / bolts), this.getPosY(), this.getPosZ() + radius * Math.sin(i * 2 * Math.PI / bolts), true));
+				// TODO: serverWorld.addLightningBolt(new LightningBoltEntity(serverWorld, this.getPosX() + radius * Math.cos(i * 2 * Math.PI / bolts), this.getPosY(), this.getPosZ() + radius * Math.sin(i * 2 * Math.PI / bolts), true));
 			}
 		}
 		this.playSound(DBMSoundEvents.HEAVENLY_CHOIR.get(), 10.0F, 1.0F);

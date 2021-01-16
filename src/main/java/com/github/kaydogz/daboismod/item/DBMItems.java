@@ -66,7 +66,7 @@ public class DBMItems {
 	public static final RegistryObject<PickaxeItem> ANCIENT_PICKAXE = ITEMS.register("ancient_pickaxe", () -> new PickaxeItem(DBMItemTier.ANCIENT, 1, -2.8F, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<AxeItem> ANCIENT_AXE = ITEMS.register("ancient_axe", () -> new AxeItem(DBMItemTier.ANCIENT, 6.0F, -2.9F, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<ShovelItem> ANCIENT_SHOVEL = ITEMS.register("ancient_shovel", () -> new ShovelItem(DBMItemTier.ANCIENT, 1.5F, -3.0F, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
-	public static final RegistryObject<HoeItem> ANCIENT_HOE = ITEMS.register("ancient_hoe", () -> new HoeItem(DBMItemTier.ANCIENT, 0F, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<HoeItem> ANCIENT_HOE = ITEMS.register("ancient_hoe", () -> new HoeItem(DBMItemTier.ANCIENT, -5, 0.0F, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	
 	// Music Discs
 	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_MR_BLUE_SKY = ITEMS.register("music_disc_mr_blue_sky", () -> new MusicDiscItem(13, DBMSoundEvents.MR_BLUE_SKY, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));

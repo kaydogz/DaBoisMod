@@ -27,7 +27,7 @@ public class CrownHelper {
         DaBoisMod.get(CrownProvider.getCapabilityOf(stackIn)).setActivated(true);
         ((CrownItem) stackIn.getItem()).onActivation(stackIn, playerIn);
         if (!playerIn.world.isRemote && sendMessages) {
-            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.on").applyTextStyle(TextFormatting.GREEN)), true);
+            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.on").mergeStyle(TextFormatting.GREEN)), true);
         }
     }
 
@@ -36,7 +36,7 @@ public class CrownHelper {
         DaBoisMod.get(CrownProvider.getCapabilityOf(stackIn)).setActivated(false);
         ((CrownItem) stackIn.getItem()).onDeactivation(stackIn, playerIn);
         if (!playerIn.world.isRemote && sendMessages) {
-            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.off").applyTextStyle(TextFormatting.RED)), true);
+            playerIn.sendStatusMessage(new TranslationTextComponent("item.daboismod.crown.toggled", stackIn.getDisplayName(), new TranslationTextComponent("item.daboismod.crown.off").mergeStyle(TextFormatting.RED)), true);
         }
     }
 
