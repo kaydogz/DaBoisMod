@@ -1,6 +1,6 @@
 package com.github.kaydogz.daboismod.block.trees;
 
-import com.github.kaydogz.daboismod.world.gen.DBMConfiguredFeatures;
+import com.github.kaydogz.daboismod.world.gen.feature.DBMConfiguredFeatures;
 import net.minecraft.block.trees.Tree;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;

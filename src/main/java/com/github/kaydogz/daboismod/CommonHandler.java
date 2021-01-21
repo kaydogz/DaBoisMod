@@ -20,6 +20,7 @@ import com.github.kaydogz.daboismod.item.CrownHelper;
 import com.github.kaydogz.daboismod.item.CrownItem;
 import com.github.kaydogz.daboismod.network.DBMNetworkHandler;
 import com.github.kaydogz.daboismod.network.client.CUpdateMagneticPacket;
+import com.github.kaydogz.daboismod.network.server.SUpdateMagneticPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateQuestsPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateRealmFallingPacket;
 import com.github.kaydogz.daboismod.network.server.SUpdateSkinTonePacket;
@@ -29,9 +30,11 @@ import com.github.kaydogz.daboismod.quest.Quest;
 import com.github.kaydogz.daboismod.stats.DBMStats;
 import com.github.kaydogz.daboismod.world.biome.DBMBiomeMaker;
 import com.github.kaydogz.daboismod.world.biome.DBMBiomes;
-import com.github.kaydogz.daboismod.world.gen.DBMConfiguredFeatures;
-import com.github.kaydogz.daboismod.world.gen.DBMConfiguredSurfaceBuilders;
-import com.github.kaydogz.daboismod.world.gen.DBMGeneration;
+import com.github.kaydogz.daboismod.world.gen.feature.DBMConfiguredFeatures;
+import com.github.kaydogz.daboismod.world.gen.surfacebuilder.DBMConfiguredSurfaceBuilders;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
@@ -65,16 +68,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class CommonHandler {
 
 	public static void onCommonSetup(final FMLCommonSetupEvent event) {
-
 		QuestTaskArgument.createExamples();
-		DBMGeneration.createGenerationConfigs();
 		DBMNetworkHandler.registerPackets();
 		DBMCapabilityHandler.registerCapabilities();
 		event.enqueueWork(() -> {
 			DBMEntities.applyEntityAttributes();
-			DBMBiomes.setupBiomes();
 			DBMConfiguredFeatures.registerConfiguredFeatures();
 			DBMConfiguredSurfaceBuilders.registerConfiguredSurfaceBuilders();
+			DBMBiomes.setupBiomes();
 			DBMArgumentTypes.registerSerializers();
 		});
 		DBMStats.registerStats();
@@ -100,6 +101,13 @@ public class CommonHandler {
 		@SubscribeEvent
 		public static void onRegisterCommands(final RegisterCommandsEvent event) {
 			DBMCommand.registerCommand(event.getDispatcher());
+		}
+
+		@SubscribeEvent(priority = EventPriority.HIGH)
+		public static void onBiomeLoading(final BiomeLoadingEvent event) {
+			if (event.getName() != null) {
+				DBMBiomeMaker.modifyBiomes(RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName()), event.getSpawns(), event.getGeneration());
+			}
 		}
 
 		@SubscribeEvent
@@ -164,26 +172,17 @@ public class CommonHandler {
 			}
 		}
 
-		@SubscribeEvent(priority = EventPriority.HIGHEST)
-		public static void onBiomeLoading(final BiomeLoadingEvent event) {
-			if (event.getName() != null) {
-				DeferredWorkQueue.runLater(() -> DBMBiomeMaker.modifyBiomes(RegistryKey.getOrCreateKey(ForgeRegistries.Keys.BIOMES, event.getName()), event.getSpawns(), event.getGeneration()));
-			}
-		}
-
 		@SubscribeEvent
 		public static void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
 			LivingEntity entity = event.getEntityLiving();
 
 			// Manage Botswana Radiation
-			if (entity.world.getBiome(entity.getPosition()) == DBMBiomes.BOTSWANA.get()) {
+			if (entity.world.getBiome(entity.getPosition()).getRegistryName().equals(DBMBiomes.BOTSWANA.getId())) {
 				if (!entity.isPotionActive(DBMEffects.RADIATION.get())) {
 					entity.addPotionEffect(new EffectInstance(DBMEffects.RADIATION.get(), 120000, 0, false, false, true));
 				}
-			} else {
-				if (entity.isInWaterRainOrBubbleColumn()) {
-					entity.removePotionEffect(DBMEffects.RADIATION.get());
-				}
+			} else if (entity.isInWaterRainOrBubbleColumn()) {
+				entity.removePotionEffect(DBMEffects.RADIATION.get());
 			}
 		}
 
@@ -246,7 +245,9 @@ public class CommonHandler {
 							);
 						}
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-							if (!DBMKeyBindings.activate_magnetism.isKeyDown()) DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(false));
+							if (player.world.isRemote && Minecraft.getInstance().player == player && !DBMKeyBindings.activate_magnetism.isKeyDown()) {
+								DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(false));
+							}
 						});
 					} else {
 						playerCap.setMagnetic(false);

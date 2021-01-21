@@ -1,7 +1,7 @@
 package com.github.kaydogz.daboismod.world.biome;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.world.gen.DBMConfiguredSurfaceBuilders;
+import com.github.kaydogz.daboismod.world.gen.surfacebuilder.DBMConfiguredSurfaceBuilders;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;

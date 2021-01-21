@@ -163,9 +163,9 @@ public class QuestScreen extends Screen {
 		if (this.quests.isEmpty()) {
 
 			// 'You have no quests available.'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.none").getUnformattedComponentText(),
-					this.width / 2F,
-					this.height / 2F - 4F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.none"),
+					this.width / 2,
+					this.height / 2 - 4,
 					16777215
 			);
 
@@ -173,37 +173,37 @@ public class QuestScreen extends Screen {
 			final Quest quest = this.quests.get(currentPage);
 
 			// 'Quest X / Y'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.questNumber", currentPage + 1, this.quests.size()).getUnformattedComponentText(),
-					this.width / 2F,
-					(this.height - this.ySize) / 2F - 9F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.questNumber", currentPage + 1, this.quests.size()),
+					this.width / 2,
+					(this.height - this.ySize) / 2 - 9,
 					16777215
 			);
 
 			// 'Objective: X'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.objective", new TranslationTextComponent(quest.getQuestTask().getTranslationKey(), quest.getQuota())).getUnformattedComponentText(),
-					this.width / 2F,
-					this.height / 2F - 63F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.objective", new TranslationTextComponent(quest.getQuestTask().getTranslationKey(), quest.getQuota())),
+					this.width / 2,
+					this.height / 2 - 63,
 					16777215
 			);
 
 			// 'Difficulty: X'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.difficulty", quest.getDifficulty().getTextComponent()).getUnformattedComponentText(),
-					this.width / 2F,
-					this.height / 2F - 45F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.difficulty", quest.getDifficulty().getTextComponent()),
+					this.width / 2,
+					this.height / 2 - 45,
 					16777215
 			);
 
 			// 'Completed: X / Y'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.completed", quest.getCount(), quest.getQuota()).getUnformattedComponentText(),
-					this.width / 2F,
-					this.height / 2F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.completed", quest.getCount(), quest.getQuota()),
+					this.width / 2,
+					this.height / 2,
 					16777215
 			);
 
 			// 'Reward: X'
-			this.font.drawString(matrixStack, new TranslationTextComponent("gui.daboismod.quest.reward", (quest.getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing").getUnformattedComponentText() : "  ")).getUnformattedComponentText(),
-					this.width / 2F - 3F,
-					this.height / 2F - 22F,
+			drawCenteredString(matrixStack, this.font, new TranslationTextComponent("gui.daboismod.quest.reward", (quest.getReward().getItem() == Items.AIR ? new TranslationTextComponent("gui.daboismod.quest.reward.nothing") : "  ")),
+					this.width / 2 - 3,
+					this.height / 2 - 22,
 					16777215
 			);
 

@@ -105,30 +105,33 @@ public class ClientHandler {
                     else if (minecraft.currentScreen instanceof ContainerScreen || minecraft.currentScreen instanceof QuestScreen) minecraft.execute(minecraft.player::closeScreen);
                 }
 
-                if (minecraft.currentScreen == null && event.getAction() == GLFW.GLFW_PRESS) {
+                if (minecraft.currentScreen == null) {
 
-                    // Magnetism
-                    if (DBMKeyBindings.activate_magnetism.isActiveAndMatches(keyInput) && MagnetismEnchantment.isHoldingMagneticItem(minecraft.player)) {
-                        DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(true));
-                    }
+                    if (event.getAction() == GLFW.GLFW_PRESS) {
 
-                    // Activate Crown
-                    if (DBMKeyBindings.activate_crown.isActiveAndMatches(keyInput)) {
-                        ItemStack headSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
-                        if (headSlotStack.getItem() instanceof CrownItem) {
-                            LazyOptional<ICrownCapability> lazyCap = CrownProvider.getCapabilityOf(headSlotStack);
-                            if (lazyCap.isPresent()) {
-                                CrownItem crownItem = (CrownItem) headSlotStack.getItem();
-                                ICrownCapability crownCap = DaBoisMod.get(lazyCap);
-                                boolean activated = !crownCap.isActivated();
-                                crownCap.setActivated(activated);
-                                if (activated) {
-                                    crownItem.onActivation(headSlotStack, minecraft.player);
-                                } else {
-                                    crownItem.onDeactivation(headSlotStack, minecraft.player);
+                        // Magnetism Enable
+                        if (DBMKeyBindings.activate_magnetism.isActiveAndMatches(keyInput) && MagnetismEnchantment.isHoldingMagneticItem(minecraft.player)) {
+                            DBMNetworkHandler.sendToServer(new CUpdateMagneticPacket(true));
+                        }
+
+                        // Activate Crown
+                        if (DBMKeyBindings.activate_crown.isActiveAndMatches(keyInput)) {
+                            ItemStack headSlotStack = minecraft.player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+                            if (headSlotStack.getItem() instanceof CrownItem) {
+                                LazyOptional<ICrownCapability> lazyCap = CrownProvider.getCapabilityOf(headSlotStack);
+                                if (lazyCap.isPresent()) {
+                                    CrownItem crownItem = (CrownItem) headSlotStack.getItem();
+                                    ICrownCapability crownCap = DaBoisMod.get(lazyCap);
+                                    boolean activated = !crownCap.isActivated();
+                                    crownCap.setActivated(activated);
+                                    if (activated) {
+                                        crownItem.onActivation(headSlotStack, minecraft.player);
+                                    } else {
+                                        crownItem.onDeactivation(headSlotStack, minecraft.player);
+                                    }
+
+                                    DBMNetworkHandler.sendToServer(new CToggleCrownActivationPacket(true));
                                 }
-
-                                DBMNetworkHandler.sendToServer(new CToggleCrownActivationPacket(true));
                             }
                         }
                     }

@@ -106,7 +106,7 @@ public class WerewolfEntity extends CryptidEntity {
 	@Override
 	public boolean attackEntityAsMob(Entity entityIn) {
 		boolean flag = super.attackEntityAsMob(entityIn);
-		if (flag && entityIn instanceof LivingEntity) ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(DBMEffects.BLEEDING.get(), 300));
+		if (flag && entityIn instanceof LivingEntity) ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(DBMEffects.BLEEDING.get(), 300, 0, false, false, true));
 		return flag;
 	}
 	

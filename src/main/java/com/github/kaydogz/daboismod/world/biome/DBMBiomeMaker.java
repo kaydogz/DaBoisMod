@@ -1,9 +1,8 @@
 package com.github.kaydogz.daboismod.world.biome;
 
 import com.github.kaydogz.daboismod.config.DBMConfigHandler;
-import com.github.kaydogz.daboismod.world.gen.DBMConfiguredFeatures;
+import com.github.kaydogz.daboismod.world.gen.feature.DBMConfiguredFeatures;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.GenerationStage;
@@ -62,12 +61,12 @@ public class DBMBiomeMaker {
         }
 
         // Add Custom Features to Custom Biomes
-        if (ForgeRegistries.BIOMES.getValue(biomeRegistryKey.getLocation()) == DBMBiomes.BOTSWANA.get()) {
+        if (biomeRegistryKey.getLocation() == DBMBiomes.BOTSWANA.get().getRegistryName()) {
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_SAND));
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_CLAY));
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_GRAVEL));
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.ORE_BOTSWANIAN_DIRT));
-            generator.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, getFeature(DBMConfiguredFeatures.PADAUK_TREE));
+            generator.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, getFeature(DBMConfiguredFeatures.TREES_BOTSWANA));
             generator.withFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, getFeature(DBMConfiguredFeatures.LAKE_WATER));
             generator.withFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS, getFeature(DBMConfiguredFeatures.LAKE_LAVA));
             generator.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, getFeature(DBMConfiguredFeatures.PATCH_GRASS_BOTSWANIAN));

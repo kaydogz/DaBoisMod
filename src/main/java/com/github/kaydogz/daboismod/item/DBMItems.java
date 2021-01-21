@@ -34,16 +34,16 @@ public class DBMItems {
 	public static final RegistryObject<BoatItem> PADAUK_BOAT = ITEMS.register("padauk_boat", () -> new BoatItem(BoatEntity.Type.ACACIA, new Item.Properties().maxStackSize(1).group(DBMItemGroup.DA_BOIS_GROUP)));
 
 	// Gems
-	public static final RegistryObject<GemItem> TOPAZ = ITEMS.register("topaz", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<GemItem> AMETHYST = ITEMS.register("amethyst", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<GemItem> RUBY = ITEMS.register("ruby", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
-	public static final RegistryObject<GemItem> AMBER = ITEMS.register("amber", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<GemItem> TOPAZ = ITEMS.register("topaz", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<GemItem> AMETHYST = ITEMS.register("amethyst", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<GemItem> RUBY = ITEMS.register("ruby", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().rarity(Rarity.UNCOMMON)));
+	public static final RegistryObject<GemItem> AMBER = ITEMS.register("amber", () -> new GemItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().rarity(Rarity.UNCOMMON)));
 
 	// Crowns
-	public static final RegistryObject<AmberCrownItem> AMBER_CROWN = ITEMS.register("amber_crown", () -> new AmberCrownItem(DBMArmorMaterial.AMBER_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<TopazCrownItem> TOPAZ_CROWN = ITEMS.register("topaz_crown", () -> new TopazCrownItem(DBMArmorMaterial.TOPAZ_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<AmethystCrownItem> AMETHYST_CROWN = ITEMS.register("amethyst_crown", () -> new AmethystCrownItem(DBMArmorMaterial.AMETHYST_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
-	public static final RegistryObject<RubyCrownItem> RUBY_CROWN = ITEMS.register("ruby_crown", () -> new RubyCrownItem(DBMArmorMaterial.RUBY_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<AmberCrownItem> AMBER_CROWN = ITEMS.register("amber_crown", () -> new AmberCrownItem(DBMArmorMaterial.AMBER_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<TopazCrownItem> TOPAZ_CROWN = ITEMS.register("topaz_crown", () -> new TopazCrownItem(DBMArmorMaterial.TOPAZ_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<AmethystCrownItem> AMETHYST_CROWN = ITEMS.register("amethyst_crown", () -> new AmethystCrownItem(DBMArmorMaterial.AMETHYST_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().defaultMaxDamage(780).rarity(Rarity.EPIC)));
+	public static final RegistryObject<RubyCrownItem> RUBY_CROWN = ITEMS.register("ruby_crown", () -> new RubyCrownItem(DBMArmorMaterial.RUBY_CROWN, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire().defaultMaxDamage(780).rarity(Rarity.EPIC)));
 
 	// Food
 	public static final RegistryObject<AncientFruitItem> ANCIENT_FRUIT = ITEMS.register("ancient_fruit", () -> new AncientFruitItem(new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).food(DBMFoods.ANCIENT_FRUIT)));
@@ -77,10 +77,10 @@ public class DBMItems {
 	public static final RegistryObject<MusicDiscItem> MUSIC_DISC_HERE_COMES_THE_SUN = ITEMS.register("music_disc_here_comes_the_sun", () -> new MusicDiscItem(13, DBMSoundEvents.HERE_COMES_THE_SUN, (new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).maxStackSize(1).rarity(Rarity.RARE))));
 
 	// Gem Block Items
-	public static final RegistryObject<GemBlockItem> TOPAZ_BLOCK = ITEMS.register(DBMBlocks.TOPAZ_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.TOPAZ_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
-	public static final RegistryObject<GemBlockItem> AMBER_BLOCK = ITEMS.register(DBMBlocks.AMBER_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.AMBER_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
-	public static final RegistryObject<GemBlockItem> RUBY_BLOCK = ITEMS.register(DBMBlocks.RUBY_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.RUBY_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
-	public static final RegistryObject<GemBlockItem> AMETHYST_BLOCK = ITEMS.register(DBMBlocks.AMETHYST_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.AMETHYST_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<GemBlockItem> TOPAZ_BLOCK = ITEMS.register(DBMBlocks.TOPAZ_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.TOPAZ_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire()));
+	public static final RegistryObject<GemBlockItem> AMBER_BLOCK = ITEMS.register(DBMBlocks.AMBER_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.AMBER_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire()));
+	public static final RegistryObject<GemBlockItem> RUBY_BLOCK = ITEMS.register(DBMBlocks.RUBY_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.RUBY_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire()));
+	public static final RegistryObject<GemBlockItem> AMETHYST_BLOCK = ITEMS.register(DBMBlocks.AMETHYST_BLOCK.getId().getPath(), () -> new GemBlockItem(DBMBlocks.AMETHYST_BLOCK.get(), new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP).isImmuneToFire()));
 
 	// Block Items
 	public static final RegistryObject<BlockItem> ANCIENT_BLOCK = registerBlockItem(DBMBlocks.ANCIENT_BLOCK);

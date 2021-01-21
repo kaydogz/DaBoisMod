@@ -1,4 +1,4 @@
-package com.github.kaydogz.daboismod.world.gen;
+package com.github.kaydogz.daboismod.world.gen.surfacebuilder;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
 import com.github.kaydogz.daboismod.block.DBMBlocks;

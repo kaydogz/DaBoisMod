@@ -59,9 +59,8 @@ public class ServerPacketHandler {
         ServerPlayerEntity player = ctx.get().getSender();
 
         // Make sure request is valid before updating
-        if (MagnetismEnchantment.isHoldingMagneticItem(player)) {
-            IPlayerCapability cap = DaBoisMod.get(PlayerProvider.getCapabilityOf(player));
-            cap.setMagnetic(magnetic);
+        if (!magnetic || MagnetismEnchantment.isHoldingMagneticItem(player)) {
+            DaBoisMod.get(PlayerProvider.getCapabilityOf(player)).setMagnetic(magnetic);
             DBMNetworkHandler.sendToAllTrackingEntityAndSelf(new SUpdateMagneticPacket(magnetic, player.getEntityId()), player);
         }
     }

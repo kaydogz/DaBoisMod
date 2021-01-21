@@ -27,7 +27,7 @@ public class ClientPacketHandler {
         Entity entity = minecraft.world.getEntityByID(playerId);
         if (entity instanceof AbstractClientPlayerEntity) {
             DaBoisMod.get(PlayerProvider.getCapabilityOf(entity)).setMagnetic(magnetic);
-            minecraft.getSoundHandler().playOnNextTick(new MagnetismTickableSound((AbstractClientPlayerEntity) entity));
+            if (magnetic) minecraft.getSoundHandler().playOnNextTick(new MagnetismTickableSound((AbstractClientPlayerEntity) entity));
         }
     }
 
