@@ -1,4 +1,12 @@
 {
+	"entity.flesh_creeper.primed": {
+		"sounds": [
+			{
+				"name": "daboismod:entity/flesh_creeper/primed",
+				"volume": 5.0
+			}
+		]
+	},
 	"entity.sasquatch.ambient": {
 		"sounds": [
 			{

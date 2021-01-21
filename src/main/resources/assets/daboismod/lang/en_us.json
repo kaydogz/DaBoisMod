@@ -58,6 +58,7 @@
 	
 	"entity.daboismod.sasquatch": "Sasquatch",
 	"entity.daboismod.werewolf": "Werewolf",
+	"entity.daboismod.flesh_creeper": "Flesh Creeper",
 	
 	"gui.daboismod.quest.title": "Quests",
 	"gui.daboismod.quest.new": "New Quest Available!",
@@ -79,6 +80,7 @@
 
 	"item.daboismod.sasquatch_spawn_egg": "Sasquatch Spawn Egg",
 	"item.daboismod.werewolf_spawn_egg": "Werewolf Spawn Egg",
+	"item.daboismod.flesh_creeper_spawn_egg": "Flesh Creeper Spawn Egg",
 	"item.daboismod.quest_scroll": "Quest Scroll",
 	"item.daboismod.bandage": "Bandage",
 	"item.daboismod.padauk_boat": "Padauk Boat",

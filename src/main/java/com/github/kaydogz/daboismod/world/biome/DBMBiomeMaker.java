@@ -1,7 +1,10 @@
 package com.github.kaydogz.daboismod.world.biome;
 
 import com.github.kaydogz.daboismod.config.DBMConfigHandler;
+import com.github.kaydogz.daboismod.entity.DBMEntities;
 import com.github.kaydogz.daboismod.world.gen.feature.DBMConfiguredFeatures;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.*;
@@ -22,7 +25,7 @@ public class DBMBiomeMaker {
 
     public static Biome makeBotswanaBiome(RegistryKey<ConfiguredSurfaceBuilder<?>> surfaceBuilderKey, float depth, float scale) {
         MobSpawnInfo.Builder spawner = new MobSpawnInfo.Builder();
-        DefaultBiomeFeatures.withBatsAndHostiles(spawner);
+        DefaultBiomeFeatures.withBats(spawner);
 
         BiomeGenerationSettings.Builder generator = (new BiomeGenerationSettings.Builder()).withSurfaceBuilder(getSurfaceBuilder(surfaceBuilderKey));
         generator.withStructure(StructureFeatures.MINESHAFT);
@@ -46,6 +49,11 @@ public class DBMBiomeMaker {
 
     public static void modifyBiomes(final RegistryKey<Biome> biomeRegistryKey, final MobSpawnInfoBuilder spawner, final BiomeGenerationSettingsBuilder generator) {
 
+        // Flesh Creepers in the Nether and Botswana
+        if (BiomeDictionary.hasType(biomeRegistryKey, BiomeDictionary.Type.NETHER) || biomeRegistryKey.getLocation() == DBMBiomes.BOTSWANA.get().getRegistryName()) {
+            spawner.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(DBMEntities.FLESH_CREEPER.get(), 20, 2, 4));
+        }
+
         //Ancient Ore in The End
         if (DBMConfigHandler.COMMON.generateAncientOre.get()) {
             if (BiomeDictionary.hasType(biomeRegistryKey, BiomeDictionary.Type.END)) {
@@ -60,8 +68,9 @@ public class DBMBiomeMaker {
             }
         }
 
-        // Add Custom Features to Custom Biomes
+        // Add Custom Features and Spawns to Custom Biomes
         if (biomeRegistryKey.getLocation() == DBMBiomes.BOTSWANA.get().getRegistryName()) {
+            spawner.disablePlayerSpawn();
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_SAND));
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_CLAY));
             generator.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, getFeature(DBMConfiguredFeatures.DISK_GRAVEL));

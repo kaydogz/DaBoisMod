@@ -15,6 +15,7 @@ public class DBMRenderManager {
 		RenderingRegistry.registerEntityRenderingHandler(EntityType.VILLAGER, DBMVillagerRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(DBMEntities.SASQUATCH.get(), SasquatchRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(DBMEntities.WEREWOLF.get(), WerewolfRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(DBMEntities.FLESH_CREEPER.get(), FleshCreeperRenderer::new);
 	}
 
 	public static void bindTileEntityRenderers() {

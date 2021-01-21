@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[35,)" #mandatory
+loaderVersion="[36,)" #mandatory
 license="LGPL v2.1"
 
 [[mods]] #mandatory
@@ -20,7 +20,7 @@ Praise Jacob.
 [[dependencies.daboismod]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[35,)" #mandatory
+    versionRange="[36,)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.daboismod]]

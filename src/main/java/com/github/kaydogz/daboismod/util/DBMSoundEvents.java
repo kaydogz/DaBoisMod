@@ -21,7 +21,8 @@ public class DBMSoundEvents {
 	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_DEATH = SOUND_EVENTS.register("entity.sasquatch.death", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.death")));
 	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_TRANSITION = SOUND_EVENTS.register("entity.sasquatch.transition", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.transition")));
 	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_SMASH = SOUND_EVENTS.register("entity.sasquatch.smash", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.smash")));
-	
+	public static final RegistryObject<SoundEvent> ENTITY_FLESH_CREEPER_PRIMED = SOUND_EVENTS.register("entity.flesh_creeper.primed", () -> new SoundEvent(DaBoisMod.modLocation("entity.flesh_creeper.primed")));
+
 	// Record Sounds
 	public static final RegistryObject<SoundEvent> CARNIVORES = SOUND_EVENTS.register("music_disc.carnivores", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.carnivores")));
 	public static final RegistryObject<SoundEvent> MR_BLUE_SKY = SOUND_EVENTS.register("music_disc.mr_blue_sky", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.mr_blue_sky")));
