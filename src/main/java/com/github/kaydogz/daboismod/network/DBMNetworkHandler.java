@@ -35,13 +35,13 @@ public class DBMNetworkHandler {
 		HANDLER.registerMessage(packetId++, SUpdateMagneticPacket.class, SUpdateMagneticPacket::encode, SUpdateMagneticPacket::decode, SUpdateMagneticPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SSasquatchSmashPacket.class, SSasquatchSmashPacket::encode, SSasquatchSmashPacket::decode, SSasquatchSmashPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, SUpdateSkinTonePacket.class, SUpdateSkinTonePacket::encode, SUpdateSkinTonePacket::decode, SUpdateSkinTonePacket.Handler::handle);
-
+		HANDLER.registerMessage(packetId++, SUpdateDimensionPacket.class, SUpdateDimensionPacket::encode, SUpdateDimensionPacket::decode, SUpdateDimensionPacket.Handler::handle);
 
 		// Client to Server
 		HANDLER.registerMessage(packetId++, CCancelQuestPacket.class, CCancelQuestPacket::encode, CCancelQuestPacket::decode, CCancelQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CClaimQuestPacket.class, CClaimQuestPacket::encode, CClaimQuestPacket::decode, CClaimQuestPacket.Handler::handle);
 		HANDLER.registerMessage(packetId++, CUpdateMagneticPacket.class, CUpdateMagneticPacket::encode, CUpdateMagneticPacket::decode, CUpdateMagneticPacket.Handler::handle);
-		HANDLER.registerMessage(packetId, CToggleCrownActivationPacket.class, CToggleCrownActivationPacket::encode, CToggleCrownActivationPacket::decode, CToggleCrownActivationPacket.Handler::handle);
+		HANDLER.registerMessage(packetId++, CToggleCrownActivationPacket.class, CToggleCrownActivationPacket::encode, CToggleCrownActivationPacket::decode, CToggleCrownActivationPacket.Handler::handle);
 	}
 	
 	/**
@@ -50,6 +50,14 @@ public class DBMNetworkHandler {
 	 */
 	public static <MSG> void sendToServer(MSG msg) {
 		HANDLER.send(PacketDistributor.SERVER.noArg(), msg);
+	}
+
+	/**
+	 * Sends a packet to every player connected to the server.
+	 * @param msg an instance of the packet to be sent.
+	 */
+	public static <MSG> void sendToAll(MSG msg) {
+		HANDLER.send(PacketDistributor.ALL.noArg(), msg);
 	}
 
 	/**

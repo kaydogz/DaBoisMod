@@ -3,7 +3,8 @@
 		"replace": false,
 		"sounds": [
 			"daboismod:ambient/cave/laugh",
-			"daboismod:ambient/cave/my_wife"
+			"daboismod:ambient/cave/my_wife",
+			"daboismod:ambient/cave/layla"
 		]
 	}
 }

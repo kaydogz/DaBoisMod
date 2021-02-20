@@ -15,9 +15,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class ClientPacketHandler {
@@ -61,5 +64,21 @@ public class ClientPacketHandler {
     public static void handleUpdateSkinTone(Supplier<NetworkEvent.Context> ctx, int skinTone, int entityId) {
         Entity entity = Minecraft.getInstance().world.getEntityByID(entityId);
         if (entity instanceof VillagerEntity) DaBoisMod.get(VillagerProvider.getCapabilityOf(entity)).setSkinTone(skinTone);
+    }
+
+    public static void handleUpdateDimension(Supplier<NetworkEvent.Context> ctx, RegistryKey<World> worldKey, boolean add) {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || worldKey == null)
+            return;
+
+        Set<RegistryKey<World>> worlds = player.connection.func_239164_m_();
+        if (worlds == null)
+            return;
+
+        if (add) {
+            worlds.add(worldKey);
+        } else {
+            worlds.remove(worldKey);
+        }
     }
 }

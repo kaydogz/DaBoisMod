@@ -1,14 +1,8 @@
 package com.github.kaydogz.daboismod.capability;
 
 import com.github.kaydogz.daboismod.DaBoisMod;
-import com.github.kaydogz.daboismod.capability.base.ICrownCapability;
-import com.github.kaydogz.daboismod.capability.base.ILivingCapability;
-import com.github.kaydogz.daboismod.capability.base.IPlayerCapability;
-import com.github.kaydogz.daboismod.capability.base.IVillagerCapability;
-import com.github.kaydogz.daboismod.capability.provider.CrownProvider;
-import com.github.kaydogz.daboismod.capability.provider.LivingProvider;
-import com.github.kaydogz.daboismod.capability.provider.PlayerProvider;
-import com.github.kaydogz.daboismod.capability.provider.VillagerProvider;
+import com.github.kaydogz.daboismod.capability.base.*;
+import com.github.kaydogz.daboismod.capability.provider.*;
 import com.github.kaydogz.daboismod.item.CrownItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +10,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

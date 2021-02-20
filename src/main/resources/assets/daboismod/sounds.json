@@ -59,6 +59,14 @@
 			}
 		]
 	},
+	"event.random_chimp.loop": {
+		"sounds": [
+			{
+				"name": "daboismod:event/random_chimp/ambience",
+				"volume": 1.0
+			}
+		]
+	},
 	"music_disc.a_day_in_the_life": {
 		"sounds": [
 			{

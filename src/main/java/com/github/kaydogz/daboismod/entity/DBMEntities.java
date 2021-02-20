@@ -5,8 +5,8 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -25,6 +25,8 @@ public class DBMEntities {
 	 * Used to apply entity attributes. Not thread-safe, enqueue it in common setup.
 	 */
 	public static void applyEntityAttributes() {
+		GlobalEntityTypeAttributes.put(CHIMP.get(), AbstractChimpEntity.registerAttributes().create());
+		GlobalEntityTypeAttributes.put(AGGRESSIVE_CHIMP.get(), AbstractChimpEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(SASQUATCH.get(), SasquatchEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(WEREWOLF.get(), WerewolfEntity.registerAttributes().create());
 		GlobalEntityTypeAttributes.put(FLESH_CREEPER.get(), FleshCreeperEntity.registerAttributes().create());
@@ -35,7 +37,13 @@ public class DBMEntities {
 	 */
 	public static void registerSpawnPlacements() {
 		EntitySpawnPlacementRegistry.register(FLESH_CREEPER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MonsterEntity::canMonsterSpawnInLight);
+		EntitySpawnPlacementRegistry.register(CHIMP.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+		EntitySpawnPlacementRegistry.register(AGGRESSIVE_CHIMP.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
 	}
+
+	// Animals
+	public static final RegistryObject<EntityType<ChimpEntity>> CHIMP = ENTITIES.register("chimp", () -> EntityType.Builder.create(ChimpEntity::new, EntityClassification.CREATURE).size(0.75F, 0.75F).build(DaBoisMod.modLocation("chimp").toString()));
+	public static final RegistryObject<EntityType<AggressiveChimpEntity>> AGGRESSIVE_CHIMP = ENTITIES.register("aggressive_chimp", () -> EntityType.Builder.create(AggressiveChimpEntity::new, EntityClassification.MONSTER).size(0.75F, 0.75F).build(DaBoisMod.modLocation("aggressive_chimp").toString()));
 
 	// Cryptids
 	public static final RegistryObject<EntityType<SasquatchEntity>> SASQUATCH = ENTITIES.register("sasquatch", () -> EntityType.Builder.create(SasquatchEntity::new, EntityClassification.MONSTER).size(1.15F, 3.15F).setTrackingRange(25).build(DaBoisMod.modLocation("sasquatch").toString()));

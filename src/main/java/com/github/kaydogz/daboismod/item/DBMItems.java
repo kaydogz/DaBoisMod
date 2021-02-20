@@ -52,6 +52,9 @@ public class DBMItems {
 	public static final RegistryObject<DBMSpawnEggItem> SASQUATCH_SPAWN_EGG = ITEMS.register("sasquatch_spawn_egg", () -> new DBMSpawnEggItem(DBMEntities.SASQUATCH, 0x654321, 0xa9a9a9, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<DBMSpawnEggItem> WEREWOLF_SPAWN_EGG = ITEMS.register("werewolf_spawn_egg", () -> new DBMSpawnEggItem(DBMEntities.WEREWOLF, 0x2b1d0e, 0xcc0000, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
 	public static final RegistryObject<DBMSpawnEggItem> FLESH_CREEPER_SPAWN_EGG = ITEMS.register("flesh_creeper_spawn_egg", () -> new DBMSpawnEggItem(DBMEntities.FLESH_CREEPER, 0xebbca4, 0x59051c, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<DBMSpawnEggItem> CHIMP_SPAWN_EGG = ITEMS.register("chimp_spawn_egg", () -> new DBMSpawnEggItem(DBMEntities.CHIMP, 0x6e532b, 0xd9c3a3, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
+	public static final RegistryObject<DBMSpawnEggItem> AGGRESSIVE_CHIMP_SPAWN_EGG = ITEMS.register("aggressive_chimp_spawn_egg", () -> new DBMSpawnEggItem(DBMEntities.AGGRESSIVE_CHIMP, 0x6e532b, 0xa34910, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));
+
 
 	// Armor
 	public static final RegistryObject<ArmorItem> ANCIENT_HELMET = ITEMS.register("ancient_helmet", () -> new ArmorItem(DBMArmorMaterial.ANCIENT, EquipmentSlotType.HEAD, new Item.Properties().group(DBMItemGroup.DA_BOIS_GROUP)));

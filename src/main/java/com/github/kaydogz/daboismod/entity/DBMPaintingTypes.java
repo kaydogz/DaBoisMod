@@ -16,4 +16,6 @@ public class DBMPaintingTypes {
 	}
 	
 	public static final RegistryObject<PaintingType> FRANK = PAINTING_TYPES.register("frank", () -> new PaintingType(16, 16));
+	public static final RegistryObject<PaintingType> GOAT = PAINTING_TYPES.register("goat", () -> new PaintingType(64, 64));
+	public static final RegistryObject<PaintingType> STARING_SMILE = PAINTING_TYPES.register("staring_smile", () -> new PaintingType(128, 128));
 }

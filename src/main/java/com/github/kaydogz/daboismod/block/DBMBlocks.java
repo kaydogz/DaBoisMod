@@ -21,7 +21,7 @@ public class DBMBlocks {
 	}
 
 	private static RotatedPillarBlock createLogBlock(MaterialColor topColor, MaterialColor barkColor) {
-		return new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD, (state) -> {
+		return new DBMLogBlock(AbstractBlock.Properties.create(Material.WOOD, (state) -> {
 			return state.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor;
 		}).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
 	}
@@ -30,7 +30,7 @@ public class DBMBlocks {
 	public static final RegistryObject<Block> ANCIENT_BLOCK = BLOCKS.register("ancient_block", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(15.0F, 1200.0F).sound(SoundType.METAL)));
 	public static final RegistryObject<GrassBlock> BOTSWANIAN_GRASS_BLOCK = BLOCKS.register("botswanian_grass_block", () -> new BotswanianGrassBlock(Block.Properties.create(Material.ORGANIC).harvestTool(ToolType.SHOVEL).tickRandomly().hardnessAndResistance(0.7F).sound(SoundType.PLANT)));
 	public static final RegistryObject<DBMDirtBlock> BOTSWANIAN_DIRT = BLOCKS.register("botswanian_dirt", () -> new DBMDirtBlock(Block.Properties.create(Material.EARTH, MaterialColor.RED).harvestTool(ToolType.SHOVEL).hardnessAndResistance(0.6F).sound(SoundType.GROUND)));
-	
+
 	// Cryptid Gem Blocks
 	public static final RegistryObject<Block> TOPAZ_BLOCK = BLOCKS.register("topaz_block", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(10.0F, 8.5F).sound(SoundType.METAL)));
 	public static final RegistryObject<Block> AMBER_BLOCK = BLOCKS.register("amber_block", () -> new Block(Block.Properties.create(Material.IRON).hardnessAndResistance(10.0F, 8.5F).sound(SoundType.METAL)));
@@ -52,8 +52,8 @@ public class DBMBlocks {
 	public static final RegistryObject<RotatedPillarBlock> PADAUK_LOG = BLOCKS.register("padauk_log", () -> createLogBlock(MaterialColor.RED, MaterialColor.QUARTZ));
 	public static final RegistryObject<LeavesBlock> PADAUK_LEAVES = BLOCKS.register("padauk_leaves", () -> new LeavesBlock(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid()));
 	public static final RegistryObject<RotatedPillarBlock> STRIPPED_PADAUK_LOG = BLOCKS.register("stripped_padauk_log", () -> createLogBlock(MaterialColor.RED, MaterialColor.RED));
-	public static final RegistryObject<RotatedPillarBlock> PADAUK_WOOD = BLOCKS.register("padauk_wood", () -> new RotatedPillarBlock(Block.Properties.create(Material.WOOD, MaterialColor.QUARTZ).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
-	public static final RegistryObject<RotatedPillarBlock> STRIPPED_PADAUK_WOOD = BLOCKS.register("stripped_padauk_wood", () -> new RotatedPillarBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<RotatedPillarBlock> PADAUK_WOOD = BLOCKS.register("padauk_wood", () -> new DBMLogBlock(Block.Properties.create(Material.WOOD, MaterialColor.QUARTZ).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<RotatedPillarBlock> STRIPPED_PADAUK_WOOD = BLOCKS.register("stripped_padauk_wood", () -> new DBMLogBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMWoodButtonBlock> PADAUK_BUTTON = BLOCKS.register("padauk_button", () -> new DBMWoodButtonBlock(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
 	public static final RegistryObject<DBMDoorBlock> PADAUK_DOOR = BLOCKS.register("padauk_door", () -> new DBMDoorBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid()));
 	public static final RegistryObject<FenceBlock> PADAUK_FENCE = BLOCKS.register("padauk_fence", () -> new FenceBlock(Block.Properties.create(Material.WOOD, MaterialColor.RED).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));

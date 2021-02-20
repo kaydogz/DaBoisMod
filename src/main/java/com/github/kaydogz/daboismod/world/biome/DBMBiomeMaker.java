@@ -54,6 +54,11 @@ public class DBMBiomeMaker {
             spawner.withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(DBMEntities.FLESH_CREEPER.get(), 20, 2, 4));
         }
 
+        // Chimps in Jungles
+        if (BiomeDictionary.hasType(biomeRegistryKey, BiomeDictionary.Type.JUNGLE)) {
+            spawner.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(DBMEntities.CHIMP.get(), 40, 3, 5));
+        }
+
         //Ancient Ore in The End
         if (DBMConfigHandler.COMMON.generateAncientOre.get()) {
             if (BiomeDictionary.hasType(biomeRegistryKey, BiomeDictionary.Type.END)) {

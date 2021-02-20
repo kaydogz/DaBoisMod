@@ -31,7 +31,7 @@ public class MagnetismTickableSound extends TickableSound {
 	
 	@Override
 	public void tick() {
-		if (this.player == null || !this.player.isAlive()) {
+		if (this.player == null || !this.player.isAddedToWorld() || !this.player.isAlive()) {
 			this.finishPlaying();
 		} else {
 			LazyOptional<IPlayerCapability> playerCap = PlayerProvider.getCapabilityOf(this.player);

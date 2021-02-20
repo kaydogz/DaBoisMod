@@ -1,6 +1,8 @@
 package com.github.kaydogz.daboismod.entity;
 
 import com.github.kaydogz.daboismod.util.DBMSoundEvents;
+import net.minecraft.client.renderer.entity.BeeRenderer;
+import net.minecraft.client.renderer.entity.CowRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;

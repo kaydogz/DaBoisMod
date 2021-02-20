@@ -10,7 +10,7 @@ public class DBMStats {
 
 	public static ResourceLocation complete_quest;
 	
-	public static ResourceLocation registerStat(String key, IStatFormatter formatter) {
+	protected static ResourceLocation registerStat(String key, IStatFormatter formatter) {
 		ResourceLocation location = DaBoisMod.modLocation(key);
 		Registry.register(Registry.CUSTOM_STAT, key, location);
 		Stats.CUSTOM.get(location, formatter);

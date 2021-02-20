@@ -46,6 +46,8 @@
 	"commands.daboismod.quest.clear.success.multiple": "Removed %s items from %s players",
 	"commands.daboismod.quest.clear.failed.single": "No quests were found on player %s",
 	"commands.daboismod.quest.clear.failed.multiple": "No quests were found on %s players",
+	"commands.daboismod.randomchimpevent.start.success": "Started new random chimp event of %s chimps",
+	"commands.daboismod.randomchimpevent.stop.success": "Stopped random chimp event",
 
 	"dimension.daboismod.the_realm_of_the_ancients": "The Realm of the Ancients",
 	
@@ -59,7 +61,10 @@
 	"entity.daboismod.sasquatch": "Sasquatch",
 	"entity.daboismod.werewolf": "Werewolf",
 	"entity.daboismod.flesh_creeper": "Flesh Creeper",
-	
+
+	"event.daboismod.random_chimp": "Random Chimp Event",
+	"event.daboismod.random_chimp.chimps_remaining": "Chimps Remaining: ",
+
 	"gui.daboismod.quest.title": "Quests",
 	"gui.daboismod.quest.new": "New Quest Available!",
 	"gui.daboismod.quest.none": "You have no quests available.",
@@ -81,6 +86,8 @@
 	"item.daboismod.sasquatch_spawn_egg": "Sasquatch Spawn Egg",
 	"item.daboismod.werewolf_spawn_egg": "Werewolf Spawn Egg",
 	"item.daboismod.flesh_creeper_spawn_egg": "Flesh Creeper Spawn Egg",
+	"item.daboismod.chimp_spawn_egg": "Chimp Spawn Egg",
+	"item.daboismod.aggressive_chimp_spawn_egg": "Aggressive Chimp Spawn Egg",
 	"item.daboismod.quest_scroll": "Quest Scroll",
 	"item.daboismod.bandage": "Bandage",
 	"item.daboismod.padauk_boat": "Padauk Boat",

@@ -6,17 +6,22 @@ import com.github.kaydogz.daboismod.command.argument.QuestTaskArgument;
 import com.github.kaydogz.daboismod.quest.Quest;
 import com.github.kaydogz.daboismod.quest.QuestHelper;
 import com.github.kaydogz.daboismod.quest.QuestTask;
+import com.github.kaydogz.daboismod.world.randomchimpevent.RandomChimpEvent;
+import com.github.kaydogz.daboismod.world.randomchimpevent.RandomChimpEventManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.BlockPosArgument;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.command.arguments.ItemArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.raid.RaidManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -60,6 +65,24 @@ public class DBMCommand {
 								.executes(context -> clearQuests(context.getSource(), Collections.singleton(context.getSource().asPlayer())))
 								.then(Commands.argument("targets", EntityArgument.players())
 										.executes(context -> clearQuests(context.getSource(), EntityArgument.getPlayers(context, "targets")))
+								)
+						)
+				)
+				.then(Commands.literal("randomchimpevent")
+						.requires(source -> source.hasPermissionLevel(2))
+						.then(Commands.literal("start")
+								.executes(context -> startRandomChimpEvent(context.getSource(), new BlockPos(context.getSource().getPos()), 270))
+								.then(Commands.argument("position", BlockPosArgument.blockPos())
+										.executes(context -> startRandomChimpEvent(context.getSource(), BlockPosArgument.getBlockPos(context, "position"), 270))
+										.then(Commands.argument("chimpCount", IntegerArgumentType.integer(9))
+												.executes(context -> startRandomChimpEvent(context.getSource(), BlockPosArgument.getBlockPos(context, "position"), IntegerArgumentType.getInteger(context, "chimpCount")))
+										)
+								)
+						)
+						.then(Commands.literal("stop")
+								.executes(context -> stopRandomChimpEvent(context.getSource(), new BlockPos(context.getSource().getPos())))
+								.then(Commands.argument("position", BlockPosArgument.blockPos())
+										.executes(context -> stopRandomChimpEvent(context.getSource(), BlockPosArgument.getBlockPos(context, "position")))
 								)
 						)
 				)
@@ -111,5 +134,19 @@ public class DBMCommand {
 
 			return 1;
 		}
+	}
+
+	private static int startRandomChimpEvent(CommandSource source, BlockPos position, int chimpCount) {
+		RandomChimpEventManager.getByWorld(source.getWorld()).findOrCreateRandomChimpEvent(position);
+		source.sendFeedback(new TranslationTextComponent("commands.daboismod.randomchimpevent.start.success", chimpCount), true);
+
+		return 1;
+	}
+
+	private static int stopRandomChimpEvent(CommandSource source, BlockPos position) {
+		RandomChimpEventManager.getByWorld(source.getWorld()).findRandomChimpEvent(position, 100).stop();
+		source.sendFeedback(new TranslationTextComponent("commands.daboismod.randomchimpevent.stop.success"), true);
+
+		return 1;
 	}
 }

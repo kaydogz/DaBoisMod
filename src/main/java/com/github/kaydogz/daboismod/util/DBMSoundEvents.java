@@ -14,26 +14,33 @@ public class DBMSoundEvents {
 	public static void registerSoundEvents(IEventBus eventBus) {
 		SOUND_EVENTS.register(eventBus);
 	}
+
+	private static RegistryObject<SoundEvent> registerSoundEvent(String location) {
+		return SOUND_EVENTS.register(location, () -> new SoundEvent(DaBoisMod.modLocation(location)));
+	}
 	
 	// Entity Sounds
-	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_AMBIENT = SOUND_EVENTS.register("entity.sasquatch.ambient", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.ambient")));
-	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_HURT = SOUND_EVENTS.register("entity.sasquatch.hurt", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.hurt")));
-	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_DEATH = SOUND_EVENTS.register("entity.sasquatch.death", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.death")));
-	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_TRANSITION = SOUND_EVENTS.register("entity.sasquatch.transition", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.transition")));
-	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_SMASH = SOUND_EVENTS.register("entity.sasquatch.smash", () -> new SoundEvent(DaBoisMod.modLocation("entity.sasquatch.smash")));
-	public static final RegistryObject<SoundEvent> ENTITY_FLESH_CREEPER_PRIMED = SOUND_EVENTS.register("entity.flesh_creeper.primed", () -> new SoundEvent(DaBoisMod.modLocation("entity.flesh_creeper.primed")));
+	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_AMBIENT = registerSoundEvent("entity.sasquatch.ambient");
+	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_HURT = registerSoundEvent("entity.sasquatch.hurt");
+	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_DEATH = registerSoundEvent("entity.sasquatch.death");
+	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_TRANSITION = registerSoundEvent("entity.sasquatch.transition");
+	public static final RegistryObject<SoundEvent> ENTITY_SASQUATCH_SMASH = registerSoundEvent("entity.sasquatch.smash");
+	public static final RegistryObject<SoundEvent> ENTITY_FLESH_CREEPER_PRIMED = registerSoundEvent("entity.flesh_creeper.primed");
+
+	// Event Sounds
+	public static final RegistryObject<SoundEvent> EVENT_RANDOM_CHIMP_LOOP = registerSoundEvent("event.random_chimp.loop");
 
 	// Record Sounds
-	public static final RegistryObject<SoundEvent> CARNIVORES = SOUND_EVENTS.register("music_disc.carnivores", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.carnivores")));
-	public static final RegistryObject<SoundEvent> MR_BLUE_SKY = SOUND_EVENTS.register("music_disc.mr_blue_sky", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.mr_blue_sky")));
-	public static final RegistryObject<SoundEvent> SPHERE = SOUND_EVENTS.register("music_disc.sphere", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.sphere")));
-	public static final RegistryObject<SoundEvent> MEGALOVANIA = SOUND_EVENTS.register("music_disc.megalovania", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.megalovania")));
-	public static final RegistryObject<SoundEvent> A_DAY_IN_THE_LIFE = SOUND_EVENTS.register("music_disc.a_day_in_the_life", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.a_day_in_the_life")));
-	public static final RegistryObject<SoundEvent> HERE_COMES_THE_SUN = SOUND_EVENTS.register("music_disc.here_comes_the_sun", () -> new SoundEvent(DaBoisMod.modLocation("music_disc.here_comes_the_sun")));
+	public static final RegistryObject<SoundEvent> CARNIVORES = registerSoundEvent("music_disc.carnivores");
+	public static final RegistryObject<SoundEvent> MR_BLUE_SKY = registerSoundEvent("music_disc.mr_blue_sky");
+	public static final RegistryObject<SoundEvent> SPHERE = registerSoundEvent("music_disc.sphere");
+	public static final RegistryObject<SoundEvent> MEGALOVANIA = registerSoundEvent("music_disc.megalovania");
+	public static final RegistryObject<SoundEvent> A_DAY_IN_THE_LIFE = registerSoundEvent("music_disc.a_day_in_the_life");
+	public static final RegistryObject<SoundEvent> HERE_COMES_THE_SUN = registerSoundEvent("music_disc.here_comes_the_sun");
 
 	// Player Sounds
-	public static final RegistryObject<SoundEvent> MAGNETIC_HUM = SOUND_EVENTS.register("player.magnetic_hum", () -> new SoundEvent(DaBoisMod.modLocation("player.magnetic_hum")));
+	public static final RegistryObject<SoundEvent> MAGNETIC_HUM = registerSoundEvent("player.magnetic_hum");
 	
 	// Master Sounds
-	public static final RegistryObject<SoundEvent> HEAVENLY_CHOIR = SOUND_EVENTS.register("master.heavenly_choir", () -> new SoundEvent(DaBoisMod.modLocation("master.heavenly_choir")));
+	public static final RegistryObject<SoundEvent> HEAVENLY_CHOIR = registerSoundEvent("master.heavenly_choir");
 }
